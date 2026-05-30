@@ -5,17 +5,6 @@ Global Header
 <!-- JS-Available Guard -->
 <script>document.documentElement.classList.add("js");</script>
 
-<!-- Theme Flash Prevention -->
-<script>
-(function() {
-  const theme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const active = theme || (prefersDark ? 'dark' : 'light');
-  document.documentElement.className = document.documentElement.className.replace(/u-theme-\w+/g, '');
-  document.documentElement.classList.add(`u-theme-${active}`);
-})();
-</script>
-
 <!-- Viewport -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 

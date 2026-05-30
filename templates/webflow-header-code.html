@@ -1,20 +1,6 @@
-<!-- JS-available guard — MUST be first, before stylesheets and the theme script.
-     Adds .js to <html> so the bd-animations FOUC rules apply only when JS runs.
-     Survives the u-theme className rewrite below (it only strips u-theme-*). -->
+<!-- JS-available guard — MUST be first, before stylesheets.
+     Adds .js to <html> so the bd-animations FOUC rules apply only when JS runs. -->
 <script>document.documentElement.classList.add("js");</script>
-
-<!-- Prevent theme flash -->
-<script>
-(function() {
-  const theme = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const active = theme || (prefersDark ? 'dark' : 'light');
-
-  // Apply Webflow theme class immediately
-  document.documentElement.className = document.documentElement.className.replace(/u-theme-\w+/g, '');
-  document.documentElement.classList.add(`u-theme-${active}`);
-})();
-</script>
 
 <style>
   * {  -webkit-font-smoothing: antialiased;  -moz-osx-font-smoothing: grayscale;  -o-font-smoothing: antialiased;}
@@ -45,8 +31,8 @@
 <link rel="stylesheet" href="http://localhost:2000/assets/css/bd-animations.css">
 
 
-<!-- Custom cursor token bridge — maps bd-cursor.css tokens to Webflow theme vars
-     (follows u-theme via cursor-primary/secondary) -->
+<!-- Custom cursor token bridge — maps bd-cursor.css tokens to the
+     Webflow cursor-primary/secondary vars -->
 <style>
   :root {
     --text-accent: var(--_semantic---cursor-primary);
