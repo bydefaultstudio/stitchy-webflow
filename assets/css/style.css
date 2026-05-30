@@ -891,7 +891,7 @@ section {
   white-space: normal;
 }
 
-/* -- Button (API: data-variant | data-size | data-color | data-icon-only | data-full-width. Legacy .is-* aliased below.) -- */
+/* -- Button (API: data-variant | data-size | data-icon-only | data-full-width) -- */
 .button,
 button.button {
   --button-color: var(--text-primary);
@@ -1007,25 +1007,6 @@ button.button {
   width: 100%;
 }
 
-/* -- Colour variants (--button-color drives bg, border, and faded) -- */
-.button[data-color="danger"] {
-  --button-color: var(--status-danger);
-  --button-text-color: var(--text-inverted);
-}
-
-.button[data-color="danger"]:hover {
-  --button-color: color-mix(in srgb, var(--status-danger), var(--text-primary) 15%);
-}
-
-.button[data-color="success"] {
-  --button-color: var(--status-success);
-  --button-text-color: var(--text-inverted);
-}
-
-.button[data-color="success"]:hover {
-  --button-color: color-mix(in srgb, var(--status-success), var(--text-primary) 15%);
-}
-
 /* -- States -- */
 .button:disabled,
 .button.is-disabled {
@@ -1045,62 +1026,12 @@ button.button {
   }
 }
 
-/* -- Legacy .is-* aliases -- */
-.button.is-faded {
-  --button-bg: var(--button-faded);
-  --button-border: transparent;
-  --button-text-color: var(--button-color);
-}
-
-.button.is-outline {
-  --button-bg: transparent;
-  --button-text-color: var(--button-color);
-}
-
-.button.is-outline.is-faded {
-  --button-bg: transparent;
-  --button-border: var(--button-faded);
-  --button-text-color: var(--button-color);
-}
-
-.button.is-small {
-  --button-padding-y: var(--space-s);
-  --button-padding-x: var(--space-m);
-  --button-text-size: var(--font-xs);
-}
-
-.button.is-icon {
-  --button-padding-x: var(--button-padding-y);
-  --icon-size: 1.3rem;
-}
-
 .button-group {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   grid-column-gap: var(--space-m);
   grid-row-gap: var(--space-m);
-}
-
-/* -- Styleguide demos -- */
-.type-demo > h1,
-.type-demo > h2,
-.type-demo > h3,
-.type-demo > h4,
-.type-demo > h5,
-.type-demo > h6 {
-  margin-top: var(--space-none);
-  margin-bottom: var(--space-xl);
-}
-
-.button-demo > button {
-  margin-top: var(--space-none);
-  margin-bottom: var(--space-l);
-}
-
-.button-demo > .token-tag {
-  margin-top: var(--space-none);
-  margin-bottom: var(--space-none);
 }
 
 /* ------ BACKGROUND UTILITIES ------ */
