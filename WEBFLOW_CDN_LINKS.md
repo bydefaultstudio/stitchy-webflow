@@ -31,9 +31,9 @@ Global Header
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css" as="style" onload="this.onload=null;this.rel='stylesheet';">
 
 <!-- Stitchy Styles -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/css/style.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/css/bd-animations.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/css/bd-cursor.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/bd-animations.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/bd-cursor.css">
 
 <!-- Custom Cursor Token Bridge -->
 <style>
@@ -62,8 +62,8 @@ Global Footer
 <script src="https://cdn.jsdelivr.net/npm/lottie-web@5/build/player/lottie_light.min.js"></script>
 
 <!-- Custom Cursor -->
-<script>window.BD_CURSOR_SPRITE = "https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/images/svg-icons/_sprite.svg";</script>
-<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/js/bd-cursor.js"></script>
+<script>window.BD_CURSOR_SPRITE = "https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/images/svg-icons/_sprite.svg";</script>
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/bd-cursor.js"></script>
 <div class="cursor-label" aria-hidden="true">
   <div class="cursor-label-icon cursor-label-icon-lead"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="100%" height="100%"><use href="#plus"/></svg></div>
   <span class="cursor-label-text"></span>
@@ -72,10 +72,10 @@ Global Footer
 <div class="cursor-halo" aria-hidden="true"></div>
 
 <!-- BD Animations -->
-<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/js/bd-animations.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/bd-animations.js"></script>
 
 <!-- Site Loader -->
-<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/js/site-loader.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/site-loader.js"></script>
 
 
 ---
@@ -83,7 +83,7 @@ Homepage Footer
 ---
 
 <!-- Homepage Scripts -->
-<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/js/homepage.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/homepage.js"></script>
 
 
 ---
@@ -94,4 +94,4 @@ Our Science Footer
 <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20/build/matter.min.js"></script>
 
 <!-- Our Science Scripts -->
-<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-london@main/assets/js/our-science.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/our-science.js"></script>

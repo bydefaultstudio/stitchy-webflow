@@ -1,9 +1,9 @@
 # ──────────────────────────────────────────────────────────────
-# Stitchy London — PUBLIC repo (GitHub + Netlify + jsDelivr CDN)
+# Stitchy London — PUBLIC repo (GitHub + jsDelivr CDN)
 #
-# Default: everything is committed so Netlify can deploy the
-# prototype as a static site. Internal docs, briefs and local
-# tooling are kept out.
+# Only the custom code layer (assets/) and the Webflow Custom Code
+# snippets are committed — Webflow pulls them via jsDelivr @main.
+# Internal build notes and local tooling are kept out.
 # ──────────────────────────────────────────────────────────────
 
 # OS / editor cruft
@@ -13,9 +13,7 @@
 # Local Claude Code config
 .claude/
 
-# Internal documentation (reference only, not for public repo)
-docs/
+# Internal build notes (local only, not for public repo)
 CLAUDE.md
-PROJECT_BRIEF.md
 PROJECT_PROGRESS.md
 HANDOVER.md
