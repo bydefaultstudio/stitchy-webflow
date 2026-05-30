@@ -1,4 +1,4 @@
-/* Stitchy London — design system + project styles. Tokens mirror Webflow; brand tokens read via var(--brand-*, fallback) from brand-book.css. */
+/* Stitchy London — design system + project styles. Tokens mirror the Webflow Variables; brand values are carried inline as var(--brand-*, fallback) defaults. */
 
 
 /* ------ BRAND MAPPING ------ */
