@@ -5,15 +5,19 @@
   <!-- Essential -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Design System</title>
+  <title>Styleguide — Stitchy London (Webflow build manifest)</title>
   <meta name="description"
-    content="Interactive design system showcasing typography, colors, components, and layout primitives." />
+    content="Build manifest for the Stitchy London Webflow rebuild: every class, combo class, custom attribute and token to recreate natively in Webflow." />
 
   <!-- Robots -->
   <meta name="robots" content="noindex, nofollow" />
 
-  <!-- Combined stylesheet (design system + project styles) -->
+  <!-- Design system + project styles (source of truth for values; native-built in Webflow, not shipped) -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- Can't-be-native layer (buttons, [data-grid], stickers) — ships to production -->
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <!-- Page-only styleguide chrome (sg-* helpers). NEVER add this site-wide. -->
+  <link rel="stylesheet" href="assets/css/styleguide.css" />
 
   <!-- Google Fonts: Mona Sans (brand primary) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,652 +30,600 @@
   <div class="page-wrapper">
     <div class="page-content">
 
-      <!-- Header -->
+      <!-- ============ HEADER / HOW TO READ ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="container-medium">
-            <div class="block gap-small">
-              <p class="eyebrow">Design System</p>
-              <h1>Design System</h1>
-              <p class="text-size-s">All design system components rendered with <strong>default tokens</strong>.</p>
+          <div class="container-xl">
+            <div class="block gap-medium">
+              <p class="eyebrow">Webflow Build Manifest</p>
+              <h1>Styleguide</h1>
+              <p class="sg-lead text-size-l">Every class, combo class, custom attribute and token to recreate <strong>natively in Webflow</strong>. The chip beside each example is the build recipe; the example element carries the real production markup. Values are sourced from <code>assets/css/style.css</code>.</p>
+
+              <div class="sg-legend" role="note" aria-label="How to read the chips">
+                <span class="sg-legend-item"><code class="sg-chip" data-sg-kind="variable">Color/Green</code> Native — Webflow Variable</span>
+                <span class="sg-legend-item"><code class="sg-chip" data-sg-kind="class">.text-size-m</code> Native — class</span>
+                <span class="sg-legend-item"><code class="sg-chip" data-sg-kind="combo">.border-faded</code> Native — combo on a base class</span>
+                <span class="sg-legend-item"><code class="sg-chip" data-sg-kind="attr">data-variant="outline"</code> Custom code → <code>global.css</code> (not natively styleable)</span>
+                <span class="sg-legend-item"><span class="sg-used">Used in build</span> appears on a real page</span>
+              </div>
+              <p class="sg-note">Breakpoints: <strong>Desktop ≥992</strong> (fluid <code>vw</code>) · <strong>≤991</strong> · <strong>≤767</strong>. There is no ≤479 step (it inherits ≤767). Type sizes/weights/line-heights live <strong>on the classes</strong> — Webflow Variables can't hold <code>vw</code>.</p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Colors -->
+      <!-- ============ COLORS ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="container-medium">
+          <div class="container-xl">
             <div class="block gap-large">
-              <h2 class="eyebrow">Colors</h2>
+              <h2 class="eyebrow">Colors — Webflow Variables</h2>
+              <p class="sg-note">Build primitives first (Brand · Neutral · Alpha), then the semantic groups (Text · Background · Border) as <strong>aliases</strong> that link to a primitive. Single mode — no light/dark.</p>
 
-              <!-- Brand Colors -->
+              <!-- Brand -->
+              <h3>Brand</h3>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Swatch</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Dark</code><span class="sg-value">--brand-dark · #171c17</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-dark);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Light</code><span class="sg-value">--brand-light · #f9fbfb</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-light);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Green</code><span class="sg-value">--brand-green · #d3ff6b</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-green);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Green</code><span class="sg-value">--brand-accent (alias of Green) · #d3ff6b</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-accent);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Orange</code><span class="sg-value">--brand-orange · #ff4800</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-orange);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Blue</code><span class="sg-value">--brand-blue · #98affe</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-blue);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Brand/Link</code><span class="sg-value">--brand-link · #96dd05</span></div></td><td><div class="sg-swatch" style="background-color: var(--brand-link);"></div></td></tr>
+                </tbody>
+              </table>
+
+              <!-- Neutral -->
+              <h3>Neutral</h3>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Swatch</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/50</code><span class="sg-value">--neutral-50 · #f9fbfb</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-50);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/100</code><span class="sg-value">--neutral-100 · #f4f6f6</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-100);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/150</code><span class="sg-value">--neutral-150 · #ebefed</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-150);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/200</code><span class="sg-value">--neutral-200 · #e3e8e3</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-200);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/300</code><span class="sg-value">--neutral-300 · #d0d8d0</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-300);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/400</code><span class="sg-value">--neutral-400 · #9daa9d</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-400);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/500</code><span class="sg-value">--neutral-500 · #6b7b6b</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-500);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/600</code><span class="sg-value">--neutral-600 · #4c574e</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-600);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/700</code><span class="sg-value">--neutral-700 · #3b453c</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-700);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/800</code><span class="sg-value">--neutral-800 · #242a23</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-800);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/900</code><span class="sg-value">--neutral-900 · #171c17</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-900);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Neutral/950</code><span class="sg-value">--neutral-950 · #090c09</span></div></td><td><div class="sg-swatch" style="background-color: var(--neutral-950);"></div></td></tr>
+                </tbody>
+              </table>
+
+              <!-- Alpha -->
+              <h3>Alpha</h3>
+              <p class="sg-note">8-digit hex (colour + opacity). In Webflow set the base colour at the listed opacity, or paste the hex.</p>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Swatch (over a tint)</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black</code><span class="sg-value">--black · #000000</span></div></td><td><div class="sg-swatch" style="background-color: var(--black);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-5</code><span class="sg-value">--black-alpha-5 · #0000000d</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-5), var(--black-alpha-5));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-10</code><span class="sg-value">--black-alpha-10 · #0000001a</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-10), var(--black-alpha-10));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-15</code><span class="sg-value">--black-alpha-15 · #00000026</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-15), var(--black-alpha-15));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-20</code><span class="sg-value">--black-alpha-20 · #00000033</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-20), var(--black-alpha-20));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-30</code><span class="sg-value">--black-alpha-30 · #0000004d</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-30), var(--black-alpha-30));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-40</code><span class="sg-value">--black-alpha-40 · #00000066</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-40), var(--black-alpha-40));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/Black-50</code><span class="sg-value">--black-alpha-50 · #00000080</span></div></td><td><div class="sg-swatch background-color-secondary" style="background-image: linear-gradient(var(--black-alpha-50), var(--black-alpha-50));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White</code><span class="sg-value">--white · #ffffff</span></div></td><td><div class="sg-swatch" style="background-color: var(--white);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-5</code><span class="sg-value">--white-alpha-5 · #ffffff0d</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-5), var(--white-alpha-5));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-10</code><span class="sg-value">--white-alpha-10 · #ffffff1a</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-10), var(--white-alpha-10));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-15</code><span class="sg-value">--white-alpha-15 · #ffffff26</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-15), var(--white-alpha-15));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-20</code><span class="sg-value">--white-alpha-20 · #ffffff33</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-20), var(--white-alpha-20));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-30</code><span class="sg-value">--white-alpha-30 · #ffffff4d</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-30), var(--white-alpha-30));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-40</code><span class="sg-value">--white-alpha-40 · #ffffff66</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-40), var(--white-alpha-40));"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Alpha/White-50</code><span class="sg-value">--white-alpha-50 · #ffffff80</span></div></td><td><div class="sg-swatch background-color-dark" style="background-image: linear-gradient(var(--white-alpha-50), var(--white-alpha-50));"></div></td></tr>
+                </tbody>
+              </table>
+
+              <!-- Semantic: Text -->
+              <h3>Text <span class="sg-value">(aliases → primitives)</span></h3>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Sample</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Primary</code><span class="sg-value">--text-primary → Brand/Dark</span></div></td><td><span style="color: var(--text-primary); font-weight: var(--font-weight-semi-bold);">Primary text</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Secondary</code><span class="sg-value">--text-secondary → Neutral/800</span></div></td><td><span style="color: var(--text-secondary); font-weight: var(--font-weight-semi-bold);">Secondary text</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Plain</code><span class="sg-value">--text-plain → Alpha/Black</span></div></td><td><span style="color: var(--text-plain); font-weight: var(--font-weight-semi-bold);">Plain text</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Faded</code><span class="sg-value">--text-faded → Alpha/Black-50</span></div></td><td><span style="color: var(--text-faded); font-weight: var(--font-weight-semi-bold);">Faded text</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Accent</code><span class="sg-value">--text-accent → Brand/Green</span></div></td><td><span class="background-color-dark padding-small" style="color: var(--text-accent); font-weight: var(--font-weight-semi-bold);">Accent text</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Link</code><span class="sg-value">--text-link → Brand/Link</span></div></td><td><span style="color: var(--text-link); font-weight: var(--font-weight-semi-bold);">Link text</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Text/Inverted</code><span class="sg-value">--text-inverted → Alpha/White</span></div></td><td><span class="background-color-dark padding-small" style="color: var(--text-inverted); font-weight: var(--font-weight-semi-bold);">Inverted text</span></td></tr>
+                </tbody>
+              </table>
+
+              <!-- Semantic: Background -->
+              <h3>Background <span class="sg-value">(aliases → primitives)</span></h3>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Swatch</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Primary</code><span class="sg-value">--background-primary → Neutral/50</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-primary);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Secondary</code><span class="sg-value">--background-secondary → Neutral/150</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-secondary);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Plain</code><span class="sg-value">--background-plain → Alpha/White</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-plain);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Faded</code><span class="sg-value">--background-faded → Alpha/Black-5</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-faded);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Accent</code><span class="sg-value">--background-accent → Brand/Green</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-accent);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/White</code><span class="sg-value">--background-white → Alpha/White</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-white);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Green</code><span class="sg-value">--background-green → Brand/Green</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-green);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Orange</code><span class="sg-value">--background-orange → Brand/Orange</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-orange);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Blue</code><span class="sg-value">--background-blue → Brand/Blue</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-blue);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Background/Dark</code><span class="sg-value">--background-dark → Brand/Dark</span></div></td><td><div class="sg-swatch" style="background-color: var(--background-dark);"></div></td></tr>
+                </tbody>
+              </table>
+
+              <!-- Semantic: Border + Button -->
+              <h3>Border &amp; Button <span class="sg-value">(aliases → primitives)</span></h3>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Swatch</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Border/Primary</code><span class="sg-value">--border-primary → Alpha/Black</span></div></td><td><div class="sg-swatch" style="background-color: var(--border-primary);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Border/Secondary</code><span class="sg-value">--border-secondary → Neutral/300</span></div></td><td><div class="sg-swatch" style="background-color: var(--border-secondary);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Border/Faded</code><span class="sg-value">--border-faded → Alpha/Black-15</span></div></td><td><div class="sg-swatch" style="background-color: var(--border-faded);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Button/Primary</code><span class="sg-value">--button-primary → Brand/Link</span></div></td><td><div class="sg-swatch" style="background-color: var(--button-primary);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Color/Button/Text</code><span class="sg-value">--button-text → Alpha/White</span></div></td><td><div class="sg-swatch" style="background-color: var(--button-text);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="attr">--button-faded</code><span class="sg-value">computed color-mix() — bake a concrete value, not a Variable</span></div></td><td><div class="sg-swatch" style="background-color: var(--button-faded);"></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SPACING ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Spacing — Webflow Variables</h2>
+              <p class="sg-note">The <code>Space</code> scale is a Size-type Variable collection. (Some steps compress at ≤767 — see <code>style.css</code>.) Section-spacing aliases live on the <code>.top-*</code>/<code>.bottom-*</code> classes, not as Variables.</p>
+
+              <h3>Space scale</h3>
+              <table class="sg-table">
+                <thead><tr><th>Variable</th><th>Size (bar = value)</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/None</code><span class="sg-value">--space-none · 0</span></div></td><td><div class="sg-bar" style="width: var(--space-none);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/2XS</code><span class="sg-value">--2xs · 0.125rem (2px)</span></div></td><td><div class="sg-bar" style="width: var(--2xs);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/XS</code><span class="sg-value">--space-xs · 0.25rem (4px)</span></div></td><td><div class="sg-bar" style="width: var(--space-xs);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/S</code><span class="sg-value">--space-s · 0.5rem (8px)</span></div></td><td><div class="sg-bar" style="width: var(--space-s);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/M</code><span class="sg-value">--space-m · 0.75rem (12px)</span></div></td><td><div class="sg-bar" style="width: var(--space-m);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/L</code><span class="sg-value">--space-l · 1rem (16px)</span></div></td><td><div class="sg-bar" style="width: var(--space-l);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/XL</code><span class="sg-value">--space-xl · 1.5rem (24px)</span></div></td><td><div class="sg-bar" style="width: var(--space-xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/2XL</code><span class="sg-value">--space-2xl · 2rem (32px)</span></div></td><td><div class="sg-bar" style="width: var(--space-2xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/3XL</code><span class="sg-value">--space-3xl · 2.5rem (40px)</span></div></td><td><div class="sg-bar" style="width: var(--space-3xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/4XL</code><span class="sg-value">--space-4xl · 3rem (48px)</span></div></td><td><div class="sg-bar" style="width: var(--space-4xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/5XL</code><span class="sg-value">--space-5xl · 3.5rem (56px)</span></div></td><td><div class="sg-bar" style="width: var(--space-5xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/6XL</code><span class="sg-value">--space-6xl · 4rem (64px)</span></div></td><td><div class="sg-bar" style="width: var(--space-6xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/8XL</code><span class="sg-value">--space-8xl · 5rem (80px)</span></div></td><td><div class="sg-bar" style="width: var(--space-8xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/10XL</code><span class="sg-value">--space-10xl · 6rem (96px)</span></div></td><td><div class="sg-bar" style="width: var(--space-10xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/12XL</code><span class="sg-value">--space-12xl · 7rem (112px)</span></div></td><td><div class="sg-bar" style="width: var(--space-12xl);"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Space/14XL</code><span class="sg-value">--space-14xl · 10rem (160px)</span></div></td><td><div class="sg-bar" style="width: var(--space-14xl);"></div></td></tr>
+                </tbody>
+              </table>
+
+              <h3>Section spacing <span class="sg-value">(on classes — used by .top-* / .bottom-*)</span></h3>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Resolves to</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">--section-s</code></div></td><td><span class="sg-value">Space/2XL (32px) desktop → XL ≤767</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">--section-m</code></div></td><td><span class="sg-value">Space/6XL (64px) → 4XL ≤991 → 2XL ≤767</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">--section-l</code></div></td><td><span class="sg-value">Space/10XL (96px) → 8XL ≤991 → 5XL ≤767</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">--section-xl</code></div></td><td><span class="sg-value">Space/14XL (160px) → 12XL ≤991 → 8XL ≤767</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TYPE SCALE ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Type scale — on classes</h2>
+              <p class="sg-note">Sizes are <strong>not</strong> Variables (Webflow can't hold <code>vw</code>). In Webflow set the Desktop <code>vw</code> on the class, then override with the fixed value at ≤991 and ≤767. Rows with no utility class are tokens consumed by element selectors — <strong>don't invent classes for them</strong>.</p>
+
+              <h3>Base sizes</h3>
+              <table class="sg-table is-type">
+                <thead><tr><th>Token</th><th>Class</th><th>Desktop ≥992</th><th>≤991</th><th>≤767</th><th>Specimen</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-6xl</code></td><td><span class="sg-value">—</span></td><td>4.2vw</td><td>60px</td><td>48px</td><td><span class="sg-specimen" style="font-size: var(--font-6xl);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-4xl</code></td><td><span class="sg-value">h1</span></td><td>3.2vw</td><td>46px</td><td>32px</td><td><span class="sg-specimen" style="font-size: var(--font-4xl);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-3xl</code></td><td><span class="sg-value">—</span></td><td>2.65vw</td><td>38px</td><td>28px</td><td><span class="sg-specimen" style="font-size: var(--font-3xl);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-2xl</code></td><td><span class="sg-value">h2</span></td><td>2.25vw</td><td>32px</td><td>22px</td><td><span class="sg-specimen" style="font-size: var(--font-2xl);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-xl</code></td><td><span class="sg-value">h3 · .text-size-xl</span></td><td>2vw</td><td>28px</td><td>20px</td><td><span class="sg-specimen" style="font-size: var(--font-xl);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-l</code></td><td><span class="sg-value">h4 · .text-size-l</span></td><td>1.5vw</td><td>24px</td><td>18px</td><td><span class="sg-specimen" style="font-size: var(--font-l);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-m</code></td><td><span class="sg-value">h5 · body · .text-size-m</span></td><td>1.25vw</td><td>18px</td><td>16px</td><td><span class="sg-specimen" style="font-size: var(--font-m);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-s</code></td><td><span class="sg-value">h6 · eyebrow · .text-size-s</span></td><td>1.1vw</td><td>16px</td><td>14px</td><td><span class="sg-specimen" style="font-size: var(--font-s);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-xs</code></td><td><span class="sg-value">—</span></td><td>1vw</td><td>14px</td><td>12px</td><td><span class="sg-specimen" style="font-size: var(--font-xs);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-2xs</code></td><td><span class="sg-value">—</span></td><td>0.85vw</td><td>12px</td><td>12px</td><td><span class="sg-specimen" style="font-size: var(--font-2xs);">Aa</span></td></tr>
+                </tbody>
+              </table>
+
+              <h3>Headline sizes</h3>
+              <table class="sg-table is-type">
+                <thead><tr><th>Token</th><th>Class</th><th>Desktop ≥992</th><th>≤991</th><th>≤767</th><th>Specimen</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-headline-xl</code></td><td><span class="sg-value">.headline-xlarge</span></td><td>8vw</td><td>4.75rem (76px)</td><td>3.5rem (56px)</td><td><span class="sg-specimen" style="font-size: var(--font-headline-xl);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-headline-s</code></td><td><span class="sg-value">.headline-small</span></td><td>3.9vw</td><td>3.5rem (56px)</td><td>1.8rem</td><td><span class="sg-specimen" style="font-size: var(--font-headline-s);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-headline-m</code></td><td><span class="sg-value">.ticker-headline</span></td><td>4.5vw</td><td>3rem (48px)</td><td>2.25rem (36px)</td><td><span class="sg-specimen" style="font-size: var(--font-headline-m);">Aa</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-headline-xs</code></td><td><span class="sg-value">—</span></td><td>3vw</td><td>1.5rem (24px)</td><td>1.25rem (20px)</td><td><span class="sg-specimen" style="font-size: var(--font-headline-xs);">Aa</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TYPE FAMILIES & TREATMENTS ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Type families &amp; treatments</h2>
+
+              <h3>Font family</h3>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Specimen</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="variable">Font/Mona Sans</code><span class="sg-value">--font-primary &amp; --font-tertiary (identical → one family)</span></div></td><td><span style="font-size: var(--font-2xl);">Mona Sans — the quick brown fox</span></td></tr>
+                </tbody>
+              </table>
+
+              <h3>Weights <span class="sg-value">(on class — font-weight)</span></h3>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Specimen</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-weight-light · 300</code></td><td><span style="font-size: var(--font-xl); font-weight: 300;">Light 300</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-weight-regular · 400</code></td><td><span style="font-size: var(--font-xl); font-weight: 400;">Regular 400</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-weight-medium · 500</code></td><td><span style="font-size: var(--font-xl); font-weight: 500;">Medium 500</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-weight-semi-bold · 600</code></td><td><span style="font-size: var(--font-xl); font-weight: 600;">Semi-bold 600</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-weight-bold · 700</code></td><td><span style="font-size: var(--font-xl); font-weight: 700;">Bold 700</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--font-weight-extra-bold · 800</code></td><td><span style="font-size: var(--font-xl); font-weight: 800;">Extra-bold 800</span></td></tr>
+                </tbody>
+              </table>
+
+              <h3>Line height &amp; letter spacing <span class="sg-value">(on class)</span></h3>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Value</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--line-height-s</code></td><td><span class="sg-value">1 — headlines, stickers</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--line-height-m</code></td><td><span class="sg-value">1.2</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--line-height-l</code></td><td><span class="sg-value">1.4 — body default</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--line-height-xl</code></td><td><span class="sg-value">1.6 — small text</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">--letter-spacing-xl</code></td><td><span class="sg-value">0.11em — eyebrow, ticker</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ HEADINGS & RICH TEXT ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Headings &amp; rich text</h2>
+              <p class="sg-note">Base element styles — in Webflow set these on the tag selectors (All H1, All Paragraph…). Each heading maps to a size token (shown).</p>
+              <table class="sg-table">
+                <thead><tr><th>Element</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">h1</code><span class="sg-value">--font-4xl · 600</span></div></td><td><h1>Heading 1</h1></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">h2</code><span class="sg-value">--font-2xl · 600</span></div></td><td><h2>Heading 2</h2></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">h3</code><span class="sg-value">--font-xl · 600</span></div></td><td><h3>Heading 3</h3></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">h4</code><span class="sg-value">--font-l · 600</span></div></td><td><h4>Heading 4</h4></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">h5</code><span class="sg-value">--font-m · 600</span></div></td><td><h5>Heading 5</h5></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">h6</code><span class="sg-value">--font-s · 600</span></div></td><td><h6>Heading 6</h6></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">p</code></td><td><p>Body paragraph with <strong>strong</strong>, <em>emphasis</em>, <del>deleted</del>, and an <a href="#">inline link</a>. The quick brown fox jumps over the lazy dog to test the reading rhythm.</p></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">blockquote</code></td><td><blockquote>Typography transforms content from ordinary to extraordinary.</blockquote></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">ul</code></td><td><ul><li>Unordered item one</li><li>Unordered item two</li><li>Unordered item three</li></ul></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">ol</code></td><td><ol><li>Ordered item one</li><li>Ordered item two</li><li>Ordered item three</li></ol></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ TYPOGRAPHY UTILITY CLASSES ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Typography utility classes</h2>
+              <table class="sg-table">
+                <thead><tr><th>Class</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.text-size-xl</code></td><td><p class="text-size-xl">Lead paragraph / callout body.</p></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.text-size-l</code></td><td><p class="text-size-l">Larger body copy.</p></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.text-size-m</code></td><td><p class="text-size-m">Body default.</p></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.text-size-s</code></td><td><p class="text-size-s">Captions and small print.</p></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.headline-xlarge</code></td><td><span class="headline-xlarge">Standout</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.headline-small</code></td><td><span class="headline-small">Section head</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.ticker-headline</code></td><td><span class="ticker-headline">Ticker copy</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.eyebrow</code></td><td><p class="eyebrow">Eyebrow label</p></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.text-primary</code><code class="sg-chip" data-sg-kind="class">.text-accent</code></div></td><td><span class="text-primary">Primary</span> · <span class="background-color-dark padding-small text-accent">Accent</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.text-align-left</code><code class="sg-chip" data-sg-kind="class">.text-align-center</code><code class="sg-chip" data-sg-kind="class">.text-align-right</code></div></td><td><p class="text-align-center">Centered text</p></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.visually-hidden</code></td><td><span class="sg-value">Screen-reader-only; reveals on focus (skip links)</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ BUTTONS ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Buttons</h2>
+              <p class="sg-note">Base <code>.button</code> is a native class. Its variants/sizes/booleans are <strong>custom attributes</strong> — Webflow can't style by attribute, so the attribute rules ship in <span class="sg-flag">global.css</span>. In Webflow: add the class, then add the attribute under Settings → Custom Attributes (booleans take an empty value).</p>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.button</code></td><td><button class="button" type="button">Button</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-variant="outline"</code></div></td><td><button class="button" type="button" data-variant="outline">Outline</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-variant="faded"</code></div></td><td><button class="button" type="button" data-variant="faded">Faded</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-variant="outline-faded"</code></div></td><td><button class="button" type="button" data-variant="outline-faded">Outline faded</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-variant="transparent"</code></div></td><td><button class="button" type="button" data-variant="transparent">Transparent</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-variant="text"</code></div></td><td><button class="button" type="button" data-variant="text">Text</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-size="small"</code></div></td><td><button class="button" type="button" data-size="small">Small</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-size="xsmall"</code></div></td><td><button class="button" type="button" data-size="xsmall">X-small</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-icon-only=""</code></div></td><td><button class="button" type="button" data-icon-only aria-label="Add"><span class="svg-icn"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M11 15C11 13.8954 10.1046 13 9 13H4V11H9C10.1046 11 11 10.1046 11 9V4H13V9C13 10.1046 13.8954 11 15 11H20V13H15C13.8954 13 13 13.8954 13 15V20H11V15Z" fill="currentColor" /></svg></span></button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">data-full-width=""</code></div></td><td><button class="button" type="button" data-full-width>Full width</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="attr">disabled</code></div></td><td><button class="button" type="button" disabled>Disabled</button></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.button</code><code class="sg-chip" data-sg-kind="combo">.is-loading</code></div></td><td><button class="button is-loading" type="button">Loading</button></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.button-group</code></td><td><div class="button-group"><button class="button" type="button">One</button><button class="button" type="button" data-variant="outline">Two</button></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FORM ELEMENTS ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Form elements</h2>
+              <p class="sg-note">Native element styles (no wrapper class). In Webflow these are styled on the field types inside a Form Block. Only the footer newsletter uses a button + email today; the rest are here for future forms.</p>
+              <table class="sg-table">
+                <thead><tr><th>Element</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">label</code><code class="sg-chip" data-sg-kind="class">input[type="text"]</code></div></td><td><div class="block gap-xsmall"><label for="demo-text">Text input</label><input type="text" id="demo-text" placeholder="Placeholder text"></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">label</code><code class="sg-chip" data-sg-kind="class">input[type="email"]</code></div></td><td><div class="block gap-xsmall"><label for="demo-email">Email input</label><input type="email" id="demo-email" placeholder="name@example.com"></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">textarea</code></td><td><div class="block gap-xsmall"><label for="demo-textarea">Textarea</label><textarea id="demo-textarea" placeholder="Enter longer text here..."></textarea></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">select</code></td><td><div class="block gap-xsmall"><label for="demo-select">Select</label><select id="demo-select"><option value="" disabled selected>Choose an option</option><option>Option 1</option><option>Option 2</option><option>Option 3</option></select></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">input[type="checkbox"]</code></td><td><div class="block row align-center gap-small"><input type="checkbox" id="demo-check" checked><label for="demo-check" style="margin: 0;">Checkbox option</label></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">input[type="radio"]</code></td><td><div class="block gap-small"><div class="block row align-center gap-small"><input type="radio" name="demo-radio" id="demo-radio-a" checked><label for="demo-radio-a" style="margin: 0;">Option A</label></div><div class="block row align-center gap-small"><input type="radio" name="demo-radio" id="demo-radio-b"><label for="demo-radio-b" style="margin: 0;">Option B</label></div></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="attr">disabled</code></td><td><div class="block gap-xsmall"><label for="demo-disabled">Disabled input</label><input type="text" id="demo-disabled" value="Cannot edit this" disabled></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ LAYOUT: PADDING & SECTION SPACING ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Layout — padding &amp; section spacing</h2>
+              <table class="sg-table">
+                <thead><tr><th>Class</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.padding-global</code></td><td><span class="sg-value">Page horizontal gutter (--space-l each side)</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.padding-small</code></td><td><div class="sg-demo-frame padding-small"><div class="sg-fill">--space-s</div></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.padding-medium</code></td><td><div class="sg-demo-frame padding-medium"><div class="sg-fill">--space-m</div></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.padding-large</code></td><td><div class="sg-demo-frame padding-large"><div class="sg-fill">--space-l</div></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.padding-xlarge</code></td><td><div class="sg-demo-frame padding-xlarge"><div class="sg-fill">--space-xl</div></div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.padding-xxlarge</code></td><td><div class="sg-demo-frame padding-xxlarge"><div class="sg-fill">--space-2xl</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.top-small</code><code class="sg-chip" data-sg-kind="class">.top-medium</code><code class="sg-chip" data-sg-kind="class">.top-large</code><code class="sg-chip" data-sg-kind="class">.top-huge</code></div></td><td><span class="sg-value">Section top padding (--section-s/m/l/xl)</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.bottom-small</code><code class="sg-chip" data-sg-kind="class">.bottom-medium</code><code class="sg-chip" data-sg-kind="class">.bottom-large</code><code class="sg-chip" data-sg-kind="class">.bottom-huge</code></div></td><td><span class="sg-value">Section bottom padding (--section-s/m/l/xl)</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ LAYOUT: CONTAINERS & MAX-WIDTH ============ -->
+      <section class="top-medium bottom-medium border-bottom border-secondary">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Layout — containers &amp; max-width</h2>
+              <p class="sg-note">Width constraints (centred, <code>margin: 0 auto</code>). Widths use <code>vw</code>/px on the class — not Variables.</p>
+              <table class="sg-table">
+                <thead><tr><th>Class</th><th>Width</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.container-xs</code></td><td><span class="sg-value">480px</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.container-small</code></td><td><span class="sg-value">640px</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.container-medium</code></td><td><span class="sg-value">56vw (84vw ≤991)</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.container-large</code></td><td><span class="sg-value">60vw</span></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.container-xl</code></td><td><span class="sg-value">90vw (95% ≤991)</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.max-width-xsmall</code><code class="sg-chip" data-sg-kind="class">.max-width-small</code><code class="sg-chip" data-sg-kind="class">.max-width-medium</code><code class="sg-chip" data-sg-kind="class">.max-width-large</code><code class="sg-chip" data-sg-kind="class">.max-width-xlarge</code><code class="sg-chip" data-sg-kind="class">.max-width-full</code></div></td><td><span class="sg-value">480 · 640 · 960 · 1200 · 1440px · 100%</span></td></tr>
+                </tbody>
+              </table>
               <div class="block gap-medium">
-                <h3>Brand Colors</h3>
-                <div class="grid token-col border border-secondary ">
-                  <div class="token-block"><span class="token-tag">brand-dark</span></div>
-                  <div class="color-block" style="background-color: var(--brand-dark);"></div>
-                  <div class="token-block"><span class="token-tag">brand-light</span></div>
-                  <div class="color-block" style="background-color: var(--brand-light);"></div>
-                  <div class="token-block"><span class="token-tag">brand-accent</span></div>
-                  <div class="color-block" style="background-color: var(--brand-accent);"></div>
-                </div>
-              </div>
-
-              <!-- Base Colors -->
-              <div class="color-collection grid cols-3 gap-medium">
-                <!-- Base Colors - White -->
-                <div class="color-group block gap-medium">
-                  <h3>Base Colors - White</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">white</span></div>
-                    <div class="color-block" style="background-color: var(--white);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-5</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-5);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-10</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-10);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-15</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-15);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-20</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-20);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-30</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-30);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-40</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-40);"></div>
-                    <div class="token-block"><span class="token-tag">white-alpha-50</span></div>
-                    <div class="color-block" style="background-color: var(--white-alpha-50);"></div>
-                  </div>
-                </div>
-                <!-- Base Colors - Black -->
-                <div class="color-group block gap-medium">
-                  <h3>Base Colors - Black</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">black</span></div>
-                    <div class="color-block" style="background-color: var(--black);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-5</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-5);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-10</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-10);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-15</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-15);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-20</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-20);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-30</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-30);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-40</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-40);"></div>
-                    <div class="token-block"><span class="token-tag">black-alpha-50</span></div>
-                    <div class="color-block" style="background-color: var(--black-alpha-50);"></div>
-                  </div>
-                </div>
-                <!-- Neutral Colors -->
-                <div class="color-group block gap-medium">
-                  <h3>Neutral Colors</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">neutral-50</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-50);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-100</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-100);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-150</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-150);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-200</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-200);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-300</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-300);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-400</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-400);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-500</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-500);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-600</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-600);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-700</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-700);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-800</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-800);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-900</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-900);"></div>
-                    <div class="token-block"><span class="token-tag">neutral-950</span></div>
-                    <div class="color-block" style="background-color: var(--neutral-950);"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="color-collection grid gap-medium">
-                <!-- Text Colors -->
-                <div class="block gap-medium">
-                  <h3>Text Colors</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">text-primary</span></div>
-                    <div class="color-block" style="background-color: var(--text-primary);"></div>
-                    <div class="token-block"><span class="token-tag">text-secondary</span></div>
-                    <div class="color-block" style="background-color: var(--text-secondary);"></div>
-                    <div class="token-block"><span class="token-tag">text-plain</span></div>
-                    <div class="color-block" style="background-color: var(--text-plain);"></div>
-                    <div class="token-block"><span class="token-tag">text-faded</span></div>
-                    <div class="color-block" style="background-color: var(--text-faded);"></div>
-                    <div class="token-block"><span class="token-tag">text-accent</span></div>
-                    <div class="color-block" style="background-color: var(--text-accent);"></div>
-                    <div class="token-block"><span class="token-tag">text-link</span></div>
-                    <div class="color-block" style="background-color: var(--text-link);"></div>
-                  </div>
-                </div>
-
-                <!-- Background Colors -->
-                <div class="block gap-medium">
-                  <h3>Background Colors</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">background-primary</span></div>
-                    <div class="color-block" style="background-color: var(--background-primary);"></div>
-                    <div class="token-block"><span class="token-tag">background-secondary</span></div>
-                    <div class="color-block" style="background-color: var(--background-secondary);"></div>
-                    <div class="token-block"><span class="token-tag">background-plain</span></div>
-                    <div class="color-block" style="background-color: var(--background-plain);"></div>
-                    <div class="token-block"><span class="token-tag">background-faded</span></div>
-                    <div class="color-block" style="background-color: var(--background-faded);"></div>
-                  </div>
-                </div>
-
-                <!-- Border Colors -->
-                <div class="color-group block gap-medium">
-                  <h3>Border Colors</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">border-primary</span></div>
-                    <div class="color-block" style="background-color: var(--border-primary);"></div>
-                    <div class="token-block"><span class="token-tag">border-secondary</span></div>
-                    <div class="color-block" style="background-color: var(--border-secondary);"></div>
-                    <div class="token-block"><span class="token-tag">border-faded</span></div>
-                    <div class="color-block" style="background-color: var(--border-faded);"></div>
-                  </div>
-                </div>
-
-                <!-- Button Colors -->
-                <div class="color-group block gap-medium">
-                  <h3>Button Colors</h3>
-                  <div class="grid token-col border border-secondary ">
-                    <div class="token-block"><span class="token-tag">button-primary</span></div>
-                    <div class="color-block" style="background-color: var(--button-primary);"></div>
-                    <div class="token-block"><span class="token-tag">button-text</span></div>
-                    <div class="color-block" style="background-color: var(--button-text);"></div>
-                    <div class="token-block"><span class="token-tag">button-faded</span></div>
-                    <div class="color-block" style="background-color: var(--button-faded);"></div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Status Colors -->
-              <div class="block gap-medium">
-                <h3>Status Colors</h3>
-                <div class="grid token-col border border-secondary ">
-                  <div class="token-block"><span class="token-tag">status-info</span></div>
-                  <div class="color-block" style="background-color: var(--status-info);"></div>
-                  <div class="token-block"><span class="token-tag">status-success</span></div>
-                  <div class="color-block" style="background-color: var(--status-success);"></div>
-                  <div class="token-block"><span class="token-tag">status-warning</span></div>
-                  <div class="color-block" style="background-color: var(--status-warning);"></div>
-                  <div class="token-block"><span class="token-tag">status-danger</span></div>
-                  <div class="color-block" style="background-color: var(--status-danger);"></div>
-                  <div class="token-block"><span class="token-tag">status-accent</span></div>
-                  <div class="color-block" style="background-color: var(--status-accent);"></div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Typography -->
-      <section class="top-medium bottom-medium border-bottom border-secondary">
-        <div class="padding-global">
-          <div class="container-medium">
-            <article>
-              <h2 class="eyebrow">Typography</h2>
-              <span class="token-tag">Heading 1</span>
-              <h1>Your Primary Headline, Big, Bold, and Unmissable</h1>
-              <span class="token-tag">Heading 2</span>
-              <h2>Supporting Headline to Guide Your Content</h2>
-              <span class="token-tag">Heading 3</span>
-              <h3>Section Headings to Keep Content Organised</h3>
-              <span class="token-tag">Heading 4</span>
-              <h4>Smaller Subheading for Detailed Content Organisation</h4>
-              <span class="token-tag">Paragraph</span>
-              <p>
-                This paragraph demonstrates how body text will look across your layout. <strong>Bold text</strong>
-                adds emphasis, while <em>italics</em> offer a subtle highlight. You can also use
-                <del>strikethrough</del> to show edits. This is an entire paragraph to test readability and text flow.
-              </p>
-
-              <p>
-                This example paragraph demonstrates how hyperlinks appear within body text. When designing your
-                layout, consider how <a href="https://example.com">linked text</a> stands out from regular content.
-              </p>
-              <span class="token-tag">Text sizes — fluid vw on desktop, rem at ≤991px</span>
-              <p class="text-size-xl">
-                <code>.text-size-xl</code> — 2vw desktop, 28px tablet. Lead paragraph or callout-sized body.
-              </p>
-              <p class="text-size-l">
-                <code>.text-size-l</code> — 1.5vw desktop, 22px tablet. Larger body copy.
-              </p>
-              <p class="text-size-m">
-                <code>.text-size-m</code> — 1.25vw desktop, 18px tablet. Body default.
-              </p>
-              <p class="text-size-s">
-                <code>.text-size-s</code> — 1.1vw desktop, 16px tablet. Captions and small print.
-              </p>
-              <span class="token-tag">Eyebrow</span>
-              <p class="eyebrow">Eyebrow Text</p>
-
-              <span class="token-tag">Blockquote</span>
-              <blockquote>
-                Words matter, but how those words are presented matters just as much. Typography transforms content from
-                mundane to magical, from ordinary to extraordinary.
-              </blockquote>
-
-              <span class="token-tag">Unordered List</span>
-              <ul>
-                <li>Unordered lists help organize related items without hierarchy</li>
-                <li>Perfect for showing features, benefits, or options</li>
-                <li>Allows readers to quickly scan through content</li>
-                <li>Keep items concise and parallel in structure</li>
-              </ul>
-              <span class="token-tag">Ordered List</span>
-              <ol>
-                <li>Use headings to create a visual hierarchy.</li>
-                <li>Structure content with clear lists.</li>
-                <li>Guide readers step-by-step with ordered items.</li>
-                <li>Keep everything neat and easy to follow.</li>
-              </ol>
-              <span class="token-tag">Link</span>
-              <p>For further information, check out <a href="#">this link</a>, which will take you to another page.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- Buttons -->
-      <section class="top-medium bottom-medium border-bottom border-secondary">
-        <div class="padding-global">
-          <div class="container-medium">
-            <div class="block gap-none">
-              <div class="block gap-large">
-                <h2 class="eyebrow">Buttons</h2>
-
-                <p class="text-size-s">Token-driven button. Variants and sizes are set with <code>data-*</code> attributes; <code>--button-color</code> drives background, border, and faded fill.</p>
-
-                <span class="token-tag">.button (default)</span>
-                <button class="button">Button</button>
-
-                <span class="token-tag">data-variant exceptions</span>
-                <div class="button-group">
-                  <button class="button" data-variant="outline">Outline</button>
-                  <button class="button" data-variant="faded">Faded</button>
-                  <button class="button" data-variant="outline-faded">Outline faded</button>
-                  <button class="button" data-variant="transparent">Transparent</button>
-                  <button class="button" data-variant="text">Text</button>
-                </div>
-
-                <span class="token-tag">data-size</span>
-                <div class="button-group">
-                  <button class="button">Default</button>
-                  <button class="button" data-size="small">Small</button>
-                  <button class="button" data-size="xsmall">X-small</button>
-                </div>
-
-                <span class="token-tag">data-icon-only</span>
-                <button class="button" data-icon-only aria-label="Add">
-                  <span class="svg-icn">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11 15C11 13.8954 10.1046 13 9 13H4V11H9C10.1046 11 11 10.1046 11 9V4H13V9C13 10.1046 13.8954 11 15 11H20V13H15C13.8954 13 13 13.8954 13 15V20H11V15Z" fill="currentColor" />
-                    </svg>
-                  </span>
-                </button>
-
-                <span class="token-tag">states: disabled / loading</span>
-                <div class="button-group">
-                  <button class="button" disabled>Disabled</button>
-                  <button class="button is-loading">Loading</button>
-                </div>
-
-                <span class="token-tag">data-full-width</span>
-                <button class="button" data-full-width>Full width</button>
+                <div class="container-small sg-demo-frame"><span class="sg-value">.container-small (640px)</span></div>
+                <div class="container-medium sg-demo-frame"><span class="sg-value">.container-medium (56vw)</span></div>
+                <div class="container-large sg-demo-frame"><span class="sg-value">.container-large (60vw)</span></div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Form Elements -->
+      <!-- ============ LAYOUT: BLOCK & GAPS ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="container-medium">
+          <div class="container-xl">
             <div class="block gap-large">
-              <h2 class="eyebrow">Form Elements</h2>
-
-              <div class="block gap-small">
-                <span class="token-tag">label + input[type="text"]</span>
-                <div class="form-group">
-                  <label for="demo-text">Text input</label>
-                  <input type="text" id="demo-text" placeholder="Placeholder text">
-                </div>
-              </div>
-
-              <div class="block gap-small">
-                <span class="token-tag">label + input[type="email"]</span>
-                <div class="form-group">
-                  <label for="demo-email">Email input</label>
-                  <input type="email" id="demo-email" placeholder="name@example.com">
-                </div>
-              </div>
-
-              <div class="block gap-small">
-                <span class="token-tag">label + textarea</span>
-                <div class="form-group">
-                  <label for="demo-textarea">Textarea</label>
-                  <textarea id="demo-textarea" placeholder="Enter longer text here..."></textarea>
-                </div>
-              </div>
-
-              <div class="block gap-small">
-                <span class="token-tag">label + select</span>
-                <div class="form-group">
-                  <label for="demo-select">Select</label>
-                  <select id="demo-select">
-                    <option value="" disabled selected>Choose an option</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="block gap-small">
-                <span class="token-tag">input:disabled</span>
-                <div class="form-group">
-                  <label for="demo-disabled">Disabled input</label>
-                  <input type="text" id="demo-disabled" value="Cannot edit this" disabled>
-                </div>
-              </div>
-
+              <h2 class="eyebrow">Layout — block &amp; gaps</h2>
+              <p class="sg-note"><code>.block</code> is a vertical flex stack; <code>.row</code> turns it horizontal; <code>.gap-*</code> and the alignment classes are combos on top.</p>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.block</code></td><td><div class="block sg-demo-frame"><div class="sg-fill">One</div><div class="sg-fill">Two</div><div class="sg-fill">Three</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.block</code><code class="sg-chip" data-sg-kind="combo">.gap-none</code></div></td><td><div class="block gap-none sg-demo-frame"><div class="sg-fill">One</div><div class="sg-fill">Two</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.block</code><code class="sg-chip" data-sg-kind="combo">.gap-large</code></div></td><td><div class="block gap-large sg-demo-frame"><div class="sg-fill">One</div><div class="sg-fill">Two</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.block</code><code class="sg-chip" data-sg-kind="combo">.row</code><code class="sg-chip" data-sg-kind="combo">.gap-xlarge</code></div></td><td><div class="block row gap-xlarge sg-demo-frame"><div class="sg-fill">Left</div><div class="sg-fill">Right</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.gap-xsmall</code><code class="sg-chip" data-sg-kind="combo">.gap-small</code><code class="sg-chip" data-sg-kind="combo">.gap-medium</code><code class="sg-chip" data-sg-kind="combo">.gap-large</code><code class="sg-chip" data-sg-kind="combo">.gap-xlarge</code><code class="sg-chip" data-sg-kind="combo">.gap-2xlarge</code></div></td><td><span class="sg-value">Gap scale → --space-xs … --space-3xl</span></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.row-reverse</code><code class="sg-chip" data-sg-kind="combo">.align-start</code><code class="sg-chip" data-sg-kind="combo">.align-center</code><code class="sg-chip" data-sg-kind="combo">.align-end</code><code class="sg-chip" data-sg-kind="combo">.justify-start</code><code class="sg-chip" data-sg-kind="combo">.justify-center</code><code class="sg-chip" data-sg-kind="combo">.justify-end</code><code class="sg-chip" data-sg-kind="combo">.justify-between</code></div></td><td><span class="sg-value">Flex direction + alignment combos</span></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Blocks & Gaps -->
+      <!-- ============ LAYOUT: GRID UTILITY ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="container-medium">
+          <div class="container-xl">
             <div class="block gap-large">
-              <h2 class="eyebrow">Blocks & Gaps</h2>
-
-              <span class="token-tag">block</span>
-              <div class="block border border-secondary" style="padding: 1rem;">
-                <p>First item</p>
-                <p>Second item</p>
-                <p>Third item</p>
-              </div>
-
-              <span class="token-tag">block gap-none</span>
-              <div class="block gap-none border border-secondary" style="padding: 1rem;">
-                <p>First item</p>
-                <p>Second item</p>
-                <p>Third item</p>
-              </div>
-
-              <span class="token-tag">block gap-xsmall</span>
-              <div class="block gap-xsmall border border-secondary" style="padding: 1rem;">
-                <p>First item</p>
-                <p>Second item</p>
-                <p>Third item</p>
-              </div>
-
-              <span class="token-tag">block gap-large</span>
-              <div class="block gap-large border border-secondary" style="padding: 1rem;">
-                <p>First item</p>
-                <p>Second item</p>
-                <p>Third item</p>
-              </div>
-
-              <span class="token-tag">block gap-xlarge</span>
-              <div class="block gap-xlarge border border-secondary" style="padding: 1rem;">
-                <p>First item</p>
-                <p>Second item</p>
-                <p>Third item</p>
-              </div>
-
-              <span class="token-tag">block row gap-xlarge</span>
-              <div class="block row gap-xlarge border border-secondary" style="padding: 1rem;">
-                <p>Left</p>
-                <p>Right</p>
-              </div>
-
+              <h2 class="eyebrow">Layout — grid utility</h2>
+              <p class="sg-note">Simple equal-column grid. <code>.grid</code> is 2 columns; <code>.cols-3</code>/<code>.cols-4</code> are combos. (For the editorial 12-column system see Data grid below.)</p>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.grid</code></td><td><div class="grid sg-demo-frame"><div class="sg-fill">1</div><div class="sg-fill">2</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.grid</code><code class="sg-chip" data-sg-kind="combo">.cols-3</code></div></td><td><div class="grid cols-3 sg-demo-frame"><div class="sg-fill">1</div><div class="sg-fill">2</div><div class="sg-fill">3</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.grid</code><code class="sg-chip" data-sg-kind="combo">.cols-4</code></div></td><td><div class="grid cols-4 sg-demo-frame"><div class="sg-fill">1</div><div class="sg-fill">2</div><div class="sg-fill">3</div><div class="sg-fill">4</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.grid</code><code class="sg-chip" data-sg-kind="combo">.cols-3</code><code class="sg-chip" data-sg-kind="combo">.gap-xlarge</code></div></td><td><div class="grid cols-3 gap-xlarge sg-demo-frame"><div class="sg-fill">1</div><div class="sg-fill">2</div><div class="sg-fill">3</div></div></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Grid -->
+      <!-- ============ LAYOUT: DATA-GRID (12-col) ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="container-medium">
+          <div class="container-xl">
             <div class="block gap-large">
-              <h2 class="eyebrow">Grid</h2>
-
-              <span class="token-tag">grid</span>
-              <div class="grid border border-secondary border-dashed padding-large">
-                <div class="background-color-faded padding-medium">Item 1</div>
-                <div class="background-color-faded padding-medium">Item 2</div>
-                <div class="background-color-faded padding-medium">Item 3</div>
-                <div class="background-color-faded padding-medium">Item 4</div>
-              </div>
-
-              <span class="token-tag">grid cols-3</span>
-              <div class="grid cols-3 border border-secondary border-dashed padding-large">
-                <div class="background-color-faded padding-medium">Item 1</div>
-                <div class="background-color-faded padding-medium">Item 2</div>
-                <div class="background-color-faded padding-medium">Item 3</div>
-                <div class="background-color-faded padding-medium">Item 4</div>
-                <div class="background-color-faded padding-medium">Item 5</div>
-                <div class="background-color-faded padding-medium">Item 6</div>
-              </div>
-
-              <span class="token-tag">grid cols-4</span>
-              <div class="grid cols-4 border border-secondary border-dashed padding-large">
-                <div class="background-color-faded padding-medium">Item 1</div>
-                <div class="background-color-faded padding-medium">Item 2</div>
-                <div class="background-color-faded padding-medium">Item 3</div>
-                <div class="background-color-faded padding-medium">Item 4</div>
-                <div class="background-color-faded padding-medium">Item 5</div>
-                <div class="background-color-faded padding-medium">Item 6</div>
-                <div class="background-color-faded padding-medium">Item 7</div>
-                <div class="background-color-faded padding-medium">Item 8</div>
-              </div>
-
-              <span class="token-tag">grid cols-3 gap-xlarge</span>
-              <div class="grid cols-3 gap-xlarge border border-secondary border-dashed padding-large">
-                <div class="background-color-faded padding-medium">Item 1</div>
-                <div class="background-color-faded padding-medium">Item 2</div>
-                <div class="background-color-faded padding-medium">Item 3</div>
-                <div class="background-color-faded padding-medium">Item 4</div>
-                <div class="background-color-faded padding-medium">Item 5</div>
-                <div class="background-color-faded padding-medium">Item 6</div>
-              </div>
-
-              <span class="token-tag">grid cols-4 gap-small</span>
-              <div class="grid cols-4 gap-small border border-secondary border-dashed padding-large">
-                <div class="background-color-faded padding-medium">Item 1</div>
-                <div class="background-color-faded padding-medium">Item 2</div>
-                <div class="background-color-faded padding-medium">Item 3</div>
-                <div class="background-color-faded padding-medium">Item 4</div>
-                <div class="background-color-faded padding-medium">Item 5</div>
-                <div class="background-color-faded padding-medium">Item 6</div>
-                <div class="background-color-faded padding-medium">Item 7</div>
-                <div class="background-color-faded padding-medium">Item 8</div>
-              </div>
+              <h2 class="eyebrow">Layout — data-grid (12-column)</h2>
+              <p class="sg-note">Attribute-driven 12-column system. Webflow can't style by attribute, so the rules ship in <span class="sg-flag">global.css</span>; in Webflow add the attributes (<code>data-grid</code> on the parent, <code>data-col-span</code>/<code>data-col-start</code> or <code>data-layout</code>). Collapses to one column below 992px.</p>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="attr">data-grid</code><code class="sg-chip" data-sg-kind="attr">data-col-span="6"</code><code class="sg-chip" data-sg-kind="attr">data-col-start="9"</code></div></td><td><div data-grid><div class="sg-fill" data-col-span="6">span 6</div><div class="sg-fill" data-col-span="4" data-col-start="9">span 4 · start 9</div><div class="sg-fill">full-width row</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="attr">data-grid</code><code class="sg-chip" data-sg-kind="attr">data-layout="split"</code></div></td><td><div data-grid data-layout="split"><div class="sg-fill">Left (6)</div><div class="sg-fill">Right (6)</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="attr">data-grid</code><code class="sg-chip" data-sg-kind="attr">data-layout="thirds"</code></div></td><td><div data-grid data-layout="thirds"><div class="sg-fill">One</div><div class="sg-fill">Two</div><div class="sg-fill">Three</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="attr">data-grid</code><code class="sg-chip" data-sg-kind="attr">data-layout="feature"</code></div></td><td><div data-grid data-layout="feature"><div class="sg-fill">Minor (4)</div><div class="sg-fill">Major (8)</div></div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="attr">data-layout="feature-alt"</code><code class="sg-chip" data-sg-kind="attr">data-layout="headline"</code><code class="sg-chip" data-sg-kind="attr">data-layout="masthead"</code><code class="sg-chip" data-sg-kind="attr">data-layout="spotlight"</code></div></td><td><span class="sg-value">Other presets: 8·4 · 3·6·3. <code>data-stack-order</code> promotes a child earlier on mobile (visual only).</span></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Borders -->
+      <!-- ============ BORDERS ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="container-medium">
+          <div class="container-xl">
             <div class="block gap-large">
               <h2 class="eyebrow">Borders</h2>
-
-              <span class="token-tag">.border .border-primary</span>
-              <div class="border border-primary padding-large">Primary border</div>
-
-              <span class="token-tag">.border .border-secondary</span>
-              <div class="border border-secondary padding-large">Secondary border</div>
-
-              <span class="token-tag">.border .border-faded</span>
-              <div class="border border-faded padding-large">Faded border</div>
-
-              <span class="token-tag">.border-top .border-medium .border-dashed</span>
-              <div class="border-top border-medium border-dashed padding-large">Dashed top, medium width</div>
-
-              <span class="token-tag">.border .border-large .border-dotted</span>
-              <div class="border border-large border-dotted padding-large">Dotted, large width</div>
+              <p class="sg-note">Structural class sets the side; width / style / colour are combos layered on top.</p>
+              <table class="sg-table">
+                <thead><tr><th>Token</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.border</code><code class="sg-chip" data-sg-kind="combo">.border-primary</code></div></td><td><div class="border border-primary padding-large">Primary border</div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.border</code><code class="sg-chip" data-sg-kind="combo">.border-secondary</code></div></td><td><div class="border border-secondary padding-large">Secondary border</div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.border</code><code class="sg-chip" data-sg-kind="combo">.border-faded</code></div></td><td><div class="border border-faded padding-large">Faded border</div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.border-top</code><code class="sg-chip" data-sg-kind="combo">.border-medium</code><code class="sg-chip" data-sg-kind="combo">.border-dashed</code></div></td><td><div class="border-top border-medium border-dashed padding-large">Dashed top, medium width</div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.border</code><code class="sg-chip" data-sg-kind="combo">.border-large</code><code class="sg-chip" data-sg-kind="combo">.border-dotted</code></div></td><td><div class="border border-large border-dotted padding-large">Dotted, large width</div></td></tr>
+                  <tr><td><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="class">.border-bottom</code><code class="sg-chip" data-sg-kind="class">.border-left</code><code class="sg-chip" data-sg-kind="class">.border-right</code></div></td><td><span class="sg-value">Other side classes</span></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Containers -->
+      <!-- ============ BACKGROUND-COLOR UTILITIES ============ -->
       <section class="top-medium bottom-medium border-bottom border-secondary">
         <div class="padding-global">
-          <div class="block gap-large">
-            <div class="container-medium">
-              <h2 class="eyebrow">Containers</h2>
-            </div>
-
-            <div class="container-small border border-dashed border-secondary padding-xlarge ">
-              <span class="token-tag">container-small</span>
-            </div>
-            <div class="container-medium align-center border border-dashed border-secondary padding-xlarge ">
-              <span class="token-tag">container-medium</span>
-            </div>
-            <div class="container-large border border-dashed border-secondary padding-xlarge ">
-              <span class="token-tag">container-large</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="max-width-full">
-          <div class="block gap-large">
-            <div class="container-medium">
-              <h2 class="eyebrow">Max Width</h2>
-            </div>
-
-            <div class="max-width-medium border border-dashed border-secondary padding-xlarge ">
-              <span class="token-tag">max-width-medium</span>
-            </div>
-
-            <div class="max-width-large border border-dashed border-secondary padding-xlarge ">
-              <span class="token-tag">max-width-large</span>
-            </div>
-
-            <div class="max-width-full border border-dashed border-secondary padding-xlarge ">
-              <span class="token-tag">max-width-full</span>
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2 class="eyebrow">Background-color utilities</h2>
+              <p class="sg-note">Applyable classes (the brand surfaces also set a matching text colour).</p>
+              <table class="sg-table">
+                <thead><tr><th>Class</th><th>Example</th></tr></thead>
+                <tbody>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-primary</code></td><td><div class="background-color-primary border border-faded padding-large">Primary</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-secondary</code></td><td><div class="background-color-secondary padding-large">Secondary</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-white</code></td><td><div class="background-color-white border border-faded padding-large">White</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-faded</code></td><td><div class="background-color-faded padding-large">Faded</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-green</code></td><td><div class="background-color-green padding-large">Green</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-orange</code></td><td><div class="background-color-orange padding-large">Orange</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-blue</code></td><td><div class="background-color-blue padding-large">Blue</div></td></tr>
+                  <tr><td><code class="sg-chip" data-sg-kind="class">.background-color-dark</code></td><td><div class="background-color-dark padding-large">Dark</div></td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Section Spacing -->
+      <!-- ============ STICKERS ============ -->
       <section class="top-medium bottom-medium">
         <div class="padding-global">
-          <div class="container-medium">
+          <div class="container-xl">
             <div class="block gap-large">
-              <h2 class="eyebrow">Section Spacing</h2>
+              <h2 class="eyebrow">Stickers</h2>
+              <p class="sg-note">Two modes. <strong>Add</strong> injects artwork via <code>::before</code> beside a word; <strong>Swap</strong> replaces a transparent glyph with the image (SR/SEO/SplitText-safe). Both rely on <code>::before</code>/background-image + per-sticker geometry → not natively styleable, so they ship in <span class="sg-flag">global.css</span>. In Webflow apply <code>.sticker-add</code>/<code>.sticker-swap</code> + the per-sticker combo class.</p>
 
-              <p>
-                Section spacing is controlled using combo classes on the <code>&lt;section&gt;</code> element.
-                These classes apply vertical padding using the section spacing variables.
-              </p>
-
-              <div class="block gap-none border border-dashed border-secondary">
-                <div class="block top-small background-color-faded"></div>
-                <div class="block padding-xlarge">
-                  <span class="token-tag">top-small</span>
-                </div>
+              <h3>Add mode <span class="sg-value">(.sticker-add + combo)</span></h3>
+              <div class="sg-sticker-grid">
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-book">book</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-book</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-coffee">coffee</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-coffee</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-disco-ball">disco</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-disco-ball</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-heart">heart</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-heart</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-megaphone">megaphone</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-megaphone</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-post-social">post</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-post-social</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-shine">shine</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-shine</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-slot-machine">slot</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-slot-machine</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-smiley">smiley</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-smiley</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-smiley-side">side</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-smiley-side</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-smiley-up">up</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-smiley-up</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-sparkle">sparkle</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-sparkle</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-burrito">burrito</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-burrito</code></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-coffee-cup">cup</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-coffee-cup</code></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-eye">eye</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-eye</code></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-margarita">margarita</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-margarita</code></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-phone">phone</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-phone</code></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-slot-green">slot</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-slot-green</code></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">Word <span class="sticker-add sticker-speech">speech</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-speech</code></div></div>
               </div>
 
-              <div class="block gap-none border border-dashed border-secondary">
-                <div class="block top-medium background-color-faded"></div>
-                <div class="block padding-xlarge">
-                  <span class="token-tag">top-medium</span>
-                </div>
+              <h3>Swap mode <span class="sg-value">(.sticker-swap + combo; .sticker-box = fixed square)</span></h3>
+              <div class="sg-sticker-grid">
+                <div class="sg-sticker"><span class="sg-sticker-demo"><span class="sticker-swap sticker-logo">logo</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-logo</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo"><span class="sticker-swap sticker-you">you</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-you</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo">l<span class="sticker-swap sticker-o">o</span>ng</span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-o</code><span class="sg-used">Used in build</span></div></div>
+                <div class="sg-sticker"><span class="sg-sticker-demo"><span class="sticker-swap sticker-l">L</span></span><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-l</code></div></div>
               </div>
 
-              <div class="block gap-none border border-dashed border-secondary">
-                <div class="block top-large background-color-faded"></div>
-                <div class="block padding-xlarge">
-                  <span class="token-tag">top-large</span>
-                </div>
-              </div>
-
-              <div class="block gap-none border border-dashed border-secondary">
-                <div class="block padding-xlarge">
-                  <span class="token-tag">bottom-small</span>
-                </div>
-                <div class="block bottom-small background-color-faded"></div>
-              </div>
-
-              <div class="block gap-none border border-dashed border-secondary">
-                <div class="block padding-xlarge">
-                  <span class="token-tag">bottom-medium</span>
-                </div>
-                <div class="block bottom-medium background-color-faded"></div>
-              </div>
-
-              <div class="block gap-none border border-dashed border-secondary">
-                <div class="block padding-xlarge">
-                  <span class="token-tag">bottom-large</span>
-                </div>
-                <div class="block bottom-large background-color-faded"></div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Data Grid -->
-      <section class="top-medium bottom-medium border-bottom border-secondary">
-        <div class="padding-global">
-          <div class="container-large">
-            <div class="block gap-large">
-              <h2 class="eyebrow">Data Grid</h2>
-              <p class="text-size-s">12-column grid via the <code>data-grid</code> attribute. Children use <code>data-col-span</code>/<code>data-col-start</code>, or the parent declares a <code>data-layout</code> preset. Collapses to one column below 992px.</p>
-
-              <span class="token-tag">data-col-span (6 · 4@9 · full)</span>
-              <div data-grid>
-                <div class="padding-medium background-color-faded" data-col-span="6">span 6</div>
-                <div class="padding-medium background-color-faded" data-col-span="4" data-col-start="9">span 4 · start 9</div>
-                <div class="padding-medium background-color-faded">full width row</div>
-              </div>
-
-              <span class="token-tag">data-layout="split" (6 · 6)</span>
-              <div data-grid data-layout="split">
-                <div class="padding-medium background-color-faded">Left</div>
-                <div class="padding-medium background-color-faded">Right</div>
-              </div>
-
-              <span class="token-tag">data-layout="thirds" (4 · 4 · 4)</span>
-              <div data-grid data-layout="thirds">
-                <div class="padding-medium background-color-faded">One</div>
-                <div class="padding-medium background-color-faded">Two</div>
-                <div class="padding-medium background-color-faded">Three</div>
-              </div>
-
-              <span class="token-tag">data-layout="feature" (4 · 8)</span>
-              <div data-grid data-layout="feature">
-                <div class="padding-medium background-color-faded">Minor</div>
-                <div class="padding-medium background-color-faded">Major</div>
+              <h3>Legacy placeholders <span class="sg-flag">do not rebuild</span></h3>
+              <p class="sg-note">Point at remote placeholder images. Swap to real artwork classes in markup, then remove — do not recreate these in Webflow.</p>
+              <div class="sg-sticker-grid">
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-about</code></div></div>
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-founded-1</code></div></div>
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-founded-2</code></div></div>
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-slot</code></div></div>
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-social</code></div></div>
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-speaker</code></div></div>
+                <div class="sg-sticker is-legacy"><div class="sg-chip-stack"><code class="sg-chip" data-sg-kind="combo">.sticker-out</code></div></div>
               </div>
             </div>
           </div>

@@ -21,8 +21,16 @@
      See HANDOVER.md "Pre-launch foot-guns" + WEBFLOW_CDN_LINKS.md for the pinned
      jsDelivr blocks and cache-busting (pin a tag/SHA, not @main). -->
 
-<!-- Design system + project styles (combined stylesheet) -->
+<!-- Design system + project styles — full spec + LOCAL PROTOTYPE only.
+     In production Webflow this is NOT shipped (its DS layer is built natively:
+     Variables + classes). Kept here for the local prototype render. -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/style.css">
+
+<!-- Can't-be-native layer (buttons, [data-grid], stickers) — SHIPS to production.
+     Uses the --token custom properties; resolves from style.css while it loads
+     alongside. Full-native end state: drop style.css above + paste the :root
+     token block here as a <style> embed so global.css's tokens still resolve. -->
+<link rel="stylesheet" href="http://localhost:2000/assets/css/global.css">
 
 <!-- BD Animations FOUC rules (must follow the .js classList.add script above) -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/bd-animations.css">

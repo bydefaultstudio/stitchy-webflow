@@ -1,0 +1,286 @@
+/* ============================================================
+   STYLEGUIDE — page-only demo chrome.  DO NOT SHIP SITE-WIDE.
+   ------------------------------------------------------------
+   Loaded ONLY by styleguide.html (and the hidden Webflow
+   styleguide page, as page-level Custom Code). Every selector
+   here is `sg-`-namespaced and must NEVER be recreated as a
+   Webflow class — it is scaffolding for the manifest, not part
+   of the design system. Production styles live in style.css;
+   the can't-be-native layer ships in global.css.
+   Depends on style.css for tokens (loaded first).
+   ============================================================ */
+
+/* ------ PAGE RHYTHM ------ */
+
+.sg-lead {
+  color: var(--text-secondary);
+  max-width: 60ch;
+}
+
+.sg-note {
+  color: var(--text-secondary);
+  font-size: var(--font-s);
+  max-width: 70ch;
+  margin: 0;
+}
+
+.sg-note code {
+  font-size: 0.95em;
+  background-color: var(--background-faded);
+  padding: 0 var(--space-2xs);
+  border-radius: var(--radius-xs);
+}
+
+/* ------ LEGEND (how to read this page) ------ */
+
+.sg-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s) var(--space-xl);
+  padding: var(--space-l);
+  border: var(--border-s) solid var(--border-faded);
+  border-radius: var(--radius-s);
+  background-color: var(--background-plain);
+}
+
+.sg-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-s);
+  font-size: var(--font-s);
+  color: var(--text-secondary);
+}
+
+/* ------ TOKEN → EXAMPLE TABLE ------ */
+
+.sg-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.sg-table th,
+.sg-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--space-l) var(--space-l) var(--space-l) 0;
+  border-bottom: var(--border-s) solid var(--border-faded);
+}
+
+.sg-table thead th {
+  font-size: var(--font-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-xl);
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--text-faded);
+  padding-top: 0;
+  padding-bottom: var(--space-s);
+}
+
+/* Two-column (Token | Example) default: narrow token column. */
+.sg-table th:first-child,
+.sg-table td:first-child {
+  width: 32%;
+  padding-right: var(--space-l);
+}
+
+/* Multi-column type table opts out of the fixed token-column width. */
+.sg-table.is-type {
+  table-layout: auto;
+}
+.sg-table.is-type th:first-child,
+.sg-table.is-type td:first-child {
+  width: auto;
+}
+.sg-table.is-type th,
+.sg-table.is-type td {
+  font-size: var(--font-s);
+}
+
+/* Collapse the demo's own top/bottom margins inside example cells. */
+.sg-table td > :first-child { margin-top: 0; }
+.sg-table td > :last-child { margin-bottom: 0; }
+
+/* ------ TOKEN CHIPS (build manifest contract) ------
+   Both the tint and the name format signal HOW each token is
+   built in Webflow — see the legend at the top of the page. */
+
+.sg-chip-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-xs);
+}
+
+.sg-chip {
+  display: inline-block;
+  font-family: var(--font-primary);
+  font-size: var(--font-2xs);
+  line-height: 1.4;
+  padding: var(--2xs) var(--s);
+  border: var(--border-s) solid var(--border-faded);
+  border-radius: var(--radius-xs);
+  background-color: var(--background-plain);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* Native — Webflow Variable. Subtle blue tint + path-style name. */
+.sg-chip[data-sg-kind="variable"] {
+  background-color: color-mix(in srgb, var(--brand-blue), transparent 82%);
+  border-color: color-mix(in srgb, var(--brand-blue), transparent 50%);
+}
+
+/* Native — class (value lives on the class). Plain chip. */
+.sg-chip[data-sg-kind="class"] {
+  background-color: var(--background-plain);
+}
+
+/* Native — combo class. Plain chip, leading + to read as "add on top". */
+.sg-chip[data-sg-kind="combo"]::before {
+  content: "+ ";
+  color: var(--text-faded);
+}
+
+/* Custom code → global.css (NOT natively styleable: attribute APIs,
+   ::before stickers, motion). Orange dashed = "ships as code". */
+.sg-chip[data-sg-kind="attr"] {
+  background-color: color-mix(in srgb, var(--brand-orange), transparent 88%);
+  border-color: color-mix(in srgb, var(--brand-orange), transparent 55%);
+  border-style: dashed;
+}
+
+/* Resolved value / CSS var, shown muted beneath a chip. */
+.sg-value {
+  font-size: var(--font-2xs);
+  color: var(--text-faded);
+}
+
+/* Inline "ships in global.css — not native" flag for whole sections. */
+.sg-flag {
+  display: inline-block;
+  font-size: var(--font-2xs);
+  font-weight: var(--font-weight-semi-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-xl);
+  color: var(--brand-orange);
+  border: var(--border-s) dashed color-mix(in srgb, var(--brand-orange), transparent 40%);
+  border-radius: var(--radius-xs);
+  padding: var(--2xs) var(--s);
+}
+
+/* ------ COLOR SWATCH ------ */
+
+.sg-swatch {
+  width: 100%;
+  min-width: 96px;
+  height: 56px;
+  border-radius: var(--radius-xs);
+  border: var(--border-s) solid var(--border-faded);
+}
+
+/* ------ SPACING BAR (width = the token value) ------ */
+
+.sg-bar {
+  height: var(--space-l);
+  background-color: var(--brand-green);
+  border-radius: var(--radius-xs);
+}
+
+/* ------ FILLER (layout / grid demo cells) ------ */
+
+.sg-fill {
+  background-color: var(--background-faded);
+  border: var(--border-s) solid var(--border-faded);
+  border-radius: var(--radius-xs);
+  padding: var(--space-m);
+  font-size: var(--font-2xs);
+  color: var(--text-secondary);
+}
+
+/* Dashed wrapper around layout demos so the demo boundary reads clearly. */
+.sg-demo-frame {
+  border: var(--border-s) dashed var(--border-secondary);
+  border-radius: var(--radius-s);
+  padding: var(--space-l);
+}
+
+/* ------ TYPE SPECIMEN (renders at the live token size) ------ */
+
+.sg-specimen {
+  display: block;
+  line-height: var(--line-height-s);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ------ STICKER GALLERY ------ */
+
+.sg-sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-l);
+}
+
+.sg-sticker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  padding: var(--space-l);
+  border: var(--border-s) solid var(--border-faded);
+  border-radius: var(--radius-s);
+  background-color: var(--background-plain);
+}
+
+.sg-sticker-demo {
+  font-size: var(--font-xl);
+  font-weight: var(--font-weight-semi-bold);
+}
+
+.sg-sticker.is-legacy {
+  opacity: 0.55;
+}
+
+/* ------ "USED IN BUILD" MARKER ------ */
+
+.sg-used {
+  display: inline-block;
+  font-size: var(--font-2xs);
+  font-weight: var(--font-weight-semi-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-xl);
+  color: var(--text-primary);
+  background-color: color-mix(in srgb, var(--brand-green), transparent 35%);
+  border-radius: var(--radius-xs);
+  padding: var(--2xs) var(--s);
+}
+
+/* ------ RESPONSIVE ------ */
+
+@media (max-width: 767px) {
+  .sg-table,
+  .sg-table thead,
+  .sg-table tbody,
+  .sg-table tr,
+  .sg-table th,
+  .sg-table td {
+    display: block;
+    width: 100%;
+  }
+  .sg-table thead {
+    display: none;
+  }
+  .sg-table td {
+    border-bottom: 0;
+    padding: var(--space-s) 0;
+  }
+  .sg-table tr {
+    border-bottom: var(--border-s) solid var(--border-faded);
+    padding: var(--space-m) 0;
+  }
+  .sg-table th:first-child,
+  .sg-table td:first-child {
+    width: 100%;
+    padding-right: 0;
+  }
+}

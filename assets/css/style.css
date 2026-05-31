@@ -586,14 +586,6 @@ section {
   justify-content: space-between;
 }
 
-.color-block {
-  border: var(--border-s) solid var(--border-faded);
-  aspect-ratio: 1/1;
-  height: 100%;
-  width: fit-content;
-  max-height: 100px;
-}
-
 /* ------ GRID ------ */
 
 /* -- Grid -- */
@@ -612,89 +604,11 @@ section {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-.token-col {
-  grid-template-columns: 1fr auto;
-  padding: var(--space-m);
-}
-
 .fit-content {
   width: fit-content;
 }
 
-/* -- 12-column data-grid (opt-in via the data-grid attribute) -- */
-[data-grid] {
-  display: grid;
-  container-type: inline-size;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: var(--grid-gap);
-  row-gap: var(--space-xl);
-  --grid-gap: var(--space-xl);
-}
-
-[data-grid] > * {
-  grid-column: 1 / -1;
-}
-
-[data-grid] > [data-col-span="1"]  { grid-column-end: span 1; }
-[data-grid] > [data-col-span="2"]  { grid-column-end: span 2; }
-[data-grid] > [data-col-span="3"]  { grid-column-end: span 3; }
-[data-grid] > [data-col-span="4"]  { grid-column-end: span 4; }
-[data-grid] > [data-col-span="5"]  { grid-column-end: span 5; }
-[data-grid] > [data-col-span="6"]  { grid-column-end: span 6; }
-[data-grid] > [data-col-span="7"]  { grid-column-end: span 7; }
-[data-grid] > [data-col-span="8"]  { grid-column-end: span 8; }
-[data-grid] > [data-col-span="9"]  { grid-column-end: span 9; }
-[data-grid] > [data-col-span="10"] { grid-column-end: span 10; }
-[data-grid] > [data-col-span="11"] { grid-column-end: span 11; }
-[data-grid] > [data-col-span="12"] { grid-column-end: span 12; }
-
-[data-grid] > [data-col-start="1"]  { grid-column-start: 1; }
-[data-grid] > [data-col-start="2"]  { grid-column-start: 2; }
-[data-grid] > [data-col-start="3"]  { grid-column-start: 3; }
-[data-grid] > [data-col-start="4"]  { grid-column-start: 4; }
-[data-grid] > [data-col-start="5"]  { grid-column-start: 5; }
-[data-grid] > [data-col-start="6"]  { grid-column-start: 6; }
-[data-grid] > [data-col-start="7"]  { grid-column-start: 7; }
-[data-grid] > [data-col-start="8"]  { grid-column-start: 8; }
-[data-grid] > [data-col-start="9"]  { grid-column-start: 9; }
-[data-grid] > [data-col-start="10"] { grid-column-start: 10; }
-[data-grid] > [data-col-start="11"] { grid-column-start: 11; }
-[data-grid] > [data-col-start="12"] { grid-column-start: 12; }
-
-/* -- Named layouts: split | feature | feature-alt | headline | thirds | masthead | spotlight -- */
-@media (min-width: 992px) {
-  [data-grid][data-layout="split"]       > :nth-child(1) { grid-column: 1 / span 6; }
-  [data-grid][data-layout="split"]       > :nth-child(2) { grid-column: 7 / span 6; }
-
-  [data-grid][data-layout="feature"]     > :nth-child(1) { grid-column: 1 / span 4; }
-  [data-grid][data-layout="feature"]     > :nth-child(2) { grid-column: 5 / span 8; }
-
-  [data-grid][data-layout="feature-alt"] > :nth-child(1),
-  [data-grid][data-layout="headline"]    > :nth-child(1) { grid-column: 1 / span 8; }
-  [data-grid][data-layout="feature-alt"] > :nth-child(2),
-  [data-grid][data-layout="headline"]    > :nth-child(2) { grid-column: 9 / span 4; }
-
-  [data-grid][data-layout="thirds"]      > :nth-child(1) { grid-column: 1 / span 4; }
-  [data-grid][data-layout="thirds"]      > :nth-child(2) { grid-column: 5 / span 4; }
-  [data-grid][data-layout="thirds"]      > :nth-child(3) { grid-column: 9 / span 4; }
-
-  [data-grid][data-layout="masthead"]    > :nth-child(1),
-  [data-grid][data-layout="spotlight"]   > :nth-child(1) { grid-column: 1 / span 3; }
-  [data-grid][data-layout="masthead"]    > :nth-child(2),
-  [data-grid][data-layout="spotlight"]   > :nth-child(2) { grid-column: 4 / span 6; }
-  [data-grid][data-layout="masthead"]    > :nth-child(3),
-  [data-grid][data-layout="spotlight"]   > :nth-child(3) { grid-column: 10 / span 3; }
-}
-
-/* -- Mobile collapse: every data-grid → single column < 992px. data-stack-order promotes a child earlier (visual only). -- */
-@media (max-width: 991px) {
-  [data-grid] {
-    grid-template-columns: 1fr;
-  }
-  [data-grid] > [data-stack-order="1"] { order: -3; }
-  [data-grid] > [data-stack-order="2"] { order: -2; }
-  [data-grid] > [data-stack-order="3"] { order: -1; }
-}
+/* -- 12-column [data-grid] system → moved to global.css (attribute selectors; not natively styleable in Webflow). Simple .grid/.cols-* utilities above stay native. -- */
 
 /* ------ BORDER UTILITIES ------ */
 
@@ -807,24 +721,6 @@ section {
   text-transform: uppercase;
 }
 
-
-
-/* -- Token labels -- */
-.token-tag {
-  display: inline-block;
-  font-size: var(--font-2xs);
-  font-family: var(--font-tertiary);
-  color: var(--text-plain);
-  background-color: var(--background-faded);
-  padding: var(--2xs) var(--s);
-  align-self: flex-start;
-  margin-bottom: var(--space-m);
-}
-
-.token-block {
-  padding: var(--space-s) 0;
-}
-
 /* -- Eyebrow -- */
 .eyebrow {
   font-family: var(--font-primary);
@@ -891,148 +787,7 @@ section {
   white-space: normal;
 }
 
-/* -- Button (API: data-variant | data-size | data-icon-only | data-full-width) -- */
-.button,
-button.button {
-  --button-color: var(--text-primary);
-  --button-faded: color-mix(in srgb, var(--button-color), var(--alpha-10));
-  --button-bg: var(--button-color);
-  --button-border: var(--button-color);
-  --button-text-color: var(--text-inverted);
-  --button-font: var(--font-primary);
-  --button-text-size: var(--font-m);
-  --button-padding-y: var(--space-l);
-  --button-padding-x: var(--space-xl);
-  --button-gap: var(--space-s);
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--button-gap);
-  padding: var(--button-padding-y) var(--button-padding-x);
-  background-color: var(--button-bg);
-  border: var(--border-s) solid var(--button-border);
-  border-radius: var(--radius-s);
-  font-family: var(--button-font);
-  font-size: var(--button-text-size);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-s);
-  text-transform: none;
-  text-decoration: none;
-  color: var(--button-text-color);
-
-  --icon-size: 0.8em;
-
-  cursor: pointer;
-  transition: background-color var(--duration-m) var(--ease-out), color var(--duration-2xs) var(--ease-out), border-color var(--duration-2xs) var(--ease-out), opacity var(--duration-2xs) var(--ease-out), transform var(--duration-2xs) var(--ease-out);
-}
-
-.button:hover {
-  --button-color: color-mix(in srgb, var(--text-primary), var(--background-primary) 10%);
-}
-
-.button:active {
-  transform: scale(0.98);
-}
-
-/* -- Variants -- */
-.button[data-variant="outline"] {
-  --button-bg: transparent;
-  --button-text-color: var(--button-color);
-}
-
-.button[data-variant="faded"] {
-  --button-bg: var(--button-faded);
-  --button-border: transparent;
-  --button-text-color: var(--button-color);
-}
-
-.button[data-variant="outline-faded"] {
-  --button-bg: transparent;
-  --button-border: var(--button-faded);
-  --button-text-color: var(--button-color);
-}
-
-.button[data-variant="transparent"] {
-  --button-bg: transparent;
-  --button-border: transparent;
-  --button-text-color: var(--button-color);
-}
-
-.button[data-variant="text"] {
-  --button-bg: transparent;
-  --button-border: transparent;
-  --button-text-color: var(--button-color);
-  --button-padding-x: 0;
-  --button-padding-y: 0;
-}
-
-.button[data-variant="text"]:hover {
-  text-decoration: underline;
-  text-underline-offset: 2.5px;
-}
-
-.button[data-variant="text"]:active {
-  transform: none;
-}
-
-/* Unfilled variants: subtle fill on hover instead of darkening transparent */
-.button[data-variant="outline"]:hover,
-.button[data-variant="faded"]:hover,
-.button[data-variant="outline-faded"]:hover,
-.button[data-variant="transparent"]:hover {
-  background-color: color-mix(in srgb, var(--button-color), var(--alpha-5));
-}
-
-/* -- Sizes -- */
-.button[data-size="small"] {
-  --button-padding-y: var(--space-s);
-  --button-padding-x: var(--space-m);
-  --button-text-size: var(--font-xs);
-}
-
-.button[data-size="xsmall"] {
-  --button-padding-y: var(--space-xs);
-  --button-padding-x: var(--space-s);
-  --button-text-size: var(--font-2xs);
-}
-
-/* -- Boolean modifiers -- */
-.button[data-icon-only] {
-  --button-padding-x: var(--button-padding-y);
-  --icon-size: 1.3rem;
-}
-
-.button[data-full-width] {
-  width: 100%;
-}
-
-/* -- States -- */
-.button:disabled,
-.button.is-disabled {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: not-allowed;
-}
-
-.button.is-loading {
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .button:active {
-    transform: none;
-  }
-}
-
-.button-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  grid-column-gap: var(--space-m);
-  grid-row-gap: var(--space-m);
-}
+/* -- Button component → moved to global.css (attribute API + custom-prop variants; not natively styleable in Webflow). -- */
 
 /* ------ BACKGROUND UTILITIES ------ */
 
@@ -1396,103 +1151,7 @@ body.is-intro-loading {
   .site-nav-toggle-bars span { transition: none; }
 }
 
-/* -- Stickers (ADD: ::before beside word. SWAP: transparent glyph behind image — SR/SEO/SplitText-safe.) -- */
-.sticker-add {
-  position: relative;
-  white-space: nowrap;
-}
-
-/* -- Defaults: per-sticker combos below override via compound selectors (higher specificity). -- */
-.sticker-add::before {
-  content: "";
-  display: inline-block;
-  height: 0.9em;
-  aspect-ratio: 1;
-  vertical-align: baseline;
-  transform: translateY(0.08em);
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  transform: scale(1.07);
-}
-
-.sticker-swap {
-  display: inline-block;
-  color: transparent;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/* -- Box modifier (swap only): fixed square box; per-sticker can override width + aspect-ratio. -- */
-.sticker-swap.sticker-box {
-  display: inline-block;
-  width: 1em;
-  aspect-ratio: 1;
-  overflow: hidden;
-  vertical-align: middle;
-}
-
-/* -- Per-sticker artwork (.sticker-add mode). Each rule is self-contained: edit image, aspect, or any inherited property right here. -- */
-.sticker-add.sticker-book::before         { background-image: url("../images/stickers/sticker_book.svg");                 aspect-ratio: 103 / 102; }
-.sticker-add.sticker-burrito::before      { background-image: url("../images/stickers/sticker_burrito.svg");              aspect-ratio: 72 / 108; }
-.sticker-add.sticker-coffee::before       { background-image: url("../images/stickers/sticker_coffee.svg");              aspect-ratio: 59 / 70; }
-.sticker-add.sticker-coffee-cup::before   { background-image: url("../images/stickers/sticker_coffee%20cup.svg");         aspect-ratio: 67 / 80; }
-.sticker-add.sticker-disco-ball::before   { background-image: url("../images/stickers/sticker_disco-ball.svg"); }
-.sticker-add.sticker-eye::before          { background-image: url("../images/stickers/sticker_eye.svg"); }
-.sticker-add.sticker-heart::before        { background-image: url("../images/stickers/sticker_heart.svg"); transform: translateX(0.05em) translateY(0.1em) rotate(8deg) scale(1.05); }
-
-.sticker-swap.sticker-logo {
-  background-image: url("../images/stickers/sticker_logo.svg");
-  aspect-ratio: 609 / 158;
-  transform: rotate(-5deg) scale(1.2);
-}
-
-.sticker-swap.sticker-you {
-  background-image: url("../images/stickers/sticker_you.svg");
-  aspect-ratio: 208 / 108;
-  transform: rotate(7deg) scale(1.05);
-}
-
-.sticker-swap.sticker-o {
-  background-image: url("../images/stickers/sticker_o.svg");
-  aspect-ratio: 219 / 51;
-  padding-inline: 0 2.5em;
-  /* margin-inline: .1em; */
-  margin-right: 0.1em;
-}
-
-
-.sticker-add.sticker-margarita::before    { background-image: url("../images/stickers/sticker_Margarita.svg");            aspect-ratio: 136 / 116; }
-.sticker-add.sticker-megaphone::before    { background-image: url("../images/stickers/sticker_megaphone.svg"); }
-.sticker-add.sticker-phone::before        { background-image: url("../images/stickers/sticker_phone.svg");                aspect-ratio: 87 / 107; }
-.sticker-add.sticker-post-social::before  { background-image: url("../images/stickers/sticker_post%20social.svg");        aspect-ratio: 176 / 98;
-transform: translateX(0.1em) translateY(0.1em) rotate(3deg) scale(1.05); }
-.sticker-add.sticker-slot-machine::before { background-image: url("../images/stickers/sticker_slot%20machine.svg");       aspect-ratio: 167 / 70; }
-.sticker-add.sticker-slot-green::before   { background-image: url("../images/stickers/sticker_slot%20machine-green.svg"); aspect-ratio: 152 / 63; }
-.sticker-add.sticker-smiley::before       { background-image: url("../images/stickers/sticker_smiley.svg");               aspect-ratio: 104 / 105; transform: scale(1.07) rotate(var(--sticker-rotation, 0deg)); transform-origin: 50% 50%; will-change: transform; }
-.sticker-add.sticker-smiley-side::before  { background-image: url("../images/stickers/sticker_smiley-side.svg"); }
-.sticker-add.sticker-smiley-up::before    { background-image: url("../images/stickers/sticker_smiley-up.svg"); }
-.sticker-add.sticker-shine::before        { background-image: url("../images/stickers/sticker_shine.svg");               aspect-ratio: 100 / 54; }
-.sticker-add.sticker-sparkle::before      { background-image: url("../images/stickers/sticker_sparkle.svg");              aspect-ratio: 92 / 62; transform: translateX(0.08em) translateY(0.05em) rotate(-3deg) scale(1.05); }
-.sticker-add.sticker-speech::before       { background-image: url("../images/stickers/sticker_speech%20bubble.svg");      aspect-ratio: 37 / 33; }
-
-/* -- Swap-mode sticker(s): image lives on the element itself, not a pseudo. -- */
-.sticker-swap.sticker-l {
-  background-image: url("../images/stickers/sticker_L.svg");
-  padding-inline: 0 2.9em;
-  margin-inline: .1em;
-  margin-right: -1.5em;
-}
-
-/* -- Legacy placeholder combos (prototype). Swap to artwork classes above in HTML, then remove. -- */
-.sticker-add.sticker-about::before     { background-image: url("https://bydefault.design/image/120x90");  aspect-ratio: 4 / 3; }
-.sticker-add.sticker-founded-1::before { background-image: url("https://bydefault.design/image/90x90"); }
-.sticker-add.sticker-founded-2::before { background-image: url("https://bydefault.design/image/90x90"); }
-.sticker-add.sticker-slot::before      { background-image: url("https://bydefault.design/image/120x90");  aspect-ratio: 4 / 3; }
-.sticker-add.sticker-social::before    { background-image: url("https://bydefault.design/image/180x108"); aspect-ratio: 5 / 3; }
-.sticker-add.sticker-speaker::before   { background-image: url("https://bydefault.design/image/180x108"); aspect-ratio: 5 / 3; }
-.sticker-add.sticker-out::before       { background-image: url("https://bydefault.design/image/180x108"); aspect-ratio: 5 / 3; }
+/* -- Stickers → moved to global.css (::before artwork + per-sticker geometry; not natively styleable in Webflow). -- */
 
 /* -- Page sections (homepage) -- */
 .hero-section {
@@ -2224,9 +1883,7 @@ a.hero-ms-link:hover {
   width: 70%;
 }
 
-/* Per-page sticker assets — wire real artwork here when ready. */
-.sticker-add.sticker-science::before        { background-image: url("https://bydefault.design/image/180x108?text=Book");   aspect-ratio: 5 / 3; }
-.sticker-add.sticker-science-coffee::before { background-image: url("https://bydefault.design/image/100x120?text=Coffee"); aspect-ratio: 5 / 6; }
+/* Per-page sticker assets → moved to global.css with the rest of the sticker system. */
 
 /* -- Footer -- */
 .site-footer {

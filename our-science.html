@@ -77,13 +77,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
-  <!-- WF:SITE-HEAD — stylesheets. Webflow holds the token system (Variables);
-       only bd-animations.css + style.css ship, via jsDelivr URLs in
-       templates/webflow-header-code.html. style.css carries brand fallbacks. -->
+  <!-- WF:SITE-HEAD — stylesheets. Webflow holds the token system (Variables) +
+       native-built classes; bd-animations.css + global.css ship to production
+       via jsDelivr (templates/webflow-header-code.html). style.css is the full
+       spec + local prototype and does NOT ship to Webflow. -->
   <!-- Animation FOUC rules (scoped to .js) -->
   <link rel="stylesheet" href="assets/css/bd-animations.css" />
-  <!-- Combined stylesheet (design system + project styles) -->
+  <!-- Design system + project styles (spec + local prototype; native-built in Webflow, not shipped) -->
   <link rel="stylesheet" href="assets/css/style.css" />
+  <!-- Can't-be-native layer (buttons, [data-grid], stickers) — ships to production -->
+  <link rel="stylesheet" href="assets/css/global.css" />
 </head>
 <body class="is-intro-loading">
 
