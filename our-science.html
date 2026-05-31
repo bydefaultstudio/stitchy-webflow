@@ -4,8 +4,11 @@
   WEBFLOW PORT PLAN — our-science.html
   ===========================================================================
   • HEAD: per-page meta goes in Webflow Page Settings → SEO + Custom Code.
-    Site-wide head (JS-guard, fonts, bd-animations.css, style.css, theme bridge)
-    is in templates/webflow-header-code.html.
+    Site-wide head (JS-guard, fonts, bd-animations.css, global.css + the
+    transitional style.css token layer) is pasted from the jsDelivr blocks in
+    WEBFLOW_CDN_LINKS.md (NOT the localhost templates/).
+  • CSS LAYERS: what is built natively vs shipped in global.css (the
+    can't-be-native layer) is mapped in CSS_LAYER_MAP.md — read it before build.
   • COMPONENTS reused from homepage: site-nav, site-footer, cta-email, skip-link.
   • PAGE-SPECIFIC: science-hero, science-intro, science-body, six-things-section,
     science-longgame. All static for Phase 1.
@@ -78,14 +81,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
   <!-- WF:SITE-HEAD — stylesheets. Webflow holds the token system (Variables) +
-       native-built classes; bd-animations.css + global.css ship to production
-       via jsDelivr (templates/webflow-header-code.html). style.css is the full
-       spec + local prototype and does NOT ship to Webflow. -->
+       native-built classes. SHIPS to production via jsDelivr: bd-animations.css,
+       global.css, AND (transitionally) style.css — the last only to supply the
+       --token custom properties global.css + the motion JS read, since Webflow
+       Variables don't expose them. At full-native, drop style.css and paste the
+       :root token block as a header <style> embed. See CSS_LAYER_MAP.md +
+       WEBFLOW_CDN_LINKS.md. -->
   <!-- Animation FOUC rules (scoped to .js) -->
   <link rel="stylesheet" href="assets/css/bd-animations.css" />
-  <!-- Design system + project styles (spec + local prototype; native-built in Webflow, not shipped) -->
+  <!-- Full spec + local prototype + token layer; ships transitionally for --tokens, dropped at full-native -->
   <link rel="stylesheet" href="assets/css/style.css" />
-  <!-- Can't-be-native layer (buttons, [data-grid], stickers) — ships to production -->
+  <!-- Can't-be-native layer (buttons, [data-grid], stickers, focus ring, motion slivers) — ships to production -->
   <link rel="stylesheet" href="assets/css/global.css" />
 </head>
 <body class="is-intro-loading">

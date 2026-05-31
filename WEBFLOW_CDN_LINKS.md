@@ -73,11 +73,14 @@ Our Science Footer
 Styleguide Page ONLY — do NOT add site-wide
 ---
 
-<!-- Page-level head Custom Code for the hidden/noindex /styleguide page ONLY.
-     styleguide.css holds sg-* demo chrome (tables, chips, swatches, bars) and
-     must NEVER be added to the Global Header. It is scaffolding for the build
-     manifest, not part of the design system. -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/styleguide.css">
+<!-- The standalone styleguide.css file is RETIRED. The simplified native
+     styleguide page needs only one small page-level block: the `#sg-embed`
+     <style> from the HEAD of styleguide.html (swatch boxes + layout demo
+     frames). For the hidden/noindex Webflow Styleguide page, copy that whole
+     <style id="sg-embed"> block into Page Settings → Custom Code (head), or
+     paste it into an Embed element on the page. It is STYLEGUIDE-ONLY — never
+     add it to the Global Header / never recreate it as Webflow classes.
+     Everything else on the styleguide page is built with native classes. -->
 
 
 ---
@@ -98,4 +101,4 @@ Webflow's Variables do NOT expose `--space-m` to `global.css`.
 - **End state (full native):** remove the `style.css` link above and add a header
   `<style>` embed containing the `:root` token block (base + the ≤991/≤767 overrides)
   so `global.css` + the motion JS still resolve their --tokens.
-- **`styleguide.css`** — page-level ONLY (the styleguide block above); never site-wide.
+- **`styleguide.css`** — RETIRED/deleted. The simplified native styleguide carries its only demo CSS inline as the `#sg-embed` `<style>` block in `styleguide.html`'s head (paste page-level on the Webflow styleguide page; never site-wide).

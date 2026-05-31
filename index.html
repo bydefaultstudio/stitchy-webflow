@@ -5,8 +5,11 @@
   ===========================================================================
   • HEAD: per-page meta (title/desc/canonical/OG/Twitter/theme-color) goes in
     Webflow Page Settings → Custom Code (head). Everything else (JS-guard,
-    fonts, bd-animations.css, style.css, theme bridge) lives in Site Settings
-    → Custom Code (head) — see templates/webflow-header-code.html.
+    fonts, bd-animations.css, global.css + the transitional style.css token
+    layer) lives in Site Settings → Custom Code (head) — paste the jsDelivr
+    blocks from WEBFLOW_CDN_LINKS.md (NOT the localhost templates/).
+  • CSS LAYERS: what is built natively vs shipped in global.css (the
+    can't-be-native layer) is mapped in CSS_LAYER_MAP.md — read it before build.
   • COMPONENTS (build once, reuse across pages): site-nav, site-footer,
     cta-email, skip-link.
   • CMS (Phase 1 in scope): Team collection only — see WF:CMS-LIST below.
@@ -79,14 +82,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
   <!-- WF:SITE-HEAD — stylesheets. Webflow holds the token system (Variables) +
-       native-built classes; bd-animations.css + global.css ship to production
-       via jsDelivr (templates/webflow-header-code.html). style.css is the full
-       spec + local prototype and does NOT ship to Webflow. -->
+       native-built classes. SHIPS to production via jsDelivr: bd-animations.css,
+       global.css, AND (transitionally) style.css — the last only to supply the
+       --token custom properties global.css + the motion JS read, since Webflow
+       Variables don't expose them. At full-native, drop style.css and paste the
+       :root token block as a header <style> embed. See CSS_LAYER_MAP.md +
+       WEBFLOW_CDN_LINKS.md. -->
   <!-- Animation FOUC rules (scoped to .js) -->
   <link rel="stylesheet" href="assets/css/bd-animations.css" />
-  <!-- Design system + project styles (spec + local prototype; native-built in Webflow, not shipped) -->
+  <!-- Full spec + local prototype + token layer; ships transitionally for --tokens, dropped at full-native -->
   <link rel="stylesheet" href="assets/css/style.css" />
-  <!-- Can't-be-native layer (buttons, [data-grid], stickers) — ships to production -->
+  <!-- Can't-be-native layer (buttons, [data-grid], stickers, focus ring, motion slivers) — ships to production -->
   <link rel="stylesheet" href="assets/css/global.css" />
 </head>
 <body class="is-intro-loading">
@@ -295,9 +301,11 @@
       <!-- WF:STATIC | JS-HOOK module="homepage.js" notes=".standout-scene cross-fade driven by GSAP; ball CHILDREN injected into an authored .standout-balls div"
            SOURCE ORDER IS LOAD-BEARING: scene 1 → EMPTY .standout-balls[aria-hidden] div → scene 2 (…N).
            The Designer authors BOTH scenes AND the empty .standout-balls div between them
-           (homepage.js bails if .standout-balls is missing; style.css z-indexes scene 2+ via
-           `.standout-balls ~ .standout-scene`, a general-sibling selector that needs the div first).
-           Only the ball ELEMENTS inside it are injected at runtime. -->
+           (homepage.js bails if .standout-balls is missing; the standout reveal CSS z-indexes
+           scene 2+ via `.standout-balls ~ .standout-scene`, a general-sibling selector that needs
+           the div first). This sibling/`.js`-gated CSS is a can't-be-native sliver → extract to
+           global.css before style.css is dropped (CSS_LAYER_MAP.md). Only the ball ELEMENTS
+           inside it are injected at runtime. -->
       <section class="section-standout" aria-label="What Stitchy stands for">
         <div class="standout-stage">
 
@@ -583,7 +591,9 @@
   <script src="assets/js/bd-animations.js"></script>
 
   <!-- Site loader: lottie-web from CDN + the loader controller. Site-wide.
-       Loader CSS lives in style.css under /* -- Site Loader -- */. -->
+       Loader CSS (keyframes + .is-hidden/.is-fade-in states) is a can't-be-native
+       sliver, currently under /* -- Site Loader -- */ in style.css → extract to
+       global.css before style.css is dropped (CSS_LAYER_MAP.md). -->
   <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie_light.min.js"></script>
   <script src="assets/js/site-loader.js"></script>
 
