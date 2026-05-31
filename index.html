@@ -333,7 +333,7 @@
            Designer renders ONE template inside a Collection List and CMS provides
            the rest. See CMS plan in port-plan header above.
            JS-HOOK module="homepage.js" attrs="data-team-grid, data-position,
-             data-name, data-role, data-fact, data-sticker"
+             data-name, data-role, data-fact + hidden img.team-sticker-src"
            A11Y: the .team-cell-close button needs `inert` (or display:none)
            when the cell is closed — add to the Webflow Designer interaction state. -->
       <section class="team-section background-color-dark">
@@ -354,7 +354,8 @@
                   <!-- WF:CMS-ITEM-TEMPLATE collection="team"
                        In Webflow this <article> becomes the single Collection Item
                        template. Bindings: data-position←position, data-name←name,
-                       data-role←role, data-fact←fact, data-sticker←sticker-image,
+                       data-role←role, data-fact←fact, hidden img.team-sticker-src ← sticker-image
+                       (image fields can't bind into a data-* value; homepage.js reads its src),
                        team-photo-main src/alt ← photo-main, team-photo-hover src ← photo-hover.
                        The aria-label on .team-card must be bound to the CMS name field
                        ("View {{name}}") not hardcoded.
@@ -367,8 +368,8 @@
                   <article class="team-cell" data-position="1"
                             data-name="G Douglas Kilgannon"
                             data-role="CEO"
-                            data-fact="Big time NERDDD"
-                            data-sticker="assets/images/stickers/sticker_burrito.svg">
+                            data-fact="Big time NERDDD">
+                    <img class="team-sticker-src" src="assets/images/stickers/sticker_burrito.svg" alt="" aria-hidden="true" />
                     <button class="team-card" type="button" aria-label="View G Douglas Kilgannon">
                       <span class="team-face team-face-front">
                         <img class="team-photo team-photo-main" src="assets/images/team/G%20Douglas%20Kilgannon@2x.png" alt="G Douglas Kilgannon" />
@@ -381,8 +382,8 @@
                   <article class="team-cell" data-position="2"
                             data-name="Ange D."
                             data-role="Founder"
-                            data-fact="Can always be found in broadway market on a saturday afternoon"
-                            data-sticker="assets/images/stickers/sticker_Margarita.svg">
+                            data-fact="Can always be found in broadway market on a saturday afternoon">
+                    <img class="team-sticker-src" src="assets/images/stickers/sticker_Margarita.svg" alt="" aria-hidden="true" />
                     <button class="team-card" type="button" aria-label="View Ange D.">
                       <span class="team-face team-face-front">
                         <img class="team-photo team-photo-main" src="assets/images/team/Ange%20D@2x.png" alt="Ange D." />
@@ -395,8 +396,8 @@
                   <article class="team-cell" data-position="3"
                             data-name="Stephanie Falkiner"
                             data-role="Creative Account Director"
-                            data-fact="Always up for a hike!"
-                            data-sticker="assets/images/stickers/sticker_slot%20machine-green.svg">
+                            data-fact="Always up for a hike!">
+                    <img class="team-sticker-src" src="assets/images/stickers/sticker_slot%20machine-green.svg" alt="" aria-hidden="true" />
                     <button class="team-card" type="button" aria-label="View Stephanie Falkiner">
                       <span class="team-face team-face-front">
                         <img class="team-photo team-photo-main" src="assets/images/team/Stephanie%20Falkiner@2x.png" alt="Stephanie Falkiner" />
@@ -409,8 +410,8 @@
                   <article class="team-cell" data-position="4"
                             data-name="Natalie Clark"
                             data-role="Content Director"
-                            data-fact="Brings order to our creative chaos"
-                            data-sticker="assets/images/stickers/sticker_coffee.svg">
+                            data-fact="Brings order to our creative chaos">
+                    <img class="team-sticker-src" src="assets/images/stickers/sticker_coffee.svg" alt="" aria-hidden="true" />
                     <button class="team-card" type="button" aria-label="View Natalie Clark">
                       <span class="team-face team-face-front">
                         <img class="team-photo team-photo-main" src="assets/images/team/Natalie%20Clark@2x.png" alt="Natalie Clark" />
@@ -423,8 +424,8 @@
                   <article class="team-cell" data-position="5"
                             data-name="Ruth Nichols"
                             data-role="CSO &amp; Partner"
-                            data-fact=""
-                            data-sticker="assets/images/stickers/sticker_eye.svg">
+                            data-fact="">
+                    <img class="team-sticker-src" src="assets/images/stickers/sticker_eye.svg" alt="" aria-hidden="true" />
                     <button class="team-card" type="button" aria-label="View Ruth Nichols">
                       <span class="team-face team-face-front">
                         <img class="team-photo team-photo-main" src="assets/images/team/Ruth%20Nichols@2x.png" alt="Ruth Nichols" />
@@ -437,8 +438,8 @@
                   <article class="team-cell" data-position="6"
                             data-name="Professor Colin Skittles"
                             data-role="Professor of Marketing Science"
-                            data-fact="Makes us look smart"
-                            data-sticker="assets/images/stickers/sticker_smiley.svg">
+                            data-fact="Makes us look smart">
+                    <img class="team-sticker-src" src="assets/images/stickers/sticker_smiley.svg" alt="" aria-hidden="true" />
                     <button class="team-card" type="button" aria-label="View Professor Colin Skittles">
                       <span class="team-face team-face-front">
                         <img class="team-photo team-photo-main" src="assets/images/team/Professor%20Colin%20Skittles@2x.png" alt="Professor Colin Skittles" />
