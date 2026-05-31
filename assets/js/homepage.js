@@ -98,6 +98,7 @@
   var activeTeamCell = null;
   var lastFocusedCard = null;
   var teamWired = false;
+  var teamStatusRegion = null;
 
   //
   //------- Utility Functions -------//
@@ -105,6 +106,27 @@
 
   function prefersReducedMotion() {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  // Visually-hidden polite live region. When a member opens, their content is
+  // spread across the five other cards (no coherent reading order), and those
+  // cards are taken out of the a11y tree — so we announce who opened cleanly
+  // here instead. Lazily created once; reuses the .visually-hidden styling from
+  // style.css and a stable id so a future shared region can take over.
+  function announce(message) {
+    if (!teamStatusRegion) {
+      teamStatusRegion = document.getElementById("bd-a11y-status");
+      if (!teamStatusRegion) {
+        teamStatusRegion = document.createElement("div");
+        teamStatusRegion.id = "bd-a11y-status";
+        teamStatusRegion.className = "visually-hidden";
+        teamStatusRegion.setAttribute("role", "status");
+        teamStatusRegion.setAttribute("aria-live", "polite");
+        teamStatusRegion.setAttribute("aria-atomic", "true");
+        document.body.appendChild(teamStatusRegion);
+      }
+    }
+    teamStatusRegion.textContent = message;
   }
 
   // Random tilt per stacking panel within ±stackMaxRotation. Cached by index so
@@ -357,6 +379,7 @@
       var card = cell.querySelector('.team-card');
       var close = cell.querySelector('.team-cell-close');
       if (card) {
+        card.setAttribute('aria-expanded', 'false');
         card.addEventListener('click', function () {
           // Any click on a card while another member is open closes — keeps
           // the model simple: the only open path is from the browse state.
@@ -394,11 +417,15 @@
     var layout = TEAM_LAYOUTS[position];
     if (!layout) return;
 
+    // Sticker is a hidden CMS-bound <img.team-sticker-src> — Webflow can't bind an
+    // Image field into a data-* attribute VALUE, so we read the bound image's src.
+    // Falls back to data-sticker so the static prototype keeps working either way.
+    var stickerEl = cell.querySelector('.team-sticker-src');
     var data = {
       name:    cell.dataset.name    || '',
       role:    cell.dataset.role    || '',
       fact:    cell.dataset.fact    || '',
-      sticker: cell.dataset.sticker || ''
+      sticker: (stickerEl && stickerEl.getAttribute('src')) || cell.dataset.sticker || ''
     };
 
     var cells = Array.prototype.slice.call(teamGridEl.querySelectorAll('.team-cell'));
@@ -415,12 +442,22 @@
         back.setAttribute('aria-hidden', 'false');
       }
       if (front) front.setAttribute('aria-hidden', 'true');
-      nonActiveCards.push(other.querySelector('.team-card'));
+      // The five flipped cards are now display surfaces for the active member's
+      // content, not controls — pull them out of the tab order and a11y tree so
+      // a keyboard/SR user doesn't land on a button with a stale "View X" label
+      // (and whose activation would close the whole grid).
+      var otherCard = other.querySelector('.team-card');
+      if (otherCard) {
+        otherCard.setAttribute('tabindex', '-1');
+        otherCard.setAttribute('aria-hidden', 'true');
+      }
+      nonActiveCards.push(otherCard);
     });
 
     activeTeamCell = cell;
     cell.classList.add('is-active');
     lastFocusedCard = cell.querySelector('.team-card');
+    if (lastFocusedCard) lastFocusedCard.setAttribute('aria-expanded', 'true');
     teamGridEl.classList.add('is-open');
 
     var activeClose = cell.querySelector('.team-cell-close');
@@ -428,6 +465,8 @@
       activeClose.setAttribute('aria-label', 'Close team member ' + data.name);
       activeClose.focus();
     }
+
+    announce('Showing ' + data.name + (data.role ? ', ' + data.role : ''));
 
     if (prefersReducedMotion()) {
       cells.forEach(function (other) {
@@ -470,11 +509,19 @@
         }
         if (front) front.setAttribute('aria-hidden', 'false');
         other.classList.remove('is-flipped');
+        // Restore the card as a control now that browse state is back.
+        var otherCard = other.querySelector('.team-card');
+        if (otherCard) {
+          otherCard.removeAttribute('tabindex');
+          otherCard.removeAttribute('aria-hidden');
+        }
       });
       var closingCloseBtn = closingCell.querySelector('.team-cell-close');
       if (closingCloseBtn) {
         closingCloseBtn.setAttribute('aria-label', 'Close team member');
       }
+      var closingCard = closingCell.querySelector('.team-card');
+      if (closingCard) closingCard.setAttribute('aria-expanded', 'false');
       closingCell.classList.remove('is-active');
       teamGridEl.classList.remove('is-open');
       if (lastFocusedCard) lastFocusedCard.focus();

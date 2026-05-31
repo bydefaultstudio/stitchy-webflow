@@ -1867,6 +1867,12 @@ a.hero-ms-link:hover {
 .team-cell[data-position="6"] .team-face-back { align-items: end;   text-align: right;  }
 
 /* Close button: one per cell, top-right INSIDE the polaroid; only shown on the active cell. */
+/* Hidden CMS-bound sticker image — JS reads its src to spread onto back faces
+   (Webflow can't bind an Image field into a data-* attribute value). */
+.team-sticker-src {
+  display: none;
+}
+
 .team-cell-close {
   position: absolute;
   top: var(--space-s);

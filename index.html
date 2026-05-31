@@ -95,7 +95,7 @@
   <!-- WF:COMPONENT name="site-loader"
        Full-viewport opening screen: animated warm gradient + line-draw Stitchy
        Lottie. Auto-dismisses when BOTH the Lottie completes AND window.load
-       fires (4s safety cap). Respects prefers-reduced-motion.
+       fires (5s safety cap; 1s under reduced motion). Respects prefers-reduced-motion.
        Webflow port:
          1. Upload assets/images/logo-line-svg.json to Webflow Assets → use that
             URL as data-lottie-path. (Or keep the jsDelivr GitHub URL.)
@@ -148,7 +148,9 @@
 
       <!-- 1. Hero -->
       <!-- WF:STATIC | JS-HOOK module="bd-animations" attrs="data-text-animate, data-bd-animate, data-bd-delay"
-           Future signature-motion candidate: cursor-following smiley overlay (PROJECT_BRIEF.md §9). -->
+           MOTION: the H1 smiley cursor-follow is already IMPLEMENTED in homepage.js
+           (initStickerCursorFollow) — desktop + fine-pointer + non-reduced-motion only.
+           Hook = .sticker-add.sticker-smiley on the H1; drives CSS var --sticker-rotation. -->
       <section class="background-color-green hero-section">
         <div class="padding-global">
           <div class="hero-container">
@@ -238,10 +240,11 @@
              collection slug: services
              fields: number (number, required) · title (plain-text, required) ·
                      theme (option: blue | orange | dark | green, required) · order (number, sort key)
-           BLOCKER (see gsap-expert audit): data-bd-stack is not handled by
-           bd-animations.js. Resolve before Webflow port — either implement
-           the stack module in bd-animations.js OR swap to
-           data-bd-scrub-group + data-bd-animate="slide-up" on each .service-block. -->
+           MOTION: data-bd-stack is handled by homepage.js (buildStackSection),
+           NOT bd-animations.js — it's a homepage-specific pattern that ships as
+           custom JS over the CDN. No IX2, no recoding for the port; the Designer
+           only needs section.services-section[data-bd-stack] > .service-block
+           markup (overlap comes from --bd-stack-overlap in style.css). -->
       <section id="services" class="services-section" data-bd-stack>
         <div class="service-block background-color-blue" >
           <div class="padding-global">
@@ -286,9 +289,12 @@
       </section>
 
       <!-- 7. Standout Reveal -->
-      <!-- WF:STATIC | JS-HOOK module="homepage.js" notes="standout-balls overlay is JS-injected; .standout-scene cross-fade driven by GSAP"
-           Two `.standout-scene` children + a JS-injected `.standout-balls` overlay.
-           The Designer should author the two scenes; the balls overlay is created at runtime. -->
+      <!-- WF:STATIC | JS-HOOK module="homepage.js" notes=".standout-scene cross-fade driven by GSAP; ball CHILDREN injected into an authored .standout-balls div"
+           SOURCE ORDER IS LOAD-BEARING: scene 1 → EMPTY .standout-balls[aria-hidden] div → scene 2 (…N).
+           The Designer authors BOTH scenes AND the empty .standout-balls div between them
+           (homepage.js bails if .standout-balls is missing; style.css z-indexes scene 2+ via
+           `.standout-balls ~ .standout-scene`, a general-sibling selector that needs the div first).
+           Only the ball ELEMENTS inside it are injected at runtime. -->
       <section class="section-standout" aria-label="What Stitchy stands for">
         <div class="standout-stage">
 
@@ -351,7 +357,13 @@
                        data-role←role, data-fact←fact, data-sticker←sticker-image,
                        team-photo-main src/alt ← photo-main, team-photo-hover src ← photo-hover.
                        The aria-label on .team-card must be bound to the CMS name field
-                       ("View {{name}}") not hardcoded. -->
+                       ("View {{name}}") not hardcoded.
+                       ⚠ CRITICAL: data-position is a LAYOUT SLOT read by homepage.js
+                       (TEAM_LAYOUTS[position]), not just a sort key. Its VALUE must be
+                       BOUND to the CMS `position` field (custom attribute → "+ Add field"),
+                       NEVER hardcoded — if all items ship data-position="1" the flip-layout
+                       collapses. Also set the Collection List sort to `position` ascending so
+                       DOM order matches slot number. -->
                   <article class="team-cell" data-position="1"
                             data-name="G Douglas Kilgannon"
                             data-role="CEO"

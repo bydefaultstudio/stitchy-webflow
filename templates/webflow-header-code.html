@@ -4,8 +4,6 @@
 
 <style>
   * {  -webkit-font-smoothing: antialiased;  -moz-osx-font-smoothing: grayscale;  -o-font-smoothing: antialiased;}
-  .w-editor .custom-cursor-active * { cursor: auto !important;}
-  .custom-arrows svg { width: 24px; height: 24px; fill:var(--_semantic---text--text-primary);}
   .grecaptcha-badge {
   box-shadow: none !important;
   background: transparent !important;
@@ -18,11 +16,10 @@
 }
 </style>
 
-<link  rel="preload"  href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css"  as="style"  onload="this.onload=null;this.rel='stylesheet';"/>
-
 <!-- PRE-LAUNCH: swap every http://localhost:2000/... URL below to a versioned
      https://cdn.jsdelivr.net/gh/<org>/<repo>@<tag-or-sha>/... URL before going live.
-     See PROJECT_BRIEF.md §10 open question on cache-busting strategy. -->
+     See HANDOVER.md "Pre-launch foot-guns" + WEBFLOW_CDN_LINKS.md for the pinned
+     jsDelivr blocks and cache-busting (pin a tag/SHA, not @main). -->
 
 <!-- Design system + project styles (combined stylesheet) -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/style.css">
@@ -30,24 +27,7 @@
 <!-- BD Animations FOUC rules (must follow the .js classList.add script above) -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/bd-animations.css">
 
-
-<!-- Custom cursor token bridge — maps bd-cursor.css tokens to the
-     Webflow cursor-primary/secondary vars -->
-<style>
-  :root {
-    --text-accent: var(--_semantic---cursor-primary);
-    --white: var(--_semantic---cursor-secondary);
-    --alpha-5: transparent 95%;
-    --alpha-10: transparent 90%;
-    --alpha-20: transparent 80%;
-    --alpha-50: transparent 50%;
-    --alpha-90: transparent 10%;
-  }
-</style>
-
-<!-- Custom Cursor -->
-<link rel="stylesheet" href="http://localhost:2000/assets/css/bd-cursor.css">
-
+<!-- (bd-cursor cut for Phase 1 — no token bridge / bd-cursor.css. See footer template note.) -->
 
 <!-- Full width on mobile -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">

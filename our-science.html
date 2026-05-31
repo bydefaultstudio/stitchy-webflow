@@ -129,7 +129,7 @@
 
       <!-- 1. Hero -->
       <!-- WF:STATIC | JS-HOOK module="bd-animations" + bespoke Professor Skittles motion
-           PROJECT_BRIEF.md §9 signature motion: Professor Skittles is the page's
+           FUTURE signature motion (not yet built): Professor Skittles is the page's
            interactive moment. Imagery dropping in late; markup will need new
            data-* hooks when the motion module lands (e.g. data-skittles-track). -->
       <section class="science-hero background-color-dark">
@@ -207,9 +207,12 @@
            In Webflow the Collection List renders BOTH the visible orbs AND
            the hidden [data-six-source] list (two Collection Lists bound to the
            same collection, sorted by id ascending).
-           JS-HOOK module="our-science.js" attrs="data-six-things, data-six-orbs,
+           JS-HOOK module="our-science.js" — ⚠ the load-bearing SECTION hook is the
+             CLASS `.six-things-section` (our-science.js selects on it; it bails/returns
+             null without it). `data-six-things` is NOT read by the JS — keep it only as a
+             semantic marker. Inner hooks (all required, all-or-nothing): data-six-orbs,
              data-orb-id, data-active, data-six-panel, data-six-panel-title,
-             data-six-panel-body, data-six-panel-number, data-six-source, data-fact-*"
+             data-six-panel-body, data-six-panel-number, data-six-source, data-fact-*
            A11Y: orb aria-label MUST be bound to the CMS title field
              ("Fact {{id}}: {{title}}") not hardcoded — see a11y audit #20. -->
       <section class="six-things-section"  data-grid data-layout="split" data-six-things>
@@ -417,7 +420,7 @@
 
   <!-- WF:PAGE-FOOTER-CODE — Our-Science-only modules. Page Settings → Custom
        Code (footer) on the Our Science page only. Matter.js must load BEFORE
-       our-science.js. Per-page-module rule (PROJECT_BRIEF.md §9): don't ship
+       our-science.js. Per-page-module rule: don't ship
        Matter.js on pages that don't use it. -->
   <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20/build/matter.min.js"></script>
   <script src="assets/js/our-science.js"></script>
