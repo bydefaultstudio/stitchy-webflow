@@ -298,14 +298,15 @@ button.button {
 
 
 /* ------ STICKERS (::before artwork + per-sticker geometry — not natively styleable) ------ */
-/* ARTWORK PATHS: the url("../images/stickers/…") paths are relative to THIS
-   stylesheet, so when global.css is served from jsDelivr they resolve to
-   …@<ref>/assets/images/stickers/… — the SVGs ship from the repo, NOT from
-   Webflow Assets. Do NOT upload these to Webflow or rewrite the URLs; update a
-   sticker by committing a new SVG. (The team back-face sticker is the only
-   sticker that IS a Webflow asset — it's a CMS Image field, see ASSETS.md.)
-   PRE-LAUNCH: the legacy placeholder combos below point at remote
-   bydefault.design/image/… — swap to real committed SVGs (or remove) before go-live. */
+/* ARTWORK URLS: each sticker's background-image is an absolute Webflow Asset CDN
+   URL (cdn.prod.website-files.com/<site-id>/<asset-id>_<file>.svg). The SVGs live
+   in Webflow Assets (folder "stickers"), NOT the repo — decision 2026-05-31.
+   ⚠ FRAGILITY: a Webflow asset URL embeds its asset-id, so RE-UPLOADING or moving a
+   sticker changes its URL and breaks the rule here. To update: re-fetch the URL
+   (asset_tool > get_all_assets_and_folders) and replace it below. (The team back-face
+   sticker is a separate CMS Image field — see ASSETS.md.)
+   PRE-LAUNCH: the legacy placeholder combos below still point at remote
+   bydefault.design/image/… — swap to real Webflow asset URLs (or remove) before go-live. */
 
 /* -- Stickers (ADD: ::before beside word. SWAP: transparent glyph behind image — SR/SEO/SplitText-safe.) -- */
 .sticker-add {
@@ -345,28 +346,28 @@ button.button {
 }
 
 /* -- Per-sticker artwork (.sticker-add mode). Each rule is self-contained: edit image, aspect, or any inherited property right here. -- */
-.sticker-add.sticker-book::before         { background-image: url("../images/stickers/sticker_book.svg");                 aspect-ratio: 103 / 102; }
-.sticker-add.sticker-burrito::before      { background-image: url("../images/stickers/sticker_burrito.svg");              aspect-ratio: 72 / 108; }
-.sticker-add.sticker-coffee::before       { background-image: url("../images/stickers/sticker_coffee.svg");              aspect-ratio: 59 / 70; }
-.sticker-add.sticker-coffee-cup::before   { background-image: url("../images/stickers/sticker_coffee%20cup.svg");         aspect-ratio: 67 / 80; }
-.sticker-add.sticker-disco-ball::before   { background-image: url("../images/stickers/sticker_disco-ball.svg"); }
-.sticker-add.sticker-eye::before          { background-image: url("../images/stickers/sticker_eye.svg"); }
-.sticker-add.sticker-heart::before        { background-image: url("../images/stickers/sticker_heart.svg"); transform: translateX(0.05em) translateY(0.1em) rotate(8deg) scale(1.05); }
+.sticker-add.sticker-book::before         { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d29b58e74fa85fb67_sticker_book.svg");                 aspect-ratio: 103 / 102; }
+.sticker-add.sticker-burrito::before      { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dcaa064ef33b41cb3_sticker_burrito.svg");              aspect-ratio: 72 / 108; }
+.sticker-add.sticker-coffee::before       { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dba03ba59ac867ed5_sticker_coffee.svg");              aspect-ratio: 59 / 70; }
+.sticker-add.sticker-coffee-cup::before   { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d656dbb77c24eedb5_sticker_coffee%20cup.svg");         aspect-ratio: 67 / 80; }
+.sticker-add.sticker-disco-ball::before   { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dfcc5c2be7045d5d4_sticker_disco-ball.svg"); }
+.sticker-add.sticker-eye::before          { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d1a9d535903c44b01_sticker_eye.svg"); }
+.sticker-add.sticker-heart::before        { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d0320e598439628ed_sticker_heart.svg"); transform: translateX(0.05em) translateY(0.1em) rotate(8deg) scale(1.05); }
 
 .sticker-swap.sticker-logo {
-  background-image: url("../images/stickers/sticker_logo.svg");
+  background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dc231e9d5766170e1_sticker_logo.svg");
   aspect-ratio: 609 / 158;
   transform: rotate(-5deg) scale(1.2);
 }
 
 .sticker-swap.sticker-you {
-  background-image: url("../images/stickers/sticker_you.svg");
+  background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3eb3db0157963bfe7c_sticker_you.svg");
   aspect-ratio: 208 / 108;
   transform: rotate(7deg) scale(1.05);
 }
 
 .sticker-swap.sticker-o {
-  background-image: url("../images/stickers/sticker_o.svg");
+  background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d9c83315aa821244d_sticker_o.svg");
   aspect-ratio: 219 / 51;
   padding-inline: 0 2.5em;
   /* margin-inline: .1em; */
@@ -374,23 +375,23 @@ button.button {
 }
 
 
-.sticker-add.sticker-margarita::before    { background-image: url("../images/stickers/sticker_Margarita.svg");            aspect-ratio: 136 / 116; }
-.sticker-add.sticker-megaphone::before    { background-image: url("../images/stickers/sticker_megaphone.svg"); }
-.sticker-add.sticker-phone::before        { background-image: url("../images/stickers/sticker_phone.svg");                aspect-ratio: 87 / 107; }
-.sticker-add.sticker-post-social::before  { background-image: url("../images/stickers/sticker_post%20social.svg");        aspect-ratio: 176 / 98;
+.sticker-add.sticker-margarita::before    { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dcaa064ef33b41cca_sticker_Margarita.svg");            aspect-ratio: 136 / 116; }
+.sticker-add.sticker-megaphone::before    { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dfee538e890d8fa64_sticker_megaphone.svg"); }
+.sticker-add.sticker-phone::before        { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d81b18d9459a37b0c_sticker_phone.svg");                aspect-ratio: 87 / 107; }
+.sticker-add.sticker-post-social::before  { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d6d4d91ecdbe50035_sticker_post%20social.svg");        aspect-ratio: 176 / 98;
 transform: translateX(0.1em) translateY(0.1em) rotate(3deg) scale(1.05); }
-.sticker-add.sticker-slot-machine::before { background-image: url("../images/stickers/sticker_slot%20machine.svg");       aspect-ratio: 167 / 70; }
-.sticker-add.sticker-slot-green::before   { background-image: url("../images/stickers/sticker_slot%20machine-green.svg"); aspect-ratio: 152 / 63; }
-.sticker-add.sticker-smiley::before       { background-image: url("../images/stickers/sticker_smiley.svg");               aspect-ratio: 104 / 105; transform: scale(1.07) rotate(var(--sticker-rotation, 0deg)); transform-origin: 50% 50%; will-change: transform; }
-.sticker-add.sticker-smiley-side::before  { background-image: url("../images/stickers/sticker_smiley-side.svg"); }
-.sticker-add.sticker-smiley-up::before    { background-image: url("../images/stickers/sticker_smiley-up.svg"); }
-.sticker-add.sticker-shine::before        { background-image: url("../images/stickers/sticker_shine.svg");               aspect-ratio: 100 / 54; }
-.sticker-add.sticker-sparkle::before      { background-image: url("../images/stickers/sticker_sparkle.svg");              aspect-ratio: 92 / 62; transform: translateX(0.08em) translateY(0.05em) rotate(-3deg) scale(1.05); }
-.sticker-add.sticker-speech::before       { background-image: url("../images/stickers/sticker_speech%20bubble.svg");      aspect-ratio: 37 / 33; }
+.sticker-add.sticker-slot-machine::before { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3db3db0157963bfe4f_sticker_slot%20machine.svg");       aspect-ratio: 167 / 70; }
+.sticker-add.sticker-slot-green::before   { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d11b6e405a1f4e180_sticker_slot%20machine-green.svg"); aspect-ratio: 152 / 63; }
+.sticker-add.sticker-smiley::before       { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d321baeb989063a84_sticker_smiley.svg");               aspect-ratio: 104 / 105; transform: scale(1.07) rotate(var(--sticker-rotation, 0deg)); transform-origin: 50% 50%; will-change: transform; }
+.sticker-add.sticker-smiley-side::before  { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dfee538e890d8fa8a_sticker_smiley-side.svg"); }
+.sticker-add.sticker-smiley-up::before    { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d850dcc5431d1b613_sticker_smiley-up.svg"); }
+.sticker-add.sticker-shine::before        { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d78c306601d7bb42a_sticker_shine.svg");               aspect-ratio: 100 / 54; }
+.sticker-add.sticker-sparkle::before      { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d55af9680ca6239d3_sticker_sparkle.svg");              aspect-ratio: 92 / 62; transform: translateX(0.08em) translateY(0.05em) rotate(-3deg) scale(1.05); }
+.sticker-add.sticker-speech::before       { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d350b6a58abc7cdfe_sticker_speech%20bubble.svg");      aspect-ratio: 37 / 33; }
 
 /* -- Swap-mode sticker(s): image lives on the element itself, not a pseudo. -- */
 .sticker-swap.sticker-l {
-  background-image: url("../images/stickers/sticker_L.svg");
+  background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d4f9f44f7ac1d2769_sticker_L.svg");
   padding-inline: 0 2.9em;
   margin-inline: .1em;
   margin-right: -1.5em;
