@@ -19,11 +19,14 @@ Global Header
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/global.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/bd-animations.css">
 
-<!-- TRANSITION: style.css still ships below so global.css's --tokens resolve while
-     the native build is in progress. Once the DS layer is fully native in Webflow,
-     REMOVE this line and paste the :root token block into the header as a <style>
-     embed (see the NOTE block at the bottom). -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/style.css">
+<!-- style.css NO LONGER SHIPS (decision 2026-05-31). global.css + the styleguide
+     #sg-embed swatch CSS now reference Webflow Variables DIRECTLY by their generated
+     names (--_color---*, --_spacing---space--*, --_border---radius--*/--_border---width--*,
+     --_type---family/line-height/weight--*), so no token layer is needed. style.css
+     stays the LOCAL prototype/spec stylesheet only. ⚠ This makes global.css Webflow-only
+     (it won't style the standalone prototype HTML) and rename-fragile (renaming the
+     Color/Spacing/Border/Type collections or groups breaks global.css). See memory
+     global-css-reads-webflow-variables. -->
 
 <!-- (bd-cursor cut for Phase 1 — no bd-cursor.css / token bridge) -->
 
