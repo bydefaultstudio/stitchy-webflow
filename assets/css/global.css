@@ -59,6 +59,12 @@ summary:focus-visible,
   margin-bottom: 0 !important;
 }
 
+.w-input, .w-select {
+  font-size: var(--font-m);
+  height: auto;
+  padding: var(--_spacing---space--s) var(--_spacing---space--m);
+}
+
 
 /* ------ BUTTONS (attribute API — not natively styleable) ------ */
 
