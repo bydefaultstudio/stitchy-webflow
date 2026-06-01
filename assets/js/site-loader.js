@@ -12,9 +12,13 @@
  *                 document swap — no flash.
  *
  *                 Dismiss gates (all must pass, or 5s safety cap):
- *                   1. Lottie animation finished
+ *                   1. Lottie finished — its own lottie-web draw, OR (native
+ *                      Webflow Lottie element with no mount div) treated as done
+ *                      immediately so the curtain doesn't wait on it.
  *                   2. studio:ready dispatched by bd-animations.js
  *                   3. window.load fired
+ *                   4. minimum display time elapsed (data-min-display, default
+ *                      1700ms) so a native Lottie / IX2 draw is always seen.
  *
  *                 Curtain enforcement: pauses gsap.globalTimeline immediately
  *                 so any reveals bd-animations creates during its fonts.ready
@@ -36,7 +40,7 @@
  *                 links are skipped automatically.
  *
  * Author: Erlen Masson
- * Version: 1.4.0
+ * Version: 1.5.0
  * Created: 29 May 2026
  */
 
@@ -46,7 +50,7 @@
   var loaderEl = document.querySelector("[data-site-loader]");
   if (!loaderEl) return;
 
-  console.log("Script - Site Loader v1.4.0 (Stitchy)");
+  console.log("Script - Site Loader v1.5.0 (Stitchy)");
 
   // Cross-page anchor support: if the URL arrived with a hash (e.g. /#about),
   // the browser auto-jumps to it before ScrollTrigger is built. Scrub reveals
@@ -85,6 +89,11 @@
     parseFloat(loaderEl.getAttribute("data-lottie-speed")) || 1.5;
   var fadeMs = 500; // matches CSS transition on .site-loader
   var safetyMs = 5000;
+  // Minimum time the curtain stays up so a native Webflow Lottie / IX2 draw is
+  // always seen, even when load + studio:ready resolve sooner. Override per page
+  // with data-min-display (ms) on the loader element.
+  var minDisplayMs =
+    parseFloat(loaderEl.getAttribute("data-min-display")) || 1700;
 
   var lottieDone = false;
   var pageLoaded = document.readyState === "complete";
@@ -96,6 +105,7 @@
     document.documentElement.dataset.studioReady === "true" ||
     typeof gsap === "undefined";
   var hidden = false;
+  var minDisplayElapsed = false;
 
   function dispatchIntroComplete() {
     document.dispatchEvent(new CustomEvent("studio:intro-complete"));
@@ -156,10 +166,13 @@
   }
 
   function maybeHide() {
-    if (lottieDone && pageLoaded && studioReady) hideLoader();
+    if (lottieDone && pageLoaded && studioReady && minDisplayElapsed) hideLoader();
   }
 
   function startLottie() {
+    // No lottie-web, or no [data-site-loader-logo] mount (the Lottie is a native
+    // Webflow element / IX2-played) → don't inject a player; treat the draw as
+    // done and let the min-display floor hold the curtain up while it plays.
     if (typeof lottie === "undefined" || !logoMount) {
       lottieDone = true;
       maybeHide();
@@ -212,6 +225,13 @@
     pageLoaded = true;
     maybeHide();
   });
+
+  // Minimum-display floor: release the last gate after minDisplayMs so a native
+  // Lottie / IX2 draw is always seen even when the other gates resolve sooner.
+  window.setTimeout(function () {
+    minDisplayElapsed = true;
+    maybeHide();
+  }, minDisplayMs);
 
   // Safety cap: dismiss even if one of the gates never resolves (CDN fail,
   // GSAP missing, fonts.ready hang) so the page is never stuck behind the
