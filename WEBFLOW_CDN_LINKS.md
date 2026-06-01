@@ -35,13 +35,13 @@ Global Header
 Global Footer
 ---
 
-<!-- GSAP -->
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/SplitText.min.js"></script>
+<!-- GSAP + ScrollTrigger + SplitText: loaded by Webflow's native GSAP
+     integration (head), NOT jsDelivr (decision 2026-06-01). They MUST expose
+     window.gsap / ScrollTrigger / SplitText as globals — verify on the
+     published site. bd-animations.js + site-loader.js depend on them. -->
 
-<!-- Lottie -->
-<script src="https://cdn.jsdelivr.net/npm/lottie-web@5/build/player/lottie_light.min.js"></script>
+<!-- Lottie: not loaded — the loader uses a native Webflow Lottie element
+     (logo-line-svg.json) played by IX2; site-loader.js no longer injects one. -->
 
 <!-- BD Animations -->
 <script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/bd-animations.js"></script>
@@ -49,7 +49,7 @@ Global Footer
 <!-- Site Nav (mobile burger) -->
 <script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/site-nav.js"></script>
 
-<!-- Site Loader -->
+<!-- Site Loader (v1.5.0 — native-Lottie aware, 1.7s min-display floor) -->
 <script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/site-loader.js"></script>
 
 
