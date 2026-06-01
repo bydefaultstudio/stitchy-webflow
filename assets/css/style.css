@@ -1265,6 +1265,7 @@ a.hero-ms-link:hover {
   padding-bottom: var(--section-s);
 }
 
+/* @global:start: TICKER */
 .ticker-track {
   display: inline-flex;
   align-items: center;
@@ -1289,6 +1290,7 @@ a.hero-ms-link:hover {
     animation: none;
   }
 }
+/* @global:end */
 
 /* -- Media -- */
 .media-fluid {
@@ -1323,6 +1325,7 @@ a.hero-ms-link:hover {
   text-align: center;
 }
 
+/* @global:start: SERVICES STACK */
 .services-section[data-bd-stack] {
   --bd-stack-overlap: 150px; /* resting overlap — single source of truth; bd-animations.js reads this too */
 }
@@ -1337,6 +1340,7 @@ a.hero-ms-link:hover {
     margin-top: calc(-1 * var(--bd-stack-overlap));
   }
 }
+/* @global:end */
 
 /* -- Team (polaroid grid: 3x2 flip cards. Cell holds the CSS tilt; inner .team-card owns rotateY so tilt survives flip. Perspective lives on the cell for per-card 3D depth.) -- */
 .team-section {
@@ -1389,6 +1393,7 @@ a.hero-ms-link:hover {
   will-change: transform;
 }
 
+/* @global:start: TEAM FLIP */
 /* Stable subtle tilts — same six angles every load, no JS randomisation. */
 .team-cell:nth-child(1) { transform: rotate(-1.5deg); }
 .team-cell:nth-child(2) { transform: rotate(1.2deg); }
@@ -1412,6 +1417,7 @@ a.hero-ms-link:hover {
   transition: transform 600ms ease;
 }
 
+/* @global:skip — team-specific outline would override the global WCAG focus ring */
 .team-card:focus-visible {
   outline: 2px solid var(--text-link, var(--text-primary));
   outline-offset: 4px;
@@ -1554,6 +1560,7 @@ a.hero-ms-link:hover {
   display: block;
 }
 
+/* @global:skip — team-specific outline would override the global WCAG focus ring */
 .team-cell-close:focus-visible {
   outline: 2px solid var(--text-link, var(--text-primary));
   outline-offset: 2px;
@@ -1576,6 +1583,7 @@ a.hero-ms-link:hover {
   .team-cell.is-flipped .team-face-front { opacity: 0; }
   .team-photo-hover { transition: none; }
 }
+/* @global:end */
 
 /* -- CTA -- */
 .cta-section {
@@ -2144,6 +2152,7 @@ a.hero-ms-link:hover {
   padding-block: var(--space-5xl);
 }
 
+/* @global:start: STANDOUT */
 /* With JS: overlap scenes in one grid cell, fixed viewport height. */
 .js .standout-stage {
   display: grid;
@@ -2224,6 +2233,7 @@ a.hero-ms-link:hover {
 .section-standout.is-static .standout-balls {
   display: none;
 }
+/* @global:end */
 
 /* ------ RESPONSIVE ------ */
 

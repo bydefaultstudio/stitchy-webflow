@@ -13,6 +13,9 @@
 # Local Claude Code config
 .claude/
 
+# CSS converter scratch output (build-global-css.js → build/global.css)
+build/
+
 # Internal build notes (local only, not for public repo)
 CLAUDE.md
 PROJECT_PROGRESS.md
@@ -21,4 +24,5 @@ WEBFLOW_PLAN.md
 CMS_COLLECTIONS.md
 ASSETS.md
 CSS_LAYER_MAP.md
+css-code-struture.md
 memory/
