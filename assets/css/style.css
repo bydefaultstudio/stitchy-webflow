@@ -2235,6 +2235,31 @@ a.hero-ms-link:hover {
 }
 /* @global:end */
 
+/* -- 404 / Error page (dedicated classes mirroring the home hero layout, so the
+   error page can be restyled without touching .hero-section / .hero-container) -- */
+.error-section {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--background-green);
+}
+
+.error-container {
+  max-width: var(--hero-container);
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* -- Legal page (Privacy & Cookie). The section and any id'd heading inside it
+   are offset so the target clears the 70px sticky .site-nav on deep-link jumps. -- */
+.legal-section,
+.legal-section [id] {
+  scroll-margin-top: calc(70px + var(--space-l));
+}
+
 /* ------ RESPONSIVE ------ */
 
 /* Tablet */
@@ -2315,6 +2340,10 @@ a.hero-ms-link:hover {
   }
 
   .hero-container {
+    max-width: var(--container-m);
+  }
+
+  .error-container {
     max-width: var(--container-m);
   }
 
