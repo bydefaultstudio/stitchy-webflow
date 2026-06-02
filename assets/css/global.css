@@ -577,6 +577,101 @@ button.button {
 .science-body-grid > .block { grid-column: 2; }
 
 
+/* ------ SIX THINGS ------ */
+/* Physics canvas + orbs: the custom props (--six-things-padding read by our-science.js,
+   --orb-size set by it), display:contents, inset, :focus-visible / [data-active] state
+   selectors, and the reduced-motion flex fallback can't be authored natively. The split
+   shell + typography are native classes; only this mechanic ships here. */
+
+.six-things-canvas {
+  --six-things-padding: clamp(var(--_spacing---space--xl), 3vw, var(--_spacing---space--3xl));
+  list-style: none;
+  margin: 0;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: transparent;
+  z-index: 2;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  padding-inline-start: 0;
+}
+.six-things-orb-item {
+  display: contents;
+}
+.six-things-source {
+  display: none;
+}
+.six-things-left-content {
+  position: absolute;
+  top: 3vh;
+  left: 3vh;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.science-orb {
+  --orb-size: clamp(3.5rem, 7vw, 6rem);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--orb-size);
+  height: var(--orb-size);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--_color---background--secondary);
+  color: var(--_color---text--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--_type---family--mona-sans);
+  font-size: calc(var(--orb-size) * 0.55);
+  font-weight: var(--_type---weight--semi-bold);
+  line-height: 1;
+  cursor: grab;
+  touch-action: pan-y;
+  will-change: transform;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+.science-orb:active {
+  cursor: grabbing;
+}
+.science-orb:focus-visible {
+  outline: 2px solid var(--_color---background--green);
+  outline-offset: 4px;
+}
+.science-orb[data-active="true"] {
+  background-color: var(--_color---background--green);
+  color: var(--_color---text--primary);
+}
+
+/* -- Reduced motion (physics skipped by JS; canvas falls back to a flex row) -- */
+@media (prefers-reduced-motion: reduce) {
+  .six-things-canvas {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--_spacing---space--s);
+    padding: var(--_spacing---space--l);
+  }
+  .six-things-left-content {
+    position: static;
+    pointer-events: auto;
+  }
+  .six-things-orb-item {
+    display: list-item;
+  }
+  .science-orb {
+    position: static;
+    transform: none !important;
+  }
+}
+
+
 /* ------ RESPONSIVE ------ */
 
 /* -- Buttons (font-size has no Webflow Variable; steps hardcoded) -- */
@@ -629,4 +724,18 @@ button.button {
 /* -- Science body: copy returns to a single column -- */
 @media (max-width: 991px) {
   .science-body-grid > .block { grid-column: auto; }
+}
+
+/* -- Six things: canvas fills the column edge-to-edge; title overlay nudges in -- */
+@media (max-width: 991px) {
+  .six-things-canvas {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .six-things-left-content {
+    top: 2vh;
+    left: 5%;
+  }
 }

@@ -1728,7 +1728,7 @@ a.hero-ms-link:hover {
   overflow: clip;
   min-height: 100vh;
   background-color: var(--background-dark);
-  color: var(--white);
+  color: var(--text-inverted);
 }
 
 /* Title overlays the canvas: BEHIND the balls in stacking order; never intercepts pointer events. */
@@ -1765,7 +1765,7 @@ a.hero-ms-link:hover {
 
 .six-things-right {
   background-color: var(--background-green);
-  color: var(--brand-dark);
+  color: var(--text-primary);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1786,7 +1786,7 @@ a.hero-ms-link:hover {
   font-size: 6vw;
   font-weight: var(--font-weight-medium);
   line-height: 1;
-  color: var(--brand-dark);
+  color: var(--text-primary);
 }
 
 /* Physics canvas: fills the left column edge-to-edge, sits ABOVE the title. our-science.js positions orbs via transform inside this bounding box; Matter walls match this rect. touch-action default so page scroll works over empty canvas space. */
@@ -1824,8 +1824,8 @@ a.hero-ms-link:hover {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background-color: var(--neutral-200);
-  color: var(--brand-dark);
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1844,14 +1844,14 @@ a.hero-ms-link:hover {
 }
 
 .science-orb:focus-visible {
-  outline: 2px solid var(--brand-green);
+  outline: 2px solid var(--background-green);
   outline-offset: 4px;
 }
 
 /* Active state — lime green; sole source of truth for the "selected fact" colour. */
 .science-orb[data-active="true"] {
-  background-color: var(--brand-green);
-  color: var(--brand-dark);
+  background-color: var(--background-green);
+  color: var(--text-primary);
 }
 
 /* Reduced motion: physics skipped by JS; canvas falls back to flex row. Click-swap still works. */
