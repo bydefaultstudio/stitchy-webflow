@@ -561,6 +561,22 @@ button.button {
 }
 
 
+/* ------ SCIENCE HERO ------ */
+/* Parent-hover cross-fade between the stacked portraits — a parent :hover targeting
+   descendants can't be authored natively. The stacking, sizing and resting opacity
+   states live natively on .skittles-img / .is-default / .is-hover. */
+
+.science-hero-portrait:hover .skittles-img.is-default { opacity: 0; }
+.science-hero-portrait:hover .skittles-img.is-hover  { opacity: 1; }
+
+
+/* ------ SCIENCE BODY ------ */
+/* Body copy occupies the right column of the 2-col grid — a child combinator on the
+   shared .block utility can't be native. The tablet collapse is in RESPONSIVE. */
+
+.science-body-grid > .block { grid-column: 2; }
+
+
 /* ------ RESPONSIVE ------ */
 
 /* -- Buttons (font-size has no Webflow Variable; steps hardcoded) -- */
@@ -608,4 +624,9 @@ button.button {
   [data-grid] > [data-stack-order="1"] { order: -3; }
   [data-grid] > [data-stack-order="2"] { order: -2; }
   [data-grid] > [data-stack-order="3"] { order: -1; }
+}
+
+/* -- Science body: copy returns to a single column -- */
+@media (max-width: 991px) {
+  .science-body-grid > .block { grid-column: auto; }
 }
