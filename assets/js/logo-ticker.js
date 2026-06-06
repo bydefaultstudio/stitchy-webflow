@@ -5,7 +5,7 @@
  *                 extension. Self-guards on presence; pauses for reduced motion.
  *                 Distinct from the CSS-only text `.ticker` ("No egos…").
  * Author: Erlen Masson
- * Version: 1.0.0
+ * Version: 1.0.1
  * Created: 6 June 2026
  * Last Updated: 6 June 2026
  */
@@ -20,7 +20,7 @@
     return;
   }
 
-  console.log("Script - Logo Ticker v1.0.0 (Stitchy)");
+  console.log("Script - Logo Ticker v1.0.1 (Stitchy)");
 
   // AutoScroll registers itself on window.splide.Extensions when its script
   // loads. Cache it once; if it's missing the ticker still mounts, just static.
@@ -45,13 +45,13 @@
       gap: "2.5rem",
       autoScroll: {
         autoStart: Boolean(AutoScroll) && !prefersReducedMotion(),
-        speed: 0.3,
+        speed: 1,
         pauseOnHover: false,
       },
       breakpoints: {
         600: {
           gap: "1.5rem",
-          autoScroll: { speed: 0.5 },
+          autoScroll: { speed: 1.2 },
         },
       },
     });
