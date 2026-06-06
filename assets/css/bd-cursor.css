@@ -4,7 +4,7 @@
  * Updated: June 6, 2026
  * Changes: Added solo mode (data-cursor-solo — icon rides the pointer) and hide
  *          mode (data-cursor-hide — native cursor shows through), gated behind
- *          .bd-cursor-ready. Semantic --text-inverted text color; token-driven
+ *          .bd-cursor-ready. Semantic --text-primary text color (dark on the green); token-driven
  *          fade (--duration-2xs / --ease-out).
  *          v4.0 pivoted from icon-replacement to additive tooltip-style label;
  *          native cursor stays visible, content driven by data-cursor-* attrs.
@@ -43,9 +43,9 @@
     padding: 6px 10px;
     border-radius: 0;
     background: var(--cursor--color);
-    /* Off-white text on the brand-green accent fill (single mode). Same token
-       the filled buttons use; the icon follows via currentColor. */
-    color: var(--text-inverted);
+    /* Dark text on the light brand-green accent fill (single mode) — white read
+       too low-contrast on the lime green; the icon follows via currentColor. */
+    color: var(--text-primary);
     font-family: inherit;
     font-size: 15px;
     line-height: 1;
