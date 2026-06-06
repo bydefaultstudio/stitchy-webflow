@@ -54,8 +54,23 @@ Global Footer
 
 
 ---
+Homepage Head (Page Settings → Custom Code, head)
+---
+
+<!-- Splide core CSS — REQUIRED for the logo ticker layout (without it the
+     slides stack vertically). Core only: no arrows/pagination theme needed. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide-core.min.css">
+
+
+---
 Homepage Footer
 ---
+
+<!-- Logo ticker — Splide core + AutoScroll extension. MUST load before
+     logo-ticker.js. (Intersection extension from the old project is NOT needed.) -->
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/logo-ticker.js"></script>
 
 <!-- Homepage Scripts -->
 <script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/homepage.js"></script>

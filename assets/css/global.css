@@ -401,6 +401,20 @@ button.button {
 }
 
 
+/* ------ LOGO TICKER ------ */
+/* SplideJS marquee (logo-ticker.js + Splide AutoScroll). Each .svg-code embed
+   holds a raw <svg> logo — can't be sized via Webflow classes, so normalise the
+   height here; Splide's autoWidth then derives each slide's width from the
+   logo's aspect. SVGs authored with fill: currentColor inherit .logo-ticker's
+   text colour. */
+
+.logo-ticker .svg-code svg {
+  display: block;
+  width: auto;
+  height: var(--_spacing---space--2xl);
+}
+
+
 /* ------ SERVICES STACK ------ */
 /* Resting overlap is the negative margin below — homepage.js reads --bd-stack-overlap too. */
 

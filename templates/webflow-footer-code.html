@@ -23,6 +23,13 @@
      to that page only via Page Settings → Custom Code (footer).
      ===========================================================================
      HOME (index):
+       <!-- Logo ticker: Splide core + AutoScroll MUST load before logo-ticker.js.
+            Also add the Splide CORE CSS to this page's HEAD (Page Settings →
+            Custom Code, head) — without it the slides stack vertically:
+              <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide-core.min.css"> -->
+       <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+       <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
+       <script src="http://localhost:2000/assets/js/logo-ticker.js"></script>
        <script src="http://localhost:2000/assets/js/homepage.js"></script>
 
      OUR SCIENCE (our-science) — Matter.js MUST load before our-science.js:
