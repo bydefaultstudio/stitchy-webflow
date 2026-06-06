@@ -264,7 +264,10 @@ button.button {
 .sticker-add.sticker-margarita::before    { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dcaa064ef33b41cca_sticker_Margarita.svg");            aspect-ratio: 136 / 116; }
 .sticker-add.sticker-megaphone::before    { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dfee538e890d8fa64_sticker_megaphone.svg"); }
 .sticker-add.sticker-phone::before        { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d81b18d9459a37b0c_sticker_phone.svg");                aspect-ratio: 87 / 107; }
-.sticker-add.sticker-post-social::before  { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d6d4d91ecdbe50035_sticker_post%20social.svg");        aspect-ratio: 176 / 98; transform: translateX(0.1em) translateY(0.1em) rotate(3deg) scale(1.05); }
+.sticker-add.sticker-post-social::before  {
+  background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d6d4d91ecdbe50035_sticker_post%20social.svg");
+  aspect-ratio: 176 / 98;
+  transform: translateX(0.1em) translateY(0.1em) rotate(3deg) scale(1.05); }
 .sticker-add.sticker-slot-machine::before { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3db3db0157963bfe4f_sticker_slot%20machine.svg");       aspect-ratio: 167 / 70; }
 .sticker-add.sticker-slot-green::before   { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d11b6e405a1f4e180_sticker_slot%20machine-green.svg"); aspect-ratio: 152 / 63; }
 .sticker-add.sticker-smiley::before       { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d321baeb989063a84_sticker_smiley.svg");               aspect-ratio: 104 / 105; transform: scale(1.07) rotate(var(--sticker-rotation, 0deg)); transform-origin: 50% 50%; will-change: transform; }
@@ -283,7 +286,13 @@ button.button {
 .sticker-swap.sticker-you {
   background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3eb3db0157963bfe7c_sticker_you.svg");
   aspect-ratio: 208 / 108;
-  transform: rotate(7deg) scale(1.05);
+  transform: rotate(7deg) scale(0.96);
+}
+.sticker-swap.sticker-post-social {
+  background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d6d4d91ecdbe50035_sticker_post%20social.svg");
+  aspect-ratio: 176 / 98;
+  transform: translateY(-0.6em) rotate(3deg) scale(0.7);
+    margin-inline: -0.7em;
 }
 .sticker-swap.sticker-o {
   background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d9c83315aa821244d_sticker_o.svg");
@@ -644,13 +653,13 @@ button.button {
   font-size: calc(var(--orb-size) * 0.55);
   font-weight: var(--_type---weight--semi-bold);
   line-height: 1;
-  cursor: grab;
+  cursor: var(--cursor-grab), grab;
   touch-action: pan-y;
   will-change: transform;
   transition: background-color 180ms ease, color 180ms ease;
 }
 .science-orb:active {
-  cursor: grabbing;
+  cursor: var(--cursor-grabbing), grabbing;
 }
 .science-orb:focus-visible {
   outline: 2px solid var(--_color---background--green);
@@ -683,6 +692,17 @@ button.button {
     position: static;
     transform: none !important;
   }
+}
+
+
+/* ------ LEGAL ------ */
+
+/* The section and any id'd heading inside it clear the 70px sticky .site-nav
+   on deep-link jumps (e.g. /privacy-policy#cookies). Descendant + [id]
+   selector → not natively authorable. */
+.legal-section,
+.legal-section [id] {
+  scroll-margin-top: calc(70px + var(--_spacing---space--l));
 }
 
 
@@ -753,3 +773,24 @@ button.button {
     left: 5%;
   }
 }
+
+/* ------ CUSTOM CURSORS ------ */
+/* Native OS-pointer images (cursor: url()). DISTINCT from bd-cursor.js (the tooltip
+   overlay). Base64 data: URIs — self-contained, no network fetch, no URL drift. Each
+   var holds the image + hotspot; the .cursor-* utility adds the MANDATORY keyword
+   fallback (omit it and the whole declaration is dropped). To swap an image/hotspot,
+   edit ONE var below — .science-orb and the matching .cursor-* utility share it.
+   Source: assets/images/cursors/cursor-*.png (50x50). Apply by adding a .cursor-*
+   class to an element in the Designer. Touch devices ignore custom cursors. */
+:root {
+  --cursor-default:  url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAu5JREFUeAHt3OFx2jAAhuGPXv+HERiBEWADNggbpBvgDcIGkAnoBmQD0glgg7CBKsWGOMI2Msjy5fI+d75eqK6981tLMphKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiGOgb84YM7G/uOMwGAzWQn9sjIX5amuPoZCeO/Gm2o4oPbAnfWTqrYS0/CDv7+9E6ZMfxL20Xq+J0peqICJKf+qCiCj9aAoioqR3LYiIklZIEBElndAgIkoabYKIKN1rG0RE6dYtQUSU7twaRETpxj1BRJT47g0iosQVI4iIEk+sICJKHDGDiCj3ix1ERLlPF0FElNt1FUREuU2XQUSU9roOIqK0kyKIiBIuVRARJUzKIKqOkgmfUgfRZRT3ZB6PrJ70EWQ4HPpPSI4V2S8h2PF49F+KfoUQpIWnpyfZq6T80kGR/RY0mUz0+PjYOGY0Gn2MK3kbDAYHIRdzDalYG65xg0fqwI+asrzp5sytDS8vLwp0sMe0q6vj237HsPgXuj/9bE9Q4/jFYvEx5Uyn08rfH4/H2u125Zf+2uOfN+zV/j2vwqU2U5aNcR7npqe6cdvttvxHboRwoUFWq9WXyT/Lstqx9gry1wpu/EJdC+KuBDsFXa7GdvFuukq8xT0TwhjvW7h223o+qXaLavb7vakzm81qg7grqNxPCGfy76Wfuenp+fm5agu7LI4Pbq1Q+BZ4JoQppq1rNxBZMfbLAuHWC9VEWS6X5aFbIZw9YWN77CtCuFB/vLHb8yVjT7rCF/eJ0I49afNiWlq5EKZih1SMyWtdWdy9LfBSiM/kG4HzFNe0BZ7P5/7Vxha4C65D+SpR+OI+F+Iz3na5aXH3PiHMlMCP+zzEvhflPmV6Pf3s3uOq8/DwICRgvC2wu5FUxZTl3VxyP9Kl8hbYnfhyFBfDfw/MdPT5Bwr+VeK4re5ms6m608+E7pV3XA3WQjomv1ncV4S4uNNP4dv/r6SxmPztkdNzVm/KH2I4CgBQ5z9JvfJ/KBAbLAAAAABJRU5ErkJggg==") 23 21;
+  --cursor-text:     url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAAvtJREFUeAHt3OFx2kAQhuFVKqAEdRBKUAehA9MB6gA6gA5IByYVkFQAHSgd4A4ut5ZEpNMJS8bMrOz3mbkByTp+7McdmBmtCAAAAAAAAAAAAICvK5EJcc7N/cPMj3OSJC8j5umcVJ/7eWfBfXxBV35cXFvhx96PtGdO6se6ui6ctxS8TxXGW/Z1MLoa/NgOmJMLxqne5a2Vcblc+gpc6DvfdVdE+ceic1pfaCYYzhds0SxomqZOT+vjcrmMFbkTQp7nbjabXecFgS4Fw/mCberKHQ6H16KGQwserho91vOx65+fn5uXbgTDVVvQtcj1CgmHnq9Xi143n8+j1+n5YFUtBMO58gP6Em5D+/2+E44WOxaGXrfdbmPbm55IBeM0V0lovV53Qmker1arW18CWB3v5YuX+XGKVbXvs0LD6HHU1xPcr9rCWl9tdQXU36Ik8pnS2J5ytqgHccH/J5vNphWIHgdhpILHco2vxKfTqRXI8Xhs7WqCx/OFnje3LWkEEmxXmUzIN5mu66+9/jNEPospB/IpEYgxBGIMgRhDIMYQiDEEYgyBGEMgxhCIMQRiDIEYQyDGEIgxBGIMgRhDIMYQiDEEYgyBGEMgxhCIMQRiDIEYQyDGEIgxBGIMgRhDIMYQiDEEYsyUA0nrJy8vNxsDTermkSkH8lQ/OZ/bHZeC4x+Cx3LOPTXvWdO+J9K4pU2PA0+Cj9W4JfrYusW2KKL3qUc6N+yr+angPq6n/9XQ/icRW8H7uLIrXIfe+hyGsVgsCOWRXNkgoLU97XY7l2VZZ0Vo3xMV9j/RodfrvEg4NDAbw5XtMK5hSGRrkkYYtVgo9dAmAw00FRijGYhuURJ55wddG25uaUIDs/u4sgvQ/7dznr+GoI99QcSCqeeFK8nRomk819PUMlZ7V7bb+Dnw+kIwXlXk4o0gsmDO8o052kkoFYMm0dm6Kt7Gj+9S/jalP1798eOQJMnvG/My/7Co5qXV6V9+7Py8vwIAAAAAAAAAAAAAAAAAH+8fDmDG2jzb4j8AAAAASUVORK5CYII=") 25 25;
+  --cursor-pointer:  url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAABJZJREFUeAHtnM1V60gQhe/8BOAMrCWzeoSgDMYTgZ0BTATWrNgOERgiwERgEQFMBDZLVoYdO09f6+e1G8kPHkjdku53Th0sC4TcV13dVdVtQAghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEJ3lF3SXyNjE2Lf8+M5YamwD0TpzY7sKWxubQrRKnRi2xegov6FbRMaW5UEUYTab4eTkBJvNBq+vr/bvXUM0zgx5LzBi7Nbr9a5gtVq5vSSCaJwEeYNPJpOdC3rgtn5FRxmNRugjnRWkr0iQwJAggSFBAkOCBIYECQwJEhgSJDB+R3+Jcxsbe0SWmk8ROH0WZF5x/K+xf4w9I1D6LEgV5/nPvxEovRUkjmOcnp7uc15XV1f79HwORWF1cZQbeUAH3FmIJMizuaYOcjTba6fmt9vtzgjzo6IWq40RPDOIWRZ7CQtZPyAytsL3XuOFkARhQ0xyi/DFuOl6ujNTU9lXHS14cAaPooQgCD/8wtjW2E1u6/y9CA3A3nJ/f4+bmxsY14bz83P7dJLfy7bJe6gjBEHukZVmXfgexWn8aZ3P51Vvj/J74MMxR0v4FmQG6wmkW+HsyHIjp/g+VW2Md1QfE7Qkim9B/ixeUAS6j9VqtTdLlDO0DF3ZYrFwx5cELdTpfQtSPpr068WTyoZgg1i/E7/rYl9UZ+eAz/vhg+Fcs/Fe4luQx+LF8/NhNoOuy2qMdzVEMRZMp1P36f4peA1nwI/heVrcNPy05TorlyRJ7MCNDZHgSGB4DDOr2v8PBojGJX0oqMRhADlBj2Ejlx+Wi91snAg7wScEsa9ZBdd58brGXb05x/es+0zQIL5dFv1UWhzc3t4enHQibA7u3/BJ6saZIiZhfOLCMcVijAYJIQ4pVWAS0OXsrJxkFZF8Y9SNO20uygtBkKviBQf2NE0PTrKROMD7ZGiCHHVbpCaS7iWhJBfLrQN0W1VTYN+9pC1CEWSJvKxa5bYIYwubvi62DmXDDnfa/IEsd4Wnp6c39YtipvPy8rLfoHNxcdGaKHd3d/ZDwuriLQZAjHyuz9ijLl7wgROgLtAgIRWoUlhu6/p6mDvSQivhliosl0uEgrVAonFCE6RUgT7bnW35os37CE2QFNbG/8vLS4SAI8gjGiTEVSel26qa/vrg4eHBPtxgYHB+W5sBbhum4tHi7t4Qe8jBKkLfs62KXppigJSFK98xSVEnyW2FgcIQnOui9g1hyqg7H1S4qxkGTAKrMViCbRsnQh/813Wwl6yRN0ZVabVJ2DtYg0dLKZOuwAph2Shtui7W7KHeUQmXk5YNQzfSNBWuSr3D4sB1oWFRTIEsyH0joRHBmnUhXwZkr5/6Cip6xhYSoxZG8AeicNDlE/1ZmA0wJeKqXVUziKNEcNwXLGE+0mMYbB4RgsLH8EAXvyY2QhajTKtOstTLpUP8OR6PyzIvM7Ys/7K2wWQhrSatztTNX9DXzX6YGSp6yyeMvaLxvShDYIYsx/SzQvBvKUQQy1i6/M3WLhGygT9GtgY4wtsZ0gZZ3Z5u6T9kFcoNAuJ/YLKwCVfhgAkAAAAASUVORK5CYII=") 28 16;
+  --cursor-grab:     url("data:image/png;base64,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") 25 25;
+  --cursor-grabbing: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAAA8xJREFUeAHt29t14jAQBuB/L+9LCe4gdIAf95EO4g6gA9wBpALYCiAVmFRAUgFQAWwFrAZjH3kQDskiR4n/7xwdcMwlR2OPR7IAiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIGvEDX1PXtN+mdU7be5A30sn9U4vVvpFpO9MOqq1Mi9RndE/v74LeJTItw3lnr5F36tSxTzcJ4gDnQZPPSEBXi5B32uGa1ul0DnEcH5vat3vlvSPQVc6Oful0ODq12+0edrvdoTCdTmsD5/h7DKol+b7ssMFgUHb4fD4/69DJZHLQoiiqvKbf75efIQFTgZmCasWwjmhNp6XZbPZqQFarVWV/mqb2/gz5tWaMPDgJqgWBV98RvtqS1RzteAsTHJi0VvmbCbS9GZs2N22IPBgSlCJIrRUjP0KlI6RkLY/g9XpdObol9RRngJxBer8YjUbl++W5JikM1xUMrSyRJRAXO8WVkiQIWZZVLuaapCmdqgpSCMBRHOhUZ9oELSPpofYoHQ6Hh1vT3yHBLcj3WfsW8Cyka0gCa3Amed10BsbjMcyFu3zR8/Mzbs3+/CRJKtt3d3f2S3/Bs58Ix6h4Ihdec5QeH4UEZ7lcHp/7CIgpn7FYLLDf748BofxiWaYGGRvo/I+astUnNbD0PkYJJWVF9oYuZaVMtUvTp6cnNGW73dqbf+FZKAEpe1s6Xo0Ljor0JSS1NEV9l/cvDm5g6AqGuL+/L/f3ej00RV2zNmiJBDXTIwUZZ9SNNXxQ81wxPAupyjqqS0eXzh5f5H9pa8raVDY2G4TAUWLfvuZWGJAaqprzHgwRUkDKdPDy8oIQFIPRky0aEFKVtSme+BiNv4f6P5ZoGZlJfbXSaoqeHUBDt3ZDOkPKmVSpbFS6aJxjNmCJBoQUEMkP5XXk8fERH0kmGy1LtNQMVtpqehBYkBteqKarBA0JbepkVjyRtPXw8ICP4PjeJVosg3WWuO6R+z471K1b71PuoYthpQtZ5tMktSSoseoqdOVZIk06qQmOa0cGOoqg1uG6Vpvckr2cyGoRqCS3DSsd5OtMkWA41maloDMpHMuAblkOS5pyrMtagy5KoYIiqeUWKUwWZjtWwEswIlCtFI5FcxIY6dS3lMYyRyWp78JPET48GN/wechSIVkEHbl2Fouo5VHfWZT7K9Jk9rbmjuQf5Ausm1tB8QVIT6e4bmH0tU3Oihj0XyLkR7N05nsDkSHAnxh8ppR1SfFr2h7yQEmzc9b+1GQ2eXt6XICpiYiIiIiIiIiIiIiIiIiIiIiIiKh5/wDy6PZbK95KUAAAAABJRU5ErkJggg==") 25 25;
+}
+.cursor-default   { cursor: var(--cursor-default), auto; }
+.cursor-text      { cursor: var(--cursor-text), text; }
+.cursor-pointer   { cursor: var(--cursor-pointer), pointer; }
+.cursor-grab      { cursor: var(--cursor-grab), grab; }
+.cursor-grabbing  { cursor: var(--cursor-grabbing), grabbing; }

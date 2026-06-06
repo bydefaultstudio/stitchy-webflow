@@ -1,10 +1,13 @@
 /**
- * bd-cursor — Tooltip-style cursor label
- * Version: 4.0.0
- * Updated: April 29, 2026
- * Changes: Pivoted from icon-replacement to additive tooltip-style label.
- *          Native cursor stays visible always. Content driven by HTML
- *          (data-cursor-label, data-cursor-icon, data-cursor-icon-end).
+ * bd-cursor — Tooltip-style cursor label + solo replacement mode
+ * Version: 4.1.0
+ * Updated: June 6, 2026
+ * Changes: Added solo mode (data-cursor-solo — icon rides the pointer) and hide
+ *          mode (data-cursor-hide — native cursor shows through), gated behind
+ *          .bd-cursor-ready. Semantic --text-inverted text color; token-driven
+ *          fade (--duration-2xs / --ease-out).
+ *          v4.0 pivoted from icon-replacement to additive tooltip-style label;
+ *          native cursor stays visible, content driven by data-cursor-* attrs.
  */
 
 /* Hidden by default on touch/tablet/narrow viewports — chrome injects these
@@ -40,7 +43,9 @@
     padding: 6px 10px;
     border-radius: 0;
     background: var(--cursor--color);
-    color: var(--white);
+    /* Off-white text on the brand-green accent fill (single mode). Same token
+       the filled buttons use; the icon follows via currentColor. */
+    color: var(--text-inverted);
     font-family: inherit;
     font-size: 15px;
     line-height: 1;
@@ -49,7 +54,25 @@
     opacity: 0;
     transform: translate3d(0, 0, 0);
     will-change: transform, opacity;
-    transition: opacity 0.15s ease-out;
+    transition: opacity var(--duration-2xs) var(--ease-out);
+  }
+
+  /* Solo mode — a flagged element hides the native cursor over itself (and
+     its children) and lets the icon-only graphic stand in for it (centered
+     on the pointer via JS). Gated behind .bd-cursor-ready, which JS adds only
+     once the cursor is confirmed live (desktop, not reduced-motion, DOM
+     present), so no-JS / reduced-motion / init-failure never hide the cursor
+     with nothing to replace it. The descendant rule is required because
+     children set their own cursor (e.g. cursor:pointer on links). */
+  .bd-cursor-ready [data-cursor-solo],
+  .bd-cursor-ready [data-cursor-solo] * {
+    cursor: none;
+  }
+
+  /* In solo mode the icon already sits on the pointer; the click halo would
+     bloom underneath it and read as noise. Hide it while solo is active. */
+  .bd-cursor-solo-active .cursor-halo {
+    display: none;
   }
 
   .cursor-label.is-visible {
@@ -68,6 +91,15 @@
   .cursor-label.is-icon-only .cursor-label-icon {
     width: 1em;
     height: 1em;
+  }
+
+  /* Solo cursor — larger than the shared .is-icon-only tooltip pill so the icon
+     reads as a cursor in its own right. Overrides the 40px above (equal
+     specificity, later in source); the 1em icon scales with font-size. */
+  .cursor-label.is-solo {
+    width: 56px;
+    height: 56px;
+    font-size: 22px;
   }
 
   /* Icon slots — both leading and trailing default to hidden. JS toggles

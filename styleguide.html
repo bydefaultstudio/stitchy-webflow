@@ -106,6 +106,10 @@
     /* Layout / spacing visualisers */
     .sg-frame { border: 1px dashed var(--_color---border--secondary); border-radius: var(--_border---radius--xs); }
     .sg-fill  { background-color: var(--_color---background--secondary); border-radius: var(--_border---radius--xs); padding: var(--_spacing---space--s) var(--_spacing---space--m); text-align: center; font-size: 0.875rem; }
+
+    /* Custom-cursor swatch surface (demo only). The cursors themselves are the real
+       .cursor-* utility classes from global.css, applied on the swatches below. */
+    .sg-cursor { background-color: var(--_color---background--secondary); }
   </style>
 </head>
 
@@ -455,6 +459,28 @@
                 <span class="sticker-swap sticker-you">you</span>
                 l<span class="sticker-swap sticker-o">o</span>ng
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ============ CUSTOM CURSORS (preview-only) ============ -->
+      <section class="top-medium bottom-medium">
+        <div class="padding-global">
+          <div class="container-xl">
+            <div class="block gap-large">
+              <h2>Custom cursors</h2>
+              <p class="text-size-m">Native CSS cursor images (cursor: url()) — distinct from the bd-cursor.js tooltip system. Defined once in global.css as .cursor-* utility classes (base64 data URIs, PNG, no network fetch or URL drift); apply one by adding its class to an element in the Designer. Hover a swatch to preview. Desktop/pointer only — touch devices ignore custom cursors, so never carry meaning in the cursor alone.</p>
+
+              <h3>Cursor set <span class="text-size-s">(50x50 · asset → class · hotspot · fallback)</span></h3>
+              <div class="grid cols-3">
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor cursor-default"></div><p class="text-size-s">cursor-default → .cursor-default · 23 21 · auto</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor cursor-text"></div><p class="text-size-s">cursor-text → .cursor-text · 25 25 · text</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor cursor-pointer"></div><p class="text-size-s">cursor-hand-pointing → .cursor-pointer · 28 16 · pointer</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor cursor-grab"></div><p class="text-size-s">cursor-hand-open → .cursor-grab · 25 25 · grab</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor cursor-grabbing"></div><p class="text-size-s">cursor-hand-grabbing → .cursor-grabbing · 25 25 · grabbing</p></div>
+              </div>
             </div>
           </div>
         </div>
