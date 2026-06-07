@@ -10,7 +10,7 @@
  *                 moves to the dialog and is restored to the trigger on close.
  *                 Entrance/exit is CSS (`.is-open`) — no GSAP, no DOM portalling.
  * Author: Erlen Masson
- * Version: 0.3.0
+ * Version: 0.4.0
  * Created: 7 June 2026
  * Last Updated: 7 June 2026
  */
@@ -27,7 +27,7 @@
     return;
   }
 
-  console.log("Script - Post-it v0.3.0 (Stitchy)");
+  console.log("Script - Post-it v0.4.0 (Stitchy)");
 
   var FOCUSABLE =
     'a[href], button:not([disabled]), input:not([disabled]), ' +
@@ -210,7 +210,7 @@
   }
 
   function wireTrigger(trigger) {
-    trigger.addEventListener("click", function onTriggerClick() {
+    function activate() {
       var id = trigger.getAttribute("data-postit-open");
       var source = findSource(id);
       if (!source) {
@@ -218,7 +218,20 @@
         return;
       }
       openPostit(source, trigger);
-    });
+    }
+    trigger.addEventListener("click", activate);
+    // A real <button>/<a> fires click on Enter/Space natively; any other element
+    // (e.g. a span with role="button") does not, so add keyboard activation to
+    // keep every trigger operable. preventDefault stops Space from scrolling.
+    var tag = trigger.tagName;
+    if (tag !== "BUTTON" && tag !== "A") {
+      trigger.addEventListener("keydown", function onTriggerKey(event) {
+        if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+          event.preventDefault();
+          activate();
+        }
+      });
+    }
   }
 
   //
