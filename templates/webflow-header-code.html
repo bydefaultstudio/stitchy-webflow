@@ -35,7 +35,11 @@
 <!-- BD Animations FOUC rules (must follow the .js classList.add script above) -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/bd-animations.css">
 
-<!-- (bd-cursor cut for Phase 1 — no token bridge / bd-cursor.css. See footer template note.) -->
+<!-- Cursor CSS — the single cursor file (native pointer cursors + tooltip/solo
+     overlay). SHIPS for the native data-cursor="grab" cursors (token-free base64;
+     .science-orb consumes var(--cursor-grab)). The JS overlay stays dormant until
+     its DOM + bd-cursor.js + token bridge are wired (see footer template note). -->
+<link rel="stylesheet" href="http://localhost:2000/assets/css/bd-cursor.css">
 
 <!-- Full width on mobile -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">

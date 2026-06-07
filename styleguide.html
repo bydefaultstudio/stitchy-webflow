@@ -38,9 +38,10 @@
   <!-- Can't-be-native layer (buttons, [data-grid], stickers, focus ring) — ships site-wide -->
   <link rel="stylesheet" href="assets/css/global.css" />
 
-  <!-- bd-cursor (tooltip overlay) — wired here so the styleguide demo is LIVE.
-       Cut from the launch pages (index/our-science); this is reference-only.
-       style.css (above) supplies bd-cursor.css's --tokens, so no bridge is needed. -->
+  <!-- bd-cursor.css — THE single cursor file (native pointer cursors + the JS
+       tooltip/solo overlay). Wired here so the overlay demo is LIVE; the native
+       data-cursor cursors ship site-wide, the overlay is reference-only for now.
+       style.css (above) supplies the overlay's --tokens, so no bridge is needed. -->
   <link rel="stylesheet" href="assets/css/bd-cursor.css" />
 
   <!-- ===========================================================================
@@ -112,9 +113,14 @@
     .sg-frame { border: 1px dashed var(--_color---border--secondary); border-radius: var(--_border---radius--xs); }
     .sg-fill  { background-color: var(--_color---background--secondary); border-radius: var(--_border---radius--xs); padding: var(--_spacing---space--s) var(--_spacing---space--m); text-align: center; font-size: 0.875rem; }
 
-    /* Custom-cursor swatch surface (demo only). The cursors themselves are the real
-       .cursor-* utility classes from global.css, applied on the swatches below. */
+    /* Custom-cursor swatch surface (demo only). The cursors themselves come from
+       bd-cursor.css (the one cursor file), applied on the swatches below by the
+       data-cursor / data-cursor-* attributes. */
     .sg-cursor { background-color: var(--_color---background--secondary); }
+
+    /* Demo: the real orb interaction — grab at rest (from data-cursor="grab"),
+       grabbing while pressed (the orb component bakes this :active swap in). */
+    .sg-cursor-press:active { cursor: var(--cursor-grabbing), grabbing; }
 
     /* bd-cursor demo: a solo box that centers a "hide" strip (native cursor carved out). */
     .sg-cursor-solo-box { display: flex; align-items: center; justify-content: center; }
@@ -479,8 +485,8 @@
         <div class="padding-global">
           <div class="container-xl">
             <div class="block gap-large">
-              <h2>Custom pointers <span class="text-size-s">(native cursor: url() — applied via data-cursor attribute)</span></h2>
-              <p class="text-size-m">Native CSS cursor images (cursor: url()) — distinct from the bd-cursor.js tooltip system. Defined once in global.css and applied by a data-cursor attribute (no utility class, so it never starts a combo class); base64 data URIs, PNG, no network fetch or URL drift. Hover a swatch to preview. Desktop/pointer only — touch devices ignore custom cursors, so never carry meaning in the cursor alone.</p>
+              <h2>Cursors <span class="text-size-s">(one file — bd-cursor.css — applied by attribute, never a class)</span></h2>
+              <p class="text-size-m">All cursors live in one file — <strong>bd-cursor.css</strong> — and are applied by a <code>data-cursor</code> / <code>data-cursor-*</code> attribute, never a class (so they never start a combo class). Two kinds, both locked to the pointer with <strong>no lag</strong>: <strong>native pointer swap</strong> (this section) replaces the OS pointer pixel-for-pixel via <code>cursor: url()</code> (base64 data URIs — no network fetch, no URL drift); the <strong>JS overlay</strong> (next section) floats a label/icon beside the live pointer. Hover a swatch to preview. Desktop/pointer only — touch devices ignore custom cursors, so never carry meaning in the cursor alone.</p>
 
               <h3>Cursor set <span class="text-size-s">(50x50 · asset → attribute · hotspot · fallback)</span></h3>
               <div class="grid cols-3">
@@ -489,6 +495,11 @@
                 <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="pointer"></div><p class="text-size-s">cursor-hand-pointing → data-cursor="pointer" · 28 16 · pointer</p></div>
                 <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="grab"></div><p class="text-size-s">cursor-hand-open → data-cursor="grab" · 25 25 · grab</p></div>
                 <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="grabbing"></div><p class="text-size-s">cursor-hand-grabbing → data-cursor="grabbing" · 25 25 · grabbing</p></div>
+              </div>
+
+              <h3>Press &amp; hold <span class="text-size-s">(grab → grabbing — how the draggable orbs swap)</span></h3>
+              <div class="grid cols-3">
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor sg-cursor-press" data-cursor="grab"></div><p class="text-size-s">data-cursor="grab" + component :active → grabbing · press &amp; hold the swatch</p></div>
               </div>
             </div>
           </div>
@@ -501,7 +512,7 @@
           <div class="container-xl">
             <div class="block gap-large">
               <h2>bd-cursor tooltips <span class="text-size-s">(JS overlay — applied via data-* attributes)</span></h2>
-              <p class="text-size-m">A floating label that follows the pointer, driven by data-attributes on any element (the native cursor stays visible). Hover a box to preview. Icon values are sprite symbol IDs (e.g. arrow-top-right, play-2). Desktop/pointer only; auto-disabled for reduced motion.</p>
+              <p class="text-size-m">A floating label locked to the pointer (no follow lag), driven by data-attributes on any element (the native cursor stays visible). Hover a box to preview. Icon values are sprite symbol IDs (e.g. arrow-top-right, play-2). Desktop/pointer only; auto-disabled for reduced motion.</p>
 
               <h3>Variants <span class="text-size-s">(hover each · attributes shown)</span></h3>
               <div class="grid cols-3">

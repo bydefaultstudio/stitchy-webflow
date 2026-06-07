@@ -28,7 +28,12 @@ Global Header
      Color/Spacing/Border/Type collections or groups breaks global.css). See memory
      global-css-reads-webflow-variables. -->
 
-<!-- (bd-cursor cut for Phase 1 — no bd-cursor.css / token bridge) -->
+<!-- bd-cursor.css = the single cursor file (native pointer cursors + tooltip/solo
+     overlay). SHIPS now for the native data-cursor="grab" cursors (token-free
+     base64; .science-orb consumes var(--cursor-grab) from it). The JS overlay
+     (labels/solo) stays dormant — harmless without its DOM — until bd-cursor.js +
+     a token bridge are wired in a later phase. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/css/bd-cursor.css">
 
 
 ---

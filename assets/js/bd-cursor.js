@@ -1,8 +1,8 @@
 /**
  * Script Purpose: Desktop tooltip-style cursor label + solo replacement mode
  * Author: Erlen Masson
- * Version: 4.1
- * Last Updated: June 6, 2026
+ * Version: 4.2
+ * Last Updated: June 7, 2026
  * Notes: Tooltip mode (default) keeps the native cursor visible and hangs a
  *        small label below it, showing text and/or icons declared via
  *        data-cursor-label, data-cursor-icon, data-cursor-icon-end on hovered
@@ -12,14 +12,16 @@
  *        renders nothing over the flagged element so the native cursor shows
  *        through — used to carve interactive controls (e.g. a video scrubber)
  *        out of a surrounding solo region; the element restores its own cursor
- *        value in CSS.
+ *        value in CSS. The label/solo icon is LOCKED to the pointer
+ *        (LABEL_LERP/HALO_LERP = 1) — no follow lag, matching the native
+ *        pointer cursors (data-cursor="grab" etc.) now in bd-cursor.css.
  */
 
 // Wrapped in an IIFE so re-loads of this script don't collide on the top-level
 // `const` declarations below. The window.__bdCursorInited guard inside
 // initBdCursor() prevents the listeners from being attached twice.
 (function () {
-console.log("Script - Cursor v4.1");
+console.log("Script - Cursor v4.2");
 
 // Path to the SVG icon sprite. On Webflow the sprite isn't served from /assets,
 // so set `window.BD_CURSOR_SPRITE` to its uploaded/jsDelivr URL in head custom
@@ -105,11 +107,13 @@ function initBdCursor() {
   ) || 100;
 
   // ------- Animation Configuration ------- //
-  // LERP only matters during the brief moments dots are visible (label hover or click).
-  // 1.0 = locked to pointer; lower = softer follow.
+  // 1.0 = locked to the pointer (no follow lag); lower = softer trailing follow.
+  // Locked here so the floating label / solo icon stays pixel-tight with the
+  // cursor, matching the native pointer cursors (data-cursor="grab" etc.) — the
+  // whole cursor system reads as one precise, lag-free pointer (owner request).
 
-  const LABEL_LERP = 0.75;
-  const HALO_LERP = 0.2;
+  const LABEL_LERP = 1;
+  const HALO_LERP = 1;
   const SNAP_THRESHOLD = 0.5;
   const LABEL_OFFSET_Y = 20;  // px below the cursor
 
