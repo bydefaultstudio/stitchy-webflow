@@ -119,10 +119,10 @@
     .sg-cursor { background-color: var(--_color---background--secondary); }
 
     /* Demo: the real orb interaction — grab at rest (from data-cursor="grab"),
-       grabbing while pressed (the orb component bakes this :active swap in). */
-    .sg-cursor-press:active { cursor: var(--cursor-grabbing), grabbing; }
+       grabbing while pressed (native keyword swap on :active). */
+    .sg-cursor-press:active { cursor: grabbing; }
 
-    /* bd-cursor demo: a solo box that centers a "hide" strip (native cursor carved out). */
+    /* bd-cursor demo: a replace box that centers a native carve-out strip (data-cursor-native). */
     .sg-cursor-solo-box { display: flex; align-items: center; justify-content: center; }
     .sg-cursor-hide-strip { padding: 0.4em 0.8em; background-color: var(--_color---brand--green); color: var(--_color---text--primary); border-radius: var(--_border---radius--xs); font-size: 0.7rem; }
   </style>
@@ -480,21 +480,21 @@
       </section>
 
 
-      <!-- ============ CUSTOM POINTERS — cursor: url() (preview-only) ============ -->
+      <!-- ============ NATIVE KEYWORD CURSORS — data-cursor (preview-only) ============ -->
       <section class="top-medium bottom-medium">
         <div class="padding-global">
           <div class="container-xl">
             <div class="block gap-large">
               <h2>Cursors <span class="text-size-s">(one file — bd-cursor.css — applied by attribute, never a class)</span></h2>
-              <p class="text-size-m">All cursors live in one file — <strong>bd-cursor.css</strong> — and are applied by a <code>data-cursor</code> / <code>data-cursor-*</code> attribute, never a class (so they never start a combo class). Two kinds, both locked to the pointer with <strong>no lag</strong>: <strong>native pointer swap</strong> (this section) replaces the OS pointer pixel-for-pixel via <code>cursor: url()</code> (base64 data URIs — no network fetch, no URL drift); the <strong>JS overlay</strong> (next section) floats a label/icon beside the live pointer. Hover a swatch to preview. Desktop/pointer only — touch devices ignore custom cursors, so never carry meaning in the cursor alone.</p>
+              <p class="text-size-m">All cursors live in one file — <strong>bd-cursor.css</strong> — applied by a <code>data-cursor</code> / <code>data-cursor-*</code> attribute, never a class (so they never start a combo class). Two layers: the <strong>native keyword cursor</strong> (this section) is the free, no-JS base — a bare OS keyword (<code>grab</code>, <code>pointer</code>, <code>text</code>…); the <strong>JS overlay</strong> (next section) hangs or rides an animated graphic/label that <strong>eases toward</strong> the live pointer. Hover a swatch to preview. Desktop/pointer only — touch devices ignore custom cursors, so never carry meaning in the cursor alone.</p>
 
-              <h3>Cursor set <span class="text-size-s">(50x50 · asset → attribute · hotspot · fallback)</span></h3>
+              <h3>Native keyword set <span class="text-size-s">(bare OS cursor · no JS · the fallback layer)</span></h3>
               <div class="grid cols-3">
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="default"></div><p class="text-size-s">cursor-default → data-cursor="default" · 23 21 · auto</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="text"></div><p class="text-size-s">cursor-text → data-cursor="text" · 25 25 · text</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="pointer"></div><p class="text-size-s">cursor-hand-pointing → data-cursor="pointer" · 28 16 · pointer</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="grab"></div><p class="text-size-s">cursor-hand-open → data-cursor="grab" · 25 25 · grab</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="grabbing"></div><p class="text-size-s">cursor-hand-grabbing → data-cursor="grabbing" · 25 25 · grabbing</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="default"></div><p class="text-size-s">data-cursor="default" → auto</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="text"></div><p class="text-size-s">data-cursor="text" → text</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="pointer"></div><p class="text-size-s">data-cursor="pointer" → pointer</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="grab"></div><p class="text-size-s">data-cursor="grab" → grab</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor="grabbing"></div><p class="text-size-s">data-cursor="grabbing" → grabbing</p></div>
               </div>
 
               <h3>Press &amp; hold <span class="text-size-s">(grab → grabbing — how the draggable orbs swap)</span></h3>
@@ -511,18 +511,28 @@
         <div class="padding-global">
           <div class="container-xl">
             <div class="block gap-large">
-              <h2>bd-cursor tooltips <span class="text-size-s">(JS overlay — applied via data-* attributes)</span></h2>
-              <p class="text-size-m">A floating label locked to the pointer (no follow lag), driven by data-attributes on any element (the native cursor stays visible). Hover a box to preview. Icon values are sprite symbol IDs (e.g. arrow-top-right, play-2). Desktop/pointer only; auto-disabled for reduced motion.</p>
+              <h2>bd-cursor overlay <span class="text-size-s">(JS — animated graphic cursors + text labels, from cursor-sprite.svg)</span></h2>
+              <p class="text-size-m">An animated graphic or label that <strong>eases toward</strong> the pointer (trailing motion), driven by data-attributes on any element. In <strong>replace</strong> mode the graphic takes the pointer's place (own colours — multi-colour supported); a <strong>badge</strong> does the same inside a lime circle; as a <strong>label</strong> the native cursor stays visible and text hangs below it. Hover a box to preview. Icon values are <code>&lt;symbol&gt;</code> IDs in <strong>cursor-sprite.svg</strong> (<code>arrow-right</code>, <code>arrow-left</code>, <code>add</code>, <code>close</code>, <code>cursor-default</code>, <code>cursor-text</code>, <code>cursor-hand-pointing</code>, <code>cursor-hand-grabbing</code>). Desktop/pointer only; auto-disabled for reduced motion.</p>
 
-              <h3>Variants <span class="text-size-s">(hover each · attributes shown)</span></h3>
+              <h3>Replace <span class="text-size-s">(native hidden — the graphic IS the cursor)</span></h3>
               <div class="grid cols-3">
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-label="View"></div><p class="text-size-s">data-cursor-label="View"</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-label="Open" data-cursor-icon="arrow-top-right"></div><p class="text-size-s">data-cursor-label="Open" + data-cursor-icon="arrow-top-right"</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-label="Next" data-cursor-icon-end="arrow-right"></div><p class="text-size-s">data-cursor-label="Next" + data-cursor-icon-end="arrow-right"</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-icon="play-2"></div><p class="text-size-s">data-cursor-icon="play-2" (no label → round badge)</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-icon="arrow-left" data-cursor-label="Drag" data-cursor-icon-end="arrow-right"></div><p class="text-size-s">data-cursor-icon + data-cursor-label + data-cursor-icon-end</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-solo="play-2"></div><p class="text-size-s">data-cursor-solo="play-2" (icon replaces the pointer)</p></div>
-                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor sg-cursor-solo-box" data-cursor-solo="play-2"><span class="sg-cursor-hide-strip" data-cursor-hide>data-cursor-hide</span></div><p class="text-size-s">data-cursor-hide on a child carves the native cursor out of a solo region</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-replace="cursor-hand-pointing"></div><p class="text-size-s">data-cursor-replace="cursor-hand-pointing" (graphic replaces the pointer · 64px)</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-replace="arrow-right"></div><p class="text-size-s">data-cursor-replace="arrow-right" (bare graphic, no circle)</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-badge="add"></div><p class="text-size-s">data-cursor-badge="add" (graphic in a lime circle)</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing"></div><p class="text-size-s">data-cursor-replace + data-cursor-replace-press (point → grab · press &amp; hold)</p></div>
+              </div>
+
+              <h3>Float <span class="text-size-s">(native stays — label/badge beside the pointer)</span></h3>
+              <div class="grid cols-3">
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-label="Read more"></div><p class="text-size-s">data-cursor-label="Read more" (text label, native cursor stays)</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-label="Open" data-cursor-icon="arrow-right"></div><p class="text-size-s">data-cursor-label="Open" + data-cursor-icon="arrow-right" (lead icon)</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-label="Next" data-cursor-icon-end="arrow-right"></div><p class="text-size-s">data-cursor-label="Next" + data-cursor-icon-end="arrow-right" (end icon)</p></div>
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor" data-cursor-icon="add"></div><p class="text-size-s">data-cursor-icon="add" (icon-only badge, floats)</p></div>
+              </div>
+
+              <h3>Native carve-out <span class="text-size-s">(a real control inside a replace region)</span></h3>
+              <div class="grid cols-3">
+                <div class="block gap-xsmall"><div class="sg-swatch sg-cursor sg-cursor-solo-box" data-cursor-replace="arrow-right"><span class="sg-cursor-hide-strip" data-cursor-native>data-cursor-native</span></div><p class="text-size-s">arrow replaces the pointer everywhere except the strip (native shows through)</p></div>
               </div>
             </div>
           </div>
@@ -541,7 +551,7 @@
     <span class="cursor-label-icon cursor-label-icon-end"><svg><use href="#placeholder"></use></svg></span>
   </div>
   <div class="cursor-halo"></div>
-  <script>window.BD_CURSOR_SPRITE = "assets/images/svg-icons/_sprite.svg";</script>
+  <script>window.BD_CURSOR_SPRITE = "assets/images/cursors/cursor-sprite.svg";</script>
   <script src="assets/js/bd-cursor.js"></script>
 
 </body>

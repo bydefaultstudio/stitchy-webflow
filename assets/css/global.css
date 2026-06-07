@@ -651,13 +651,13 @@ button.button {
   font-size: calc(var(--orb-size) * 0.55);
   font-weight: var(--_type---weight--semi-bold);
   line-height: 1;
-  cursor: var(--cursor-grab), grab;
+  cursor: grab;
   touch-action: pan-y;
   will-change: transform;
   transition: background-color 180ms ease, color 180ms ease;
 }
 .science-orb:active {
-  cursor: var(--cursor-grabbing), grabbing;
+  cursor: grabbing;
 }
 .science-orb:focus-visible {
   outline: 2px solid var(--_color---background--green);
@@ -773,8 +773,8 @@ button.button {
 }
 
 /* ------ CUSTOM CURSORS ------ */
-/* Moved: all cursor CSS now lives in ONE file - assets/css/bd-cursor.css (native
-   pointer cursors + the JS tooltip/solo overlay). The --cursor-* vars + the
-   [data-cursor] rules now live there; .science-orb below still consumes
-   var(--cursor-grab) from it, so bd-cursor.css must ship alongside global.css.
-   Apply any cursor by the data-cursor / data-cursor-* ATTRIBUTE - never a class. */
+/* Moved: all cursor CSS now lives in ONE file - assets/css/bd-cursor.css. Native
+   cursors are now bare OS keywords (v4.4 dropped the PNG --cursor-* vars), so the
+   .science-orb above uses a plain `grab` keyword. bd-cursor.css still ships for
+   the JS overlay (data-cursor-replace / -badge). Apply any custom cursor by the
+   data-cursor / data-cursor-* ATTRIBUTE - never a class. */

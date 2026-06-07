@@ -93,8 +93,8 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <!-- Can't-be-native layer (buttons, [data-grid], stickers, focus ring, motion slivers) — ships to production -->
   <link rel="stylesheet" href="assets/css/global.css" />
-  <!-- The single cursor file (native pointer cursors + dormant tooltip/solo overlay) —
-       .science-orb consumes var(--cursor-grab) from here. Ships site-wide. -->
+  <!-- The single cursor file (native keyword cursors + dormant JS overlay) —
+       .science-orb uses a plain grab keyword from here. Ships site-wide. -->
   <link rel="stylesheet" href="assets/css/bd-cursor.css" />
 </head>
 <body class="is-intro-loading">
@@ -234,32 +234,32 @@
         <div class="six-things-left">
           <ul class="six-things-canvas" role="list" data-six-orbs>
             <li class="six-things-orb-item">
-              <button type="button" class="science-orb" data-orb-id="1" data-active="true" aria-pressed="true" aria-controls="six-panel" aria-label="Fact 1: Most people aren&rsquo;t thinking about you.">
+              <button type="button" class="science-orb" data-cursor="grab" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing" data-orb-id="1" data-active="true" aria-pressed="true" aria-controls="six-panel" aria-label="Fact 1: Most people aren&rsquo;t thinking about you.">
                 <span aria-hidden="true">1</span>
               </button>
             </li>
             <li class="six-things-orb-item">
-              <button type="button" class="science-orb" data-orb-id="2" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 2: Brains remember fragments, not arguments.">
+              <button type="button" class="science-orb" data-cursor="grab" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing" data-orb-id="2" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 2: Brains remember fragments, not arguments.">
                 <span aria-hidden="true">2</span>
               </button>
             </li>
             <li class="six-things-orb-item">
-              <button type="button" class="science-orb" data-orb-id="3" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 3: Reach is rented. Memory is owned.">
+              <button type="button" class="science-orb" data-cursor="grab" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing" data-orb-id="3" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 3: Reach is rented. Memory is owned.">
                 <span aria-hidden="true">3</span>
               </button>
             </li>
             <li class="six-things-orb-item">
-              <button type="button" class="science-orb" data-orb-id="4" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 4: Penetration eats loyalty for breakfast.">
+              <button type="button" class="science-orb" data-cursor="grab" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing" data-orb-id="4" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 4: Penetration eats loyalty for breakfast.">
                 <span aria-hidden="true">4</span>
               </button>
             </li>
             <li class="six-things-orb-item">
-              <button type="button" class="science-orb" data-orb-id="5" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 5: People feel first. Then they justify.">
+              <button type="button" class="science-orb" data-cursor="grab" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing" data-orb-id="5" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 5: People feel first. Then they justify.">
                 <span aria-hidden="true">5</span>
               </button>
             </li>
             <li class="six-things-orb-item">
-              <button type="button" class="science-orb" data-orb-id="6" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 6">
+              <button type="button" class="science-orb" data-cursor="grab" data-cursor-replace="cursor-hand-pointing" data-cursor-replace-press="cursor-hand-grabbing" data-orb-id="6" data-active="false" aria-pressed="false" aria-controls="six-panel" aria-label="Fact 6">
                 <span aria-hidden="true">6</span>
               </button>
             </li>

@@ -1,43 +1,55 @@
 /**
- * Script Purpose: Desktop tooltip-style cursor label + solo replacement mode
+ * Script Purpose: Desktop animated cursor overlay — LABEL (float tooltip) + REPLACE / BADGE (graphic IS the cursor)
  * Author: Erlen Masson
- * Version: 4.2
+ * Version: 4.4
  * Last Updated: June 7, 2026
- * Notes: Tooltip mode (default) keeps the native cursor visible and hangs a
- *        small label below it, showing text and/or icons declared via
- *        data-cursor-label, data-cursor-icon, data-cursor-icon-end on hovered
- *        elements. Solo mode (data-cursor-solo="icon-name") hides the native
- *        cursor over the flagged element and lets that icon ride the pointer,
- *        no text — for media / thumbnail targets. Hide mode (data-cursor-hide)
- *        renders nothing over the flagged element so the native cursor shows
- *        through — used to carve interactive controls (e.g. a video scrubber)
- *        out of a surrounding solo region; the element restores its own cursor
- *        value in CSS. The label/solo icon is LOCKED to the pointer
- *        (LABEL_LERP/HALO_LERP = 1) — no follow lag, matching the native
- *        pointer cursors (data-cursor="grab" etc.) now in bd-cursor.css.
+ * Notes: Terminology — NATIVE CURSOR (OS pointer, kept as a bare CSS keyword in
+ *        bd-cursor.css) · ICON (a sprite glyph) · BADGE (icon in a lime circle) ·
+ *        LABEL (text pill). Positions — FLOAT (beside the pointer, native shown)
+ *        vs REPLACE (takes the pointer's place, native hidden).
+ *        LABEL (default): keeps the native cursor visible and hangs a small pill
+ *        below it via data-cursor-label, data-cursor-icon, data-cursor-icon-end.
+ *        REPLACE (data-cursor-replace="icon-name"): hides the native cursor and
+ *        lets the bare graphic ride the pointer. BADGE (data-cursor-badge="name"):
+ *        same, but the graphic keeps its lime circle. REPLACE-PRESS
+ *        (data-cursor-replace-press="name"): swaps the riding graphic while the
+ *        mouse is held (point→grab, play→pause). NATIVE carve-out
+ *        (data-cursor-native): renders nothing so the native cursor shows through
+ *        — carves an interactive control out of a surrounding replace region.
+ *        The overlay EASES toward the pointer (LABEL_LERP 0.75 / HALO_LERP 0.2 —
+ *        trailing motion); native keyword cursors in bd-cursor.css stay locked.
  */
 
 // Wrapped in an IIFE so re-loads of this script don't collide on the top-level
 // `const` declarations below. The window.__bdCursorInited guard inside
 // initBdCursor() prevents the listeners from being attached twice.
 (function () {
-console.log("Script - Cursor v4.2");
+console.log("Script - Cursor v4.4");
 
-// Path to the SVG icon sprite. On Webflow the sprite isn't served from /assets,
-// so set `window.BD_CURSOR_SPRITE` to its uploaded/jsDelivr URL in head custom
-// code before this script loads. Falls back to the repo-relative path locally.
-const SPRITE_URL = window.BD_CURSOR_SPRITE || "/assets/images/svg-icons/_sprite.svg";
+// Path to the dedicated cursor sprite (graphic cursors as <symbol>s). On Webflow
+// the sprite isn't served from /assets, so set `window.BD_CURSOR_SPRITE` to its
+// uploaded/jsDelivr URL in head custom code before this script loads. Falls back
+// to the repo-relative path locally.
+const SPRITE_URL = window.BD_CURSOR_SPRITE || "/assets/images/cursors/cursor-sprite.svg";
 
-// Solo mode — an element flagged with data-cursor-solo="icon-name" hides the
-// native cursor over itself and lets that icon ride the pointer (no text).
-const SOLO_ATTR = "data-cursor-solo";
-const SOLO_SELECTOR = "[" + SOLO_ATTR + "]";
-// Hide mode — an element flagged with data-cursor-hide suppresses the custom
-// cursor over itself (no label, no riding icon) so the native cursor shows
-// through. Lets an interactive control opt out of an ancestor's solo region;
-// the element restores its own cursor value in CSS.
-const HIDE_ATTR = "data-cursor-hide";
-const HIDE_SELECTOR = "[" + HIDE_ATTR + "]";
+// REPLACE mode — an element flagged with data-cursor-replace="icon-name" hides
+// the native cursor over itself and lets that bare graphic ride the pointer (no text).
+const REPLACE_ATTR = "data-cursor-replace";
+const REPLACE_SELECTOR = "[" + REPLACE_ATTR + "]";
+// REPLACE-PRESS — optional companion of data-cursor-replace/-badge: while the
+// mouse is held down over the element, the riding graphic swaps to this icon
+// (e.g. point→grab, play→pause). Read live in applyContent on press/release.
+const REPLACE_PRESS_ATTR = "data-cursor-replace-press";
+// BADGE mode — like replace, but the graphic keeps its lime circle (a badge that
+// IS the cursor) instead of riding bare. data-cursor-badge="icon-name".
+const BADGE_ATTR = "data-cursor-badge";
+const BADGE_SELECTOR = "[" + BADGE_ATTR + "]";
+// NATIVE carve-out — an element flagged with data-cursor-native suppresses the
+// custom cursor over itself (no label, no riding graphic) so the native cursor
+// shows through. Lets an interactive control opt out of an ancestor's replace
+// region; the element restores its own cursor value in CSS.
+const NATIVE_ATTR = "data-cursor-native";
+const NATIVE_SELECTOR = "[" + NATIVE_ATTR + "]";
 
 // Cross-origin <use href="…sprite.svg#id"> is blocked by browsers regardless of
 // CORS headers, so we fetch the sprite once and inject it into the document.
@@ -107,13 +119,14 @@ function initBdCursor() {
   ) || 100;
 
   // ------- Animation Configuration ------- //
-  // 1.0 = locked to the pointer (no follow lag); lower = softer trailing follow.
-  // Locked here so the floating label / solo icon stays pixel-tight with the
-  // cursor, matching the native pointer cursors (data-cursor="grab" etc.) — the
-  // whole cursor system reads as one precise, lag-free pointer (owner request).
+  // Overlay follow speed: 1.0 = locked to the pointer; lower = softer trailing
+  // follow. Restored to the original tuned values so the floating label / solo
+  // icon eases toward the pointer (premium trailing motion) and the click-halo
+  // drifts further behind it. The native pointer cursors (data-cursor="grab"
+  // etc.) in bd-cursor.css stay pixel-locked — only this JS overlay eases.
 
-  const LABEL_LERP = 1;
-  const HALO_LERP = 1;
+  const LABEL_LERP = 0.75;
+  const HALO_LERP = 0.2;
   const SNAP_THRESHOLD = 0.5;
   const LABEL_OFFSET_Y = 20;  // px below the cursor
 
@@ -133,7 +146,8 @@ function initBdCursor() {
   let activeTarget = null;
   let phase = "idle";          // 'idle' | 'visible' | 'fading-out'
   let fadeTimeoutId = null;
-  let soloActive = false;      // is the current activeTarget a solo target?
+  let soloActive = false;      // is the current activeTarget a replace/badge target? (native hidden)
+  let isPressed = false;       // is the mouse currently held down? (drives replace-press swap)
 
   // Single source of truth for the label transform so the two write sites
   // (animate + the firstMove snap) can never desync the offset. Normal mode
@@ -155,44 +169,59 @@ function initBdCursor() {
     // so solo targets keep resolving even with the native cursor hidden.
     return el.closest(
       "[data-cursor-label], [data-cursor-icon], [data-cursor-icon-end], " +
-      SOLO_SELECTOR + ", " + HIDE_SELECTOR
+      REPLACE_SELECTOR + ", " + BADGE_SELECTOR + ", " + NATIVE_SELECTOR
     );
   }
 
   function applyContent(target) {
-    // Determine the mode once, up front, and keep the solo state in sync with
-    // whatever is currently shown.
-    const solo = target.hasAttribute(SOLO_ATTR);
-    soloActive = solo;
-    document.documentElement.classList.toggle("bd-cursor-solo-active", solo);
-    // is-solo sizes the graphic larger than the shared .is-icon-only tooltip
-    // pill; toggling here adds it in solo mode and clears it for normal targets.
+    // Determine the mode once, up front. REPLACE (bare graphic) and BADGE (graphic
+    // in a circle) both hide the native cursor and ride the pointer; keep that
+    // "replace" state in sync with whatever is currently shown.
+    const solo = target.hasAttribute(REPLACE_ATTR);
+    const badge = target.hasAttribute(BADGE_ATTR);
+    const replaceMode = solo || badge;
+    soloActive = replaceMode;
+    document.documentElement.classList.toggle("bd-cursor-solo-active", replaceMode);
+    // is-solo strips the pill back to a bare graphic; is-badge keeps the lime
+    // circle. Mutually exclusive — both clear for float/tooltip targets.
     label.classList.toggle("is-solo", solo);
+    label.classList.toggle("is-badge", badge);
 
-    if (solo) {
-      // Solo: the icon becomes the cursor — no text, no trailing icon. Icon
-      // name comes from the flag's value, falling back to data-cursor-icon for
-      // the boolean form, then to nothing (graceful empty circle).
+    if (replaceMode) {
+      // The graphic becomes the cursor — no text, no trailing icon. Icon name
+      // comes from the replace/badge flag, falling back to data-cursor-icon for
+      // the boolean form, then to nothing (graceful empty circle). While pressed,
+      // data-cursor-replace-press (if set) swaps the rendered glyph.
       const iconName =
-        target.getAttribute(SOLO_ATTR) ||
+        target.getAttribute(REPLACE_ATTR) ||
+        target.getAttribute(BADGE_ATTR) ||
         target.getAttribute("data-cursor-icon") ||
         "";
+      const pressName = target.getAttribute(REPLACE_PRESS_ATTR);
+      const activeIcon = isPressed && pressName ? pressName : iconName;
 
       text.textContent = "";
       endIcon.classList.remove("is-active");
 
-      if (iconName) {
-        leadUse.setAttribute("href", `#${iconName}`);
+      if (activeIcon) {
+        leadUse.setAttribute("href", `#${activeIcon}`);
         leadIcon.classList.add("is-active");
       } else {
         leadIcon.classList.remove("is-active");
       }
 
-      // Reuse the icon-only circle look, centered on the pointer by labelTransform.
-      // Leaving solo for a normal target is cleaned up by the toggle() below.
+      // Expose the (rest) cursor name so CSS can size/style this cursor on its
+      // own (e.g. .cursor-label[data-cursor-name="cursor-hand-pointing"]).
+      label.setAttribute("data-cursor-name", iconName);
+
+      // Reuse the icon-only circle look, centered on the pointer by labelTransform;
+      // is-solo (above) strips the bg to a bare graphic, is-badge keeps it.
       label.classList.add("is-icon-only");
       return;
     }
+
+    // Float/tooltip target — clear the per-cursor styling hook.
+    label.removeAttribute("data-cursor-name");
 
     const labelText = target.getAttribute("data-cursor-label") || "";
     const iconLead = target.getAttribute("data-cursor-icon") || "";
@@ -219,10 +248,10 @@ function initBdCursor() {
 
   function completeFadeOutThenIn() {
     fadeTimeoutId = null;
-    // A hide target stays the activeTarget (so re-entering the surrounding region
-    // still counts as a change) but renders nothing — treated like "no target"
-    // for the label, leaving the native cursor visible.
-    if (activeTarget && !activeTarget.hasAttribute(HIDE_ATTR)) {
+    // A native carve-out stays the activeTarget (so re-entering the surrounding
+    // region still counts as a change) but renders nothing — treated like "no
+    // target" for the label, leaving the native cursor visible.
+    if (activeTarget && !activeTarget.hasAttribute(NATIVE_ATTR)) {
       applyContent(activeTarget);
       label.classList.add("is-visible");
       phase = "visible";
@@ -245,8 +274,8 @@ function initBdCursor() {
     }
 
     if (phase === "idle") {
-      // Hide targets show nothing — keep the label idle/hidden, native cursor through.
-      if (newTarget && !newTarget.hasAttribute(HIDE_ATTR)) {
+      // Native carve-outs show nothing — keep the label idle/hidden, native cursor through.
+      if (newTarget && !newTarget.hasAttribute(NATIVE_ATTR)) {
         applyContent(newTarget);
         label.classList.add("is-visible");
         phase = "visible";
@@ -328,10 +357,17 @@ function initBdCursor() {
 
   document.addEventListener("mousedown", () => {
     halo.classList.add("cursor-pressed");
+    isPressed = true;
+    // Re-read the active target so a replace-press graphic swaps in immediately.
+    if (activeTarget && phase === "visible") applyContent(activeTarget);
   });
 
   document.addEventListener("mouseup", () => {
     halo.classList.remove("cursor-pressed");
+    if (isPressed) {
+      isPressed = false;
+      if (activeTarget && phase === "visible") applyContent(activeTarget);
+    }
   });
 
   // Scroll keeps target in sync when the mouse is still but elements move

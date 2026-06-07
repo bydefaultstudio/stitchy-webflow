@@ -18,7 +18,7 @@
 
 <!-- PRE-LAUNCH: swap every http://localhost:2000/... URL below to a versioned
      https://cdn.jsdelivr.net/gh/<org>/<repo>@<tag-or-sha>/... URL before going live.
-     See HANDOVER.md "Pre-launch foot-guns" + WEBFLOW_CDN_LINKS.md for the pinned
+     See handover/HANDOVER.md "Pre-launch foot-guns" + WEBFLOW_CDN_LINKS.md for the pinned
      jsDelivr blocks and cache-busting (pin a tag/SHA, not @main). -->
 
 <!-- Design system + project styles — full spec + LOCAL PROTOTYPE only.
@@ -35,9 +35,9 @@
 <!-- BD Animations FOUC rules (must follow the .js classList.add script above) -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/bd-animations.css">
 
-<!-- Cursor CSS — the single cursor file (native pointer cursors + tooltip/solo
-     overlay). SHIPS for the native data-cursor="grab" cursors (token-free base64;
-     .science-orb consumes var(--cursor-grab)). The JS overlay stays dormant until
+<!-- Cursor CSS — the single cursor file (native keyword cursors + JS overlay).
+     SHIPS for the native data-cursor="grab" cursors (now bare OS keywords;
+     .science-orb uses a plain grab keyword). The JS overlay stays dormant until
      its DOM + bd-cursor.js + token bridge are wired (see footer template note). -->
 <link rel="stylesheet" href="http://localhost:2000/assets/css/bd-cursor.css">
 
