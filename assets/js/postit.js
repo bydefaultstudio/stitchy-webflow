@@ -8,9 +8,11 @@
  *                 `.post-it-source-body`). On open the shell's title/body are copied
  *                 from the source, the rest of the page is inert-ed behind it, focus
  *                 moves to the dialog and is restored to the trigger on close.
- *                 Entrance/exit is CSS (`.is-open`) — no GSAP, no DOM portalling.
+ *                 Entrance/exit is CSS via an `.is-open` class toggled on the dialog
+ *                 AND each animated part (backdrop/card/shadow), so the open/close
+ *                 states can be authored as native combo classes — no GSAP, no portal.
  * Author: Erlen Masson
- * Version: 0.4.0
+ * Version: 0.5.0
  * Created: 7 June 2026
  * Last Updated: 7 June 2026
  */
@@ -27,7 +29,7 @@
     return;
   }
 
-  console.log("Script - Post-it v0.4.0 (Stitchy)");
+  console.log("Script - Post-it v0.5.0 (Stitchy)");
 
   var FOCUSABLE =
     'a[href], button:not([disabled]), input:not([disabled]), ' +
@@ -43,6 +45,22 @@
   var titleEl = shell.querySelector(".post-it-title");
   var bodyEl = shell.querySelector(".post-it-body");
   var closeBtn = shell.querySelector(".post-it-close");
+
+  // Elements that animate on open/close. `is-open` is toggled on each (not only
+  // the dialog) so the entrance/exit states can be authored as native Webflow
+  // combo classes — .post-it-backdrop.is-open, .post-it.is-open, .post-it-shadow.is-open.
+  var animatedEls = [
+    shell,
+    shell.querySelector(".post-it-backdrop"),
+    shell.querySelector(".post-it"),
+    shell.querySelector(".post-it-shadow"),
+  ];
+
+  function setOpenState(on) {
+    for (var i = 0; i < animatedEls.length; i++) {
+      if (animatedEls[i]) animatedEls[i].classList.toggle("is-open", on);
+    }
+  }
 
   var inerted = []; // elements we inert-ed on open, to reverse exactly on close
   var activeTrigger = null;
@@ -144,7 +162,7 @@
     shell.hidden = false;
     shell.removeAttribute("aria-hidden"); // it's the live modal now
     void shell.offsetWidth; // reflow so the .is-open transition runs from hidden
-    shell.classList.add("is-open");
+    setOpenState(true);
     setBackgroundInert(true);
     document.body.classList.add("is-postit-open");
 
@@ -159,7 +177,7 @@
     var trigger = activeTrigger;
     activeTrigger = null;
 
-    shell.classList.remove("is-open");
+    setOpenState(false);
     shell.setAttribute("aria-hidden", "true"); // AT ignores the fading ghost
     setBackgroundInert(false);
     document.body.classList.remove("is-postit-open");
