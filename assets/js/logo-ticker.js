@@ -7,33 +7,44 @@
  *                 Self-guards on presence; pauses for reduced motion. Distinct
  *                 from the CSS-only text `.ticker` ("No egos…").
  *
- *                 Webflow-editable attributes on the `.logo-ticker` wrapper (all
- *                 optional; defaults below; speed: negative reverses, 0 stops):
- *                   data-ticker-speed         → desktop scroll speed (px/frame)
- *                   data-ticker-speed-mobile  → ≤600px scroll speed
- *                   data-ticker-area          → desktop logo footprint (rem²; bigger = larger)
- *                   data-ticker-area-mobile   → ≤600px logo footprint
+ *                 Webflow-editable attributes on the `.logo-ticker` wrapper —
+ *                 all optional, all small 1-based numbers like the speed knob:
+ *                   data-ticker-speed         → desktop scroll speed (default 1; negative reverses, 0 stops)
+ *                   data-ticker-speed-mobile  → ≤600px scroll speed (default 1.2)
+ *                   data-ticker-size          → desktop logo size (default 1; 2 = twice as big, 0.5 = half)
+ *                   data-ticker-size-mobile   → ≤600px logo size (default 1)
  * Author: Erlen Masson
- * Version: 1.2.0
+ * Version: 1.3.0
  * Created: 6 June 2026
- * Last Updated: 6 June 2026
+ * Last Updated: 7 June 2026
  */
 
 (function () {
   "use strict";
 
-  // Defaults used when the wrapper carries no matching data-ticker-* attribute.
+  // Defaults when the wrapper carries no matching data-ticker-* attribute.
   var DEFAULT_SPEED = 1; // desktop px/frame
   var DEFAULT_SPEED_MOBILE = 1.2; // ≤600px px/frame
-  var DEFAULT_AREA = 9; // desktop rem² (~3rem-square footprint)
-  var DEFAULT_AREA_MOBILE = 5; // ≤600px rem²
+  var DEFAULT_SIZE = 1; // desktop logo size scale (1 = default)
+  var DEFAULT_SIZE_MOBILE = 1; // ≤600px logo size scale
 
-  // Height/width clamp so extreme aspect ratios stay in a sane band. Keep these
-  // in step with the max-height/max-width in global.css (LOGO TICKER) — the CSS
-  // caps sit just above so they never clip the inline sizes.
-  var MIN_H = 1.25; // rem
-  var MAX_H = 3; // rem
-  var MAX_W = 11; // rem
+  // Internal equal-area footprint at size 1, in rem² — NOT exposed; the client
+  // tunes the linear `data-ticker-size` scale instead. Mobile is smaller so
+  // logos shrink on phones by default (data-ticker-size-mobile overrides it).
+  var BASE_AREA = 9; // desktop (~3rem-square footprint at size 1)
+  var BASE_AREA_MOBILE = 5; // ≤600px
+
+  // Per-logo clamp, in multiples of the chosen size scale, so an extreme aspect
+  // ratio can't run away. Clamps scale WITH data-ticker-size so the knob keeps
+  // headroom; maxWidth/Height are cleared inline so the global.css no-JS contain
+  // fallback never clips a JS-sized logo.
+  var MIN_H = 1.25; // rem at scale 1
+  var MAX_H = 3; // rem at scale 1
+  var MAX_W = 11; // rem at scale 1
+
+  // Keep a stray data-ticker-size typo (e.g. 50) from producing absurd logos.
+  var MIN_SIZE = 0.1;
+  var MAX_SIZE = 5;
 
   var MOBILE_QUERY = "(max-width: 600px)";
 
@@ -44,7 +55,7 @@
     return;
   }
 
-  console.log("Script - Logo Ticker v1.2.0 (Stitchy)");
+  console.log("Script - Logo Ticker v1.3.0 (Stitchy)");
 
   // AutoScroll registers itself on window.splide.Extensions when its script
   // loads. Cache it once; if it's missing the ticker still mounts, just static.
@@ -65,9 +76,12 @@
     return Number.isFinite(value) ? value : fallback;
   }
 
-  // Intrinsic aspect ratio (w/h) of a logo: an <img>'s natural size, or an
-  // <svg>'s viewBox. Returns 0 when unknown so the caller leaves it to the CSS
-  // contain-box (e.g. an image not yet decoded, or an SVG with no viewBox).
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  // Intrinsic aspect ratio (w/h): an <img>'s natural size, or an <svg>'s
+  // viewBox. Returns 0 when unknown so the CSS contain-box governs instead.
   function logoRatio(el) {
     if (el.tagName.toLowerCase() === "img") {
       return el.naturalWidth > 0 && el.naturalHeight > 0 ? el.naturalWidth / el.naturalHeight : 0;
@@ -84,21 +98,26 @@
     return 0;
   }
 
-  // Equal-area sizing: every logo gets the same footprint (area), so its height
-  // is √(area / ratio) and its width follows the ratio — wide logos get shorter,
-  // square logos taller, none distorted. Clamped to a sane height/width band.
-  function sizeLogo(el, area) {
+  // Equal-area sizing, then a linear `scale` (data-ticker-size). The footprint
+  // height is √(baseArea / ratio) so every logo shares one visual area; ×scale
+  // resizes the whole group linearly (scale 2 → twice as tall/wide). Clamps
+  // scale with `scale` to keep headroom; maxWidth/Height cleared inline so the
+  // global.css fallback caps never clip a JS-sized logo.
+  function sizeLogo(el, baseArea, scale) {
     var ratio = logoRatio(el);
     if (!ratio) return;
-    var h = Math.sqrt(area / ratio);
-    h = Math.min(Math.max(h, MIN_H), MAX_H);
+    var h = Math.sqrt(baseArea / ratio) * scale;
+    h = clamp(h, MIN_H * scale, MAX_H * scale);
     var w = h * ratio;
-    if (w > MAX_W) {
-      w = MAX_W;
+    var maxW = MAX_W * scale;
+    if (w > maxW) {
+      w = maxW;
       h = w / ratio;
     }
     el.style.height = h + "rem";
     el.style.width = w + "rem";
+    el.style.maxHeight = "none";
+    el.style.maxWidth = "none";
   }
 
   // All logo elements in a ticker — the client <img> (Logo field) and/or an
@@ -108,9 +127,9 @@
     return Array.prototype.slice.call(splideEl.querySelectorAll("img, .svg-code > svg"));
   }
 
-  function sizeAll(splideEl, area) {
+  function sizeAll(splideEl, baseArea, scale) {
     logoEls(splideEl).forEach(function (el) {
-      sizeLogo(el, area);
+      sizeLogo(el, baseArea, scale);
     });
   }
 
@@ -137,12 +156,20 @@
     var wrapper = splideEl.closest(".logo-ticker") || splideEl;
     var speed = attrNumber(wrapper, "data-ticker-speed", DEFAULT_SPEED);
     var speedMobile = attrNumber(wrapper, "data-ticker-speed-mobile", DEFAULT_SPEED_MOBILE);
-    var area = attrNumber(wrapper, "data-ticker-area", DEFAULT_AREA);
-    var areaMobile = attrNumber(wrapper, "data-ticker-area-mobile", DEFAULT_AREA_MOBILE);
+    var size = clamp(attrNumber(wrapper, "data-ticker-size", DEFAULT_SIZE), MIN_SIZE, MAX_SIZE);
+    var sizeMobile = clamp(
+      attrNumber(wrapper, "data-ticker-size-mobile", DEFAULT_SIZE_MOBILE),
+      MIN_SIZE,
+      MAX_SIZE
+    );
+
+    function applySizes() {
+      if (isMobile()) sizeAll(splideEl, BASE_AREA_MOBILE, sizeMobile);
+      else sizeAll(splideEl, BASE_AREA, size);
+    }
 
     imagesReady(splideEl).then(function () {
-      // Size before mount so autoWidth measures the real per-logo widths.
-      sizeAll(splideEl, isMobile() ? areaMobile : area);
+      applySizes(); // before mount so autoWidth measures the real per-logo widths
 
       var ticker = new Splide(splideEl, {
         type: "loop",
@@ -166,7 +193,7 @@
 
       ticker.mount(AutoScroll ? { AutoScroll: AutoScroll } : {});
 
-      // Re-size + re-measure only when the desktop/mobile area bucket flips
+      // Re-size + re-measure only when the desktop/mobile bucket flips
       // (rem sizes are otherwise viewport-independent).
       var wasMobile = isMobile();
       var resizeTimer = null;
@@ -176,7 +203,7 @@
           var nowMobile = isMobile();
           if (nowMobile === wasMobile) return;
           wasMobile = nowMobile;
-          sizeAll(splideEl, nowMobile ? areaMobile : area);
+          applySizes();
           ticker.refresh();
         }, 200);
       });
