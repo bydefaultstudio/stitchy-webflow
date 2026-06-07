@@ -401,11 +401,12 @@ button.button {
 /* ------ LOGO TICKER ------ */
 /* SplideJS marquee (logo-ticker.js + Splide AutoScroll). Logos arrive from the
    CMS as an uploaded image (Logo field -> <img>) or a pasted SVG (.svg-code
-   embed). logo-ticker.js EQUAL-AREA-sizes each one inline (width/height in rem)
-   so wide, tall and square logos share one visual footprint. These rules center
-   them on a common axis and act as the no-JS / unknown-ratio CONTAIN fallback —
-   the caps sit just above the JS clamp (MAX_H 3 / MAX_W 11) so they never fight
-   the inline sizes. */
+   embed). logo-ticker.js EQUAL-AREA-sizes each one inline — width/height in vw
+   on desktop so they scale with the viewport like the type scale, fixed rem
+   ≤600px — so wide, tall and square logos share one visual footprint. These
+   rules center them on a common axis and act as the no-JS / unknown-ratio
+   CONTAIN fallback; the JS clears max-width/height inline, so these rem caps
+   only apply when JS hasn't sized a logo and never fight the (vw) inline size. */
 
 .logo-ticker .splide__slide {
   display: flex;
