@@ -15,6 +15,7 @@
   --brand-green: #d3ff6b;
   --brand-orange: #ff4800;
   --brand-blue: #98affe;
+  --brand-yellow: #fdf35c;
   --brand-link: #96dd05;
 
   /* -- Base font sizes (fluid vw on desktop; rem at tablet/mobile — see Responsive. Mirror in Webflow Typography → Font Size.) -- */
@@ -115,6 +116,10 @@
   /* -- Solid colour backgrounds — hero blocks, callouts, etc. -- */
   --background-accent: var(--brand-green);
   --background-white: var(--white);
+  --background-postit: var(--brand-yellow);
+
+  /* -- Overlay scrim (modal/dialog backdrop) -- */
+  --background-overlay: var(--black-alpha-50);
 
   /* -- Brand surfaces — full-bleed coloured sections (mirror Webflow Brand/*) -- */
   --background-green: var(--brand-green);
@@ -1585,6 +1590,184 @@ a.hero-ms-link:hover {
 }
 /* @global:end */
 
+/* ------ POST-IT NOTE (dialog) ------ */
+/* A sticker/trigger ([data-postit-open="<id>"]) opens ONE shared modal shell,
+   filled with the note from the hidden source whose [data-postit-id] matches.
+   Open/close + content-copy + focus/inert live in assets/js/postit.js. See the
+   Webflow build handover: handover/HANDOVER_POSTIT.md.
+
+   Webflow split:
+   • NATIVE (this first block, OUTSIDE @global) — the card surface, type and close
+     button. BUILD THESE BY HAND in the Designer (bg Variable, padding, radius, type
+     classes). They live here only so the local prototype renders; they do NOT ship
+     in global.css.
+   • CAN'T-BE-NATIVE (@global: POST-IT) — the fixed overlay, backdrop, open state,
+     rotation, shadow, scroll-lock and trigger reset. These ship via global.css. */
+
+/* -- Native-able: build in Webflow -- */
+.post-it {
+  padding: var(--space-2xl) var(--space-xl);
+  background: var(--background-postit);
+  color: var(--text-primary);
+  border-radius: var(--radius-s);
+}
+
+.post-it-title {
+  margin: 0;
+  font-size: var(--font-2xl);
+  font-weight: var(--font-weight-extra-bold);
+  line-height: var(--line-height-s);
+  text-transform: uppercase;
+}
+
+.post-it-body {
+  margin: 0;
+  font-size: var(--font-m);
+  line-height: var(--line-height-l);
+}
+
+/* Close button — mirrors .team-cell-close (one accent pill, dark ×), 40px hit area. */
+.post-it-close {
+  position: absolute;
+  top: var(--space-m);
+  right: var(--space-m);
+  width: var(--space-3xl);
+  height: var(--space-3xl);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--background-accent);
+  color: var(--text-primary);
+  font-size: var(--font-l);
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* @global:start: POST-IT */
+/* Overlay layer — above the nav (≤1002), below the cursor (≥10000). */
+.post-it-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  overflow-y: auto;
+  pointer-events: none; /* let clicks through while a note fades out (.is-open removed) */
+}
+
+.post-it-dialog.is-open {
+  pointer-events: auto;
+}
+
+.post-it-dialog[hidden] {
+  display: none;
+}
+
+/* Centering stage — margin:auto centers it in the flex box and stays scrollable
+   if a note is taller than the viewport. min-width:0 + the container-xs cap keep
+   the card inside narrow viewports. Also the shadow's positioning anchor. */
+.post-it-stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+  margin: auto;
+  padding-top: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.post-it-stage .container-xs {
+  position: relative;
+}
+
+/* Dimmed backdrop — its own element so it fades independently and owns click-outside. */
+.post-it-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--background-overlay);
+  opacity: 0;
+  transition: opacity var(--duration-m) var(--ease-out);
+}
+
+.post-it-dialog.is-open .post-it-backdrop {
+  opacity: 1;
+}
+
+/* The card — tilt + fade/scale entrance handled here; visual surface is native (above).
+   CSS owns the entrance (no JS tween), so it works with or without GSAP. */
+.post-it {
+  --postit-rotation: -3deg;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: rotate(var(--postit-rotation)) scale(0.96);
+  transition: opacity var(--duration-m) var(--ease-out),
+              transform var(--duration-m) var(--ease-out);
+}
+
+.post-it-dialog.is-open .post-it {
+  opacity: 1;
+  transform: rotate(var(--postit-rotation)) scale(1);
+}
+
+/* Ground shadow — sibling of the card so the tilt doesn't drag it (840×50 strip). */
+.post-it-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: calc(-1 * var(--space-m));
+  width: 90%;
+  aspect-ratio: 840 / 50;
+  transform: translateX(-50%);
+  background: url("../images/post-it/post-it-shadow.png") center / contain no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity var(--duration-m) var(--ease-out);
+}
+
+.post-it-dialog.is-open .post-it-shadow {
+  opacity: 1;
+}
+
+/* Trigger reset — strips native button chrome but leaves the .sticker-swap
+   artwork (background-image) and the global :focus-visible ring intact.
+   background-COLOR (not the background shorthand) so the sticker image survives;
+   baseline alignment matches the <span> the button replaced. */
+.sticker-trigger {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 0;
+  background-color: transparent;
+  padding: 0;
+  font: inherit;
+  vertical-align: baseline;
+  cursor: pointer;
+}
+
+/* Scroll-lock while a note is open (unconditional — JS toggles the body class). */
+body.is-postit-open {
+  overflow: hidden;
+}
+
+/* Mobile: ease the tilt, then drop it so a tilted card never clips narrow viewports. */
+@media (max-width: 767px) {
+  .post-it { --postit-rotation: -1.5deg; }
+}
+
+@media (max-width: 479px) {
+  .post-it { --postit-rotation: 0deg; }
+}
+
+/* Reduced motion: no entrance tween; the static tilt stays (a tilt isn't motion). */
+@media (prefers-reduced-motion: reduce) {
+  .post-it-backdrop,
+  .post-it,
+  .post-it-shadow {
+    transition: none;
+  }
+}
+/* @global:end */
+
 /* -- CTA -- */
 .cta-section {
   background-color: var(--background-green);
@@ -2255,10 +2438,12 @@ a.hero-ms-link:hover {
 
 /* -- Legal page (Privacy & Cookie). The section and any id'd heading inside it
    are offset so the target clears the 70px sticky .site-nav on deep-link jumps. -- */
+/* @global:start: LEGAL */
 .legal-section,
 .legal-section [id] {
   scroll-margin-top: calc(70px + var(--space-l));
 }
+/* @global:end */
 
 /* ------ RESPONSIVE ------ */
 

@@ -42,7 +42,7 @@ const map = (local, webflow) => { TOKEN_MAP[local] = webflow; };
   .forEach((k) => map(`--space-${k}`, `--_spacing---space--${k}`));
 
 // Colour — backgrounds / text / border colours
-["primary", "secondary", "plain", "faded", "accent", "white", "green", "orange", "blue", "dark"]
+["primary", "secondary", "plain", "faded", "accent", "white", "green", "orange", "blue", "dark", "postit", "overlay"]
   .forEach((k) => map(`--background-${k}`, `--_color---background--${k}`));
 ["primary", "secondary", "plain", "faded", "accent", "link", "inverted"]
   .forEach((k) => map(`--text-${k}`, `--_color---text--${k}`));
@@ -63,17 +63,26 @@ const map = (local, webflow) => { TOKEN_MAP[local] = webflow; };
 map("--font-primary", "--_type---family--mona-sans");
 map("--font-tertiary", "--_type---family--mona-sans");
 
-// Local/runtime custom properties that are NOT design tokens — keep verbatim.
+// Custom properties kept VERBATIM (not renamed to a Webflow Variable):
+//  • runtime vars set by JS / per-element (rotation, sizes, overlap), and
+//  • motion tokens (--duration-*, --ease-*), which have no Webflow Variable —
+//    they're supplied by style.css's :root, which ships transitionally.
 const RUNTIME_VARS = new Set([
   "--bd-stack-overlap", "--sticker-rotation", "--sticker-image",
   "--grid-gap", "--icon-size", "--orb-size", "--six-things-padding",
+  "--postit-rotation",
+  "--ease-out", "--duration-2xs", "--duration-m",
 ]);
 
 
 /* ------ ASSET MAP (local path → Webflow CDN URL) ------ */
-/* Empty for the motion clusters (no asset URLs). Phase B fills this from the
-   sticker filename → CDN URL table when the sticker cluster is annotated. */
-const ASSET_MAP = {};
+/* Local image paths used inside @global rules → the jsDelivr URL the shipped
+   global.css must use (CSS url() resolves relative to global.css's own location,
+   so these MUST be absolute). Pin @main → a tag/SHA before launch. */
+const ASSET_MAP = {
+  "../images/post-it/post-it-shadow.png":
+    "https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/images/post-it/post-it-shadow.png",
+};
 
 
 /* ------ TRANSFORMS ------ */

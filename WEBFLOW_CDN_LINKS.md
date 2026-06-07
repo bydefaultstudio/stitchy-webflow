@@ -80,6 +80,10 @@ Homepage Footer
 <!-- Homepage Scripts -->
 <script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/homepage.js"></script>
 
+<!-- Post-it note dialog (sticker → modal). No-ops where no [data-postit-open] exists,
+     so this is site-wide-safe; keep on Homepage for now (only note is in the hero). -->
+<script src="https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/js/postit.js"></script>
+
 
 ---
 Our Science Footer

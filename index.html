@@ -164,7 +164,7 @@
         <div class="padding-global">
           <div class="hero-container">
             <div class="block align-center text-align-center gap-xlarge">
-              <h1 class="headline-xlarge" data-text-animate="headline-reveal">We are a strategy <span class="sticker-add sticker-smiley">led</span><span class="sticker-add sticker-post-social">agency!</span></h1>
+              <h1 class="headline-xlarge" data-text-animate="headline-reveal">We are a strategy <span class="sticker-add sticker-smiley">led</span><button type="button" class="sticker-swap sticker-post-social sticker-trigger" data-postit-open="post-social" aria-haspopup="dialog" aria-label="What does post-social mean? Open note">post-social</button>agency!</h1>
               <p class="text-size-l" data-bd-animate="fade" data-bd-delay="1.4">
                 Shaped by social and grounded in <a class="hero-ms-link" href="/our-science.html">marketing science</a>.
               </p>
@@ -325,7 +325,7 @@
           <div class="standout-scene padding-global">
             <div class="container-xl">
               <div class="block align-center text-align-center gap-xlarge">
-                <h2 class="headline-xlarge text-align-center">We are here to make <span class="sticker-swap sticker-you">you</span> stand out from it</h2>
+                <h2 class="headline-xlarge text-align-center">We are here to make <button type="button" class="sticker-swap sticker-you sticker-trigger" data-postit-open="stand-out" aria-haspopup="dialog" aria-label="What do we mean by stand out? Open note">you</button> stand out from it</h2>
               </div>
             </div>
 
@@ -581,6 +581,53 @@
     </footer>
     <!-- /WF:COMPONENT site-footer -->
 
+    <!-- WF:COMPONENT name="post-it-system" — build ONCE, place in a GLOBAL component
+         so every page has it (one source of truth). Two parts:
+
+         (1) THE MODAL SHELL — a single, styled dialog, hidden until opened. Its title
+             + body are EMPTY placeholders; postit.js fills them from the matched note.
+             Keep it top-level (a direct child of .page-wrapper / Body) and NOT inside a
+             transformed ancestor, so position:fixed covers the viewport.
+
+         (2) THE HIDDEN NOTE SOURCE — the data only. In Webflow this is a Collection List
+             ("Post-it Notes") with its WRAPPER set display:none; each item carries
+             `data-postit-id` ← the "Post-it ID" field, `.post-it-source-title` ← Title,
+             `.post-it-source-body` ← Description (plain text). Unstyled — never shown.
+
+         A trigger is ANY element with `data-postit-open="<post-it-id>"`. On click,
+         postit.js copies that note's title/body into the shell and opens it. The two
+         sample notes below prove the repeatable system; `stand-out` (wired to the "you"
+         sticker) is a demo — delete its source row + revert that <button> to remove. -->
+
+    <!-- (1) The single modal shell -->
+    <div class="post-it-dialog" role="dialog" aria-modal="true" hidden>
+      <div class="post-it-backdrop"></div>
+      <section class="post-it-stage padding-global">
+        <div class="container-xs">
+          <div class="post-it">
+            <button type="button" class="post-it-close" aria-label="Close note">&times;</button>
+            <div class="block gap-large">
+              <h2 class="post-it-title"></h2>
+              <p class="post-it-body"></p>
+            </div>
+          </div>
+          <div class="post-it-shadow" aria-hidden="true"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- (2) The hidden note source (→ a hidden CMS Collection List in Webflow) -->
+    <div class="post-it-source-list" hidden>
+      <div class="post-it-source" data-postit-id="post-social">
+        <span class="post-it-source-title">Post-social?</span>
+        <span class="post-it-source-body">Think post-industrial, but for social. The industrial age didn&rsquo;t end, it became the ground everything got built on. Social&rsquo;s the same now. Not a channel you add on, but the world every brand lives in.</span>
+      </div>
+      <div class="post-it-source" data-postit-id="stand-out">
+        <span class="post-it-source-title">Stand out?</span>
+        <span class="post-it-source-body">In a sea of sameness, blending in is the real risk. We build brands that get noticed &mdash; and remembered &mdash; for the right reasons.</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- WF:SITE-FOOTER-CODE — GSAP + bd-animations are site-wide; already in
@@ -603,6 +650,10 @@
   <!-- WF:PAGE-FOOTER-CODE — homepage-only module. Page Settings → Custom Code
        (footer) on the Home page only. Must load AFTER GSAP. -->
   <script src="assets/js/homepage.js"></script>
+
+  <!-- Post-it dialog (sticker → modal). Site-wide-capable; no-ops where no
+       [data-postit-open] exists. Loads after GSAP for the optional entrance tween. -->
+  <script src="assets/js/postit.js"></script>
 
 </body>
 </html>
