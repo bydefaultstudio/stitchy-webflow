@@ -343,8 +343,9 @@
            Six `.team-cell` blocks below are prototype-only — in Webflow the
            Designer renders ONE template inside a Collection List and CMS provides
            the rest. See CMS plan in port-plan header above.
-           JS-HOOK module="homepage.js" attrs="data-team-grid, data-position,
-             data-name, data-role, data-fact + hidden img.team-sticker-src"
+           JS-HOOK module="homepage.js" attrs="data-team-grid, data-name, data-role,
+             data-fact + hidden img.team-sticker-src" (sort the list by `position` asc;
+             data-position itself is no longer read by the JS — DOM order drives layout)
            A11Y: the .team-cell-close button needs `inert` (or display:none)
            when the cell is closed — add to the Webflow Designer interaction state. -->
       <section class="team-section background-color-dark">
@@ -370,12 +371,13 @@
                        team-photo-main src/alt ← photo-main, team-photo-hover src ← photo-hover.
                        The aria-label on .team-card must be bound to the CMS name field
                        ("View {{name}}") not hardcoded.
-                       ⚠ CRITICAL: data-position is a LAYOUT SLOT read by homepage.js
-                       (TEAM_LAYOUTS[position]), not just a sort key. Its VALUE must be
-                       BOUND to the CMS `position` field (custom attribute → "+ Add field"),
-                       NEVER hardcoded — if all items ship data-position="1" the flip-layout
-                       collapses. Also set the Collection List sort to `position` ascending so
-                       DOM order matches slot number. -->
+                       LAYOUT: homepage.js derives the flip layout from DOM ORDER + live
+                       grid geometry (v1.4.0+), so it works for ANY member count and
+                       data-position is NO LONGER read by the JS. The one requirement is
+                       to set the Collection List sort to `position` ASCENDING — that sort
+                       is what produces the DOM order. The data-position attribute binding
+                       is now optional (kept here only as a harmless prototype label); it
+                       can be removed from the Webflow Collection Item. -->
                   <article class="team-cell" data-position="1"
                             data-name="G Douglas Kilgannon"
                             data-role="CEO"

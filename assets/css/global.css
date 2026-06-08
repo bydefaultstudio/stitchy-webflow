@@ -570,19 +570,25 @@ body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equival
   aspect-ratio: auto;
 }
 
-/* -- Slot anchors + sticker rotation (per grid position) -- */
-.team-cell[data-position="1"] .team-back-sticker { transform: rotate(8deg); }
-.team-cell[data-position="2"] .team-back-sticker { transform: rotate(-5deg); }
-.team-cell[data-position="3"] .team-back-sticker { transform: rotate(6deg); }
-.team-cell[data-position="4"] .team-back-sticker { transform: rotate(-10deg); }
-.team-cell[data-position="5"] .team-back-sticker { transform: rotate(4deg); }
-.team-cell[data-position="6"] .team-back-sticker { transform: rotate(-7deg); }
-.team-cell[data-position="1"] .team-face-back { align-items: start; text-align: left;   }
-.team-cell[data-position="2"] .team-face-back { align-items: start; text-align: center; }
-.team-cell[data-position="3"] .team-face-back { align-items: start; text-align: right;  }
-.team-cell[data-position="4"] .team-face-back { align-items: end;   text-align: left;   }
-.team-cell[data-position="5"] .team-face-back { align-items: end;   text-align: center; }
-.team-cell[data-position="6"] .team-face-back { align-items: end;   text-align: right;  }
+/* -- Sticker rotation — fixed 6-angle cycle keyed to the landing cell's DOM order
+   (the slot the sticker flips into); any member count. -- */
+.team-cell:nth-child(6n+1) .team-back-sticker { transform: rotate(8deg); }
+.team-cell:nth-child(6n+2) .team-back-sticker { transform: rotate(-5deg); }
+.team-cell:nth-child(6n+3) .team-back-sticker { transform: rotate(6deg); }
+.team-cell:nth-child(6n+4) .team-back-sticker { transform: rotate(-10deg); }
+.team-cell:nth-child(6n+5) .team-back-sticker { transform: rotate(4deg); }
+.team-cell:nth-child(6n)   .team-back-sticker { transform: rotate(-7deg); }
+
+/* -- Slot anchors — homepage.js sets data-anchor-h/-v per landing cell from the
+   live grid geometry (row/col at the current column count), so each cell radiates
+   toward its own outer corner. One rule set covers every breakpoint AND member
+   count (this is why the mobile 2-col override is no longer needed here). -- */
+.team-cell[data-anchor-h="left"]   .team-face-back { text-align: left;   }
+.team-cell[data-anchor-h="center"] .team-face-back { text-align: center; }
+.team-cell[data-anchor-h="right"]  .team-face-back { text-align: right;  }
+.team-cell[data-anchor-v="start"]  .team-face-back { align-items: start;  }
+.team-cell[data-anchor-v="center"] .team-face-back { align-items: center; }
+.team-cell[data-anchor-v="end"]    .team-face-back { align-items: end;    }
 
 /* -- Close button (active cell) -- */
 .team-cell-close {

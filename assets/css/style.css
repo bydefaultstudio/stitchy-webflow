@@ -1391,13 +1391,16 @@ a.hero-ms-link:hover {
 }
 
 /* @global:start: TEAM FLIP */
-/* Stable subtle tilts — same six angles every load, no JS randomisation. */
-.team-cell:nth-child(1) { transform: rotate(-1.5deg); }
-.team-cell:nth-child(2) { transform: rotate(1.2deg); }
-.team-cell:nth-child(3) { transform: rotate(-0.8deg); }
-.team-cell:nth-child(4) { transform: rotate(1.6deg); }
-.team-cell:nth-child(5) { transform: rotate(-1.2deg); }
-.team-cell:nth-child(6) { transform: rotate(0.9deg); }
+/* Stable subtle tilts — a fixed 6-angle cycle (no JS, no randomisation). Keyed
+   to DOM order so it repeats cleanly for any member count; the first six match
+   the original hand-picked angles. Relies on .team-cell being the direct grid
+   child (it is the Webflow .w-dyn-item — verified), so :nth-child counts true. */
+.team-cell:nth-child(6n+1) { transform: rotate(-1.5deg); }
+.team-cell:nth-child(6n+2) { transform: rotate(1.2deg); }
+.team-cell:nth-child(6n+3) { transform: rotate(-0.8deg); }
+.team-cell:nth-child(6n+4) { transform: rotate(1.6deg); }
+.team-cell:nth-child(6n+5) { transform: rotate(-1.2deg); }
+.team-cell:nth-child(6n)   { transform: rotate(0.9deg); }
 
 .team-card {
   position: relative;
@@ -1433,12 +1436,17 @@ a.hero-ms-link:hover {
   background: var(--background-faded);
 }
 
-/* Back face: single-cell grid; [data-position] anchors content via align-items + text-align. Stickers opt out (margin: auto). */
+/* Back face: single-cell grid; homepage.js writes [data-anchor-h]/[data-anchor-v]
+   (from live grid geometry) to anchor content via align-items + text-align. The
+   centred default below covers the brief moment before JS sets them. Stickers opt
+   out (margin: auto). */
 .team-face-back {
   display: grid;
   padding: var(--space-l);
   background: var(--background-primary);
   color: var(--text-primary);
+  align-items: center;
+  text-align: center;
   transform: rotateY(180deg);
 }
 
@@ -1512,21 +1520,25 @@ a.hero-ms-link:hover {
   aspect-ratio: auto;
 }
 
-/* Hand-placed rotation per team member — tweak any value to retilt. */
-.team-cell[data-position="1"] .team-back-sticker { transform: rotate(8deg); }   /* Doug — burrito */
-.team-cell[data-position="2"] .team-back-sticker { transform: rotate(-5deg); }  /* Ange — margarita */
-.team-cell[data-position="3"] .team-back-sticker { transform: rotate(6deg); }   /* Stephanie — slot */
-.team-cell[data-position="4"] .team-back-sticker { transform: rotate(-10deg); } /* Natalie — coffee */
-.team-cell[data-position="5"] .team-back-sticker { transform: rotate(4deg); }   /* Ruth — eye */
-.team-cell[data-position="6"] .team-back-sticker { transform: rotate(-7deg); }  /* Colin — smiley */
+/* Sticker rotation — a fixed 6-angle cycle keyed to the landing cell's DOM order
+   (the slot the sticker flips into), so it works for any member count. */
+.team-cell:nth-child(6n+1) .team-back-sticker { transform: rotate(8deg); }
+.team-cell:nth-child(6n+2) .team-back-sticker { transform: rotate(-5deg); }
+.team-cell:nth-child(6n+3) .team-back-sticker { transform: rotate(6deg); }
+.team-cell:nth-child(6n+4) .team-back-sticker { transform: rotate(-10deg); }
+.team-cell:nth-child(6n+5) .team-back-sticker { transform: rotate(4deg); }
+.team-cell:nth-child(6n)   .team-back-sticker { transform: rotate(-7deg); }
 
-/* Slot anchors (desktop 3x2): each cell radiates toward its outer corner. */
-.team-cell[data-position="1"] .team-face-back { align-items: start; text-align: left;   }
-.team-cell[data-position="2"] .team-face-back { align-items: start; text-align: center; }
-.team-cell[data-position="3"] .team-face-back { align-items: start; text-align: right;  }
-.team-cell[data-position="4"] .team-face-back { align-items: end;   text-align: left;   }
-.team-cell[data-position="5"] .team-face-back { align-items: end;   text-align: center; }
-.team-cell[data-position="6"] .team-face-back { align-items: end;   text-align: right;  }
+/* Slot anchors — homepage.js sets data-anchor-h/-v per landing cell from the live
+   grid geometry (row/col at the current column count), so each cell radiates
+   toward its own outer corner. One rule set covers every breakpoint AND member
+   count — no per-position, no per-breakpoint duplication. */
+.team-cell[data-anchor-h="left"]   .team-face-back { text-align: left;   }
+.team-cell[data-anchor-h="center"] .team-face-back { text-align: center; }
+.team-cell[data-anchor-h="right"]  .team-face-back { text-align: right;  }
+.team-cell[data-anchor-v="start"]  .team-face-back { align-items: start;  }
+.team-cell[data-anchor-v="center"] .team-face-back { align-items: center; }
+.team-cell[data-anchor-v="end"]    .team-face-back { align-items: end;    }
 
 /* Close button: one per cell, top-right INSIDE the polaroid; only shown on the active cell. */
 /* Hidden CMS-bound sticker image — JS reads its src to spread onto back faces
@@ -2826,16 +2838,13 @@ body.is-postit-open {
     justify-content: center;
   }
 
-  /* -- Team grid: 3x2 → 2x3 at mobile. TEAM_LAYOUTS positions re-flow into the narrower grid. -- */
+  /* -- Team grid: 3-col → 2-col at mobile. Back-face anchoring re-derives itself
+     from the live column count in homepage.js, so no per-position override is
+     needed here (this is also why the old desktop-only override never had to be
+     duplicated for mobile). -- */
   .team-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .team-cell[data-position="1"] .team-face-back { align-items: start;  text-align: left;  }
-  .team-cell[data-position="2"] .team-face-back { align-items: start;  text-align: right; }
-  .team-cell[data-position="3"] .team-face-back { align-items: center; text-align: left;  }
-  .team-cell[data-position="4"] .team-face-back { align-items: center; text-align: right; }
-  .team-cell[data-position="5"] .team-face-back { align-items: end;    text-align: left;  }
-  .team-cell[data-position="6"] .team-face-back { align-items: end;    text-align: right; }
 }
 
 

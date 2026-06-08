@@ -4,9 +4,9 @@
  *                 cursor-follow rotation on the H1 smiley sticker).
  *                 Per-section detail lives in each builder's docstring below.
  * Author: Erlen Masson
- * Version: 1.3.0
+ * Version: 1.4.0
  * Created: 27 May 2026
- * Last Updated: 29 May 2026
+ * Last Updated: 8 June 2026
  */
 
 (function () {
@@ -21,7 +21,7 @@
     return;
   }
 
-  console.log("Script - Homepage v1.3.0 (Stitchy)");
+  console.log("Script - Homepage v1.4.0 (Stitchy)");
 
   gsap.registerPlugin(ScrollTrigger); // idempotent — safe if bd-animations already registered it
 
@@ -66,22 +66,73 @@
   var stackSpread = 10;        // px — extra initial separation beyond edge-to-edge per panel step
   var stackScale = 1.05;       // grow each panel as it tilts in, to cover the edges the rotation exposes
 
-  // Team polaroid grid — flip-card timing and the position-driven layout pattern.
-  // TEAM_LAYOUTS maps photo-position (1-6, indexing the 3x2 grid TL..BR) to the
-  // content type each of the six cells holds. Keeps the CMS minimal: each member
-  // only stores name/role/fact/main/hover/sticker; the per-person card placement
-  // is derived from their grid order, not authored.
+  // Team polaroid grid — flip-card timing + the DOM-order/geometry layout engine.
+  // There is no hardcoded per-position map any more: when a member opens, their
+  // content (name/role/fact/sticker) is scattered across the OTHER cells by DOM
+  // index, and each landing cell's back-face anchor is derived from the live grid
+  // geometry. Works for ANY member count — add/remove in the CMS needs no code
+  // change. The CMS Position field is now only a Collection-List sort key.
   var teamFlipDuration = 0.6;
   var teamFlipStagger = 0.04;
   var teamFlipEase = "power2.inOut";
-  var TEAM_LAYOUTS = {
-    1: ['photo', 'name',    'sticker', 'blank',   'role',    'fact'   ], // Doug
-    2: ['name',  'photo',   'role',    'fact',    'sticker', 'blank'  ], // Ange
-    3: ['blank', 'role',    'photo',   'fact',    'sticker', 'name'   ], // Stephanie
-    4: ['name',  'blank',   'fact',    'photo',   'role',    'sticker'], // Natalie
-    5: ['blank', 'sticker', 'blank',   'name',    'photo',   'role'   ], // Ruth (no fact)
-    6: ['fact',  'blank',   'name',    'sticker', 'role',    'photo'  ]  // Colin
-  };
+
+  // Ordered content blocks present for a member (optionals dropped when blank).
+  // Priority order matters: when slots are scarce (tiny teams, N<=4) the lowest-
+  // priority blocks drop first — so the bio (fact) outranks the sticker and the
+  // required name/role always survive.
+  function teamBlocks(data) {
+    var blocks = ['name', 'role'];
+    if (data.fact) blocks.push('fact');
+    if (data.sticker) blocks.push('sticker');
+    return blocks; // length 2..4
+  }
+
+  // Live column count from rendered geometry — the cells sharing the first row's
+  // offsetTop. offsetTop is the pre-transform layout position, so the resting
+  // tilts don't perturb it, and it sidesteps the getComputedStyle track-string
+  // footguns (minmax() spaces, display:none returning the specified value).
+  function teamColumnCount(cells) {
+    if (!cells.length) return 1;
+    var firstTop = cells[0].offsetTop, count = 0;
+    for (var i = 0; i < cells.length; i++) {
+      if (cells[i].offsetTop !== firstTop) break;
+      count++;
+    }
+    return count || 1;
+  }
+
+  // Scatter K content blocks across the S non-active cells (DOM order): one block
+  // per cell, evenly spaced (centred half-bucket stride — collision-free for
+  // K<=S), the rest left null (a blank cell). If S<K (tiny teams only) the
+  // overflow lowest-priority blocks are dropped rather than doubled up, keeping
+  // one beat per polaroid. Returns an array (length S) of type-string-or-null.
+  function teamDistribute(slotCount, blocks) {
+    var out = [], n = Math.min(slotCount, blocks.length), i;
+    for (i = 0; i < slotCount; i++) out[i] = null;
+    for (i = 0; i < n; i++) out[Math.floor(i * slotCount / n + slotCount / (2 * n))] = blocks[i];
+    return out;
+  }
+
+  // Back-face anchor (align-items + text-align) from a cell's real grid position,
+  // so content radiates toward its own outer corner at ANY column count and any
+  // (possibly ragged) final row. INVARIANT: the active cell stays in the layout —
+  // it only shows its front — so absolute indices keep every cell's row/col true.
+  function teamAnchor(index, cols, total) {
+    var rows = Math.ceil(total / cols);
+    var row = Math.floor(index / cols);
+    var col = index % cols;
+    var inRow = Math.min(cols, total - row * cols); // cells in this (maybe short) row
+    var h = inRow === 1 ? 'center' : (col === 0 ? 'left' : (col === inRow - 1 ? 'right' : 'center'));
+    var v = rows === 1 ? 'center' : (row === 0 ? 'start' : (row === rows - 1 ? 'end' : 'center'));
+    return { h: h, v: v };
+  }
+
+  // Sticker src guard — only http(s) / root-relative / data:image URLs reach
+  // innerHTML. Doubles as the empty-field guard: a blank-bound CMS image yields
+  // an empty/placeholder src, which fails the test and renders no sticker.
+  function teamSafeSticker(src) {
+    return /^(https?:\/\/|\/|data:image\/)/i.test(src || '') ? src : '';
+  }
 
   //
   //------- Module State -------//
@@ -413,9 +464,9 @@
   // and lets the CSS @media block cross-fade the faces via opacity.
   function activateMember(cell) {
     if (!teamGridEl) return;
-    var position = parseInt(cell.dataset.position, 10);
-    var layout = TEAM_LAYOUTS[position];
-    if (!layout) return;
+
+    var cells = Array.prototype.slice.call(teamGridEl.querySelectorAll('.team-cell'));
+    if (cells.length < 2) return; // a lone card has nothing to flip — don't open
 
     // Sticker is a hidden CMS-bound <img.team-sticker-src> — Webflow can't bind an
     // Image field into a data-* attribute VALUE, so we read the bound image's src.
@@ -425,28 +476,39 @@
       name:    cell.dataset.name    || '',
       role:    cell.dataset.role    || '',
       fact:    cell.dataset.fact    || '',
-      sticker: (stickerEl && stickerEl.getAttribute('src')) || cell.dataset.sticker || ''
+      sticker: teamSafeSticker((stickerEl && stickerEl.getAttribute('src')) || cell.dataset.sticker || '')
     };
 
-    var cells = Array.prototype.slice.call(teamGridEl.querySelectorAll('.team-cell'));
-    var nonActiveCards = [];
+    var total = cells.length;
+    var activeIndex = cells.indexOf(cell);
+    var cols = teamColumnCount(cells);
 
-    cells.forEach(function (other) {
-      if (other === cell) return;
-      var otherPos = parseInt(other.dataset.position, 10);
-      var type = layout[otherPos - 1];
-      var back = other.querySelector('.team-face-back');
-      var front = other.querySelector('.team-face-front');
+    // Non-active cells in DOM order; scatter this member's content across them and
+    // anchor each landing cell's back face by its real grid coordinate.
+    var others = [];
+    cells.forEach(function (other, index) {
+      if (other !== cell) others.push({ cell: other, index: index });
+    });
+    var assign = teamDistribute(others.length, teamBlocks(data));
+
+    var nonActiveCards = [];
+    others.forEach(function (other, slot) {
+      var back = other.cell.querySelector('.team-face-back');
+      var front = other.cell.querySelector('.team-face-front');
       if (back) {
-        back.innerHTML = fillBackFace(type, data);
+        back.innerHTML = fillBackFace(assign[slot], data);
         back.setAttribute('aria-hidden', 'false');
       }
       if (front) front.setAttribute('aria-hidden', 'true');
-      // The five flipped cards are now display surfaces for the active member's
+      // Anchor the back face toward this cell's own outer corner (derived live).
+      var anchor = teamAnchor(other.index, cols, total);
+      other.cell.setAttribute('data-anchor-h', anchor.h);
+      other.cell.setAttribute('data-anchor-v', anchor.v);
+      // The flipped cards are now display surfaces for the active member's
       // content, not controls — pull them out of the tab order and a11y tree so
       // a keyboard/SR user doesn't land on a button with a stale "View X" label
       // (and whose activation would close the whole grid).
-      var otherCard = other.querySelector('.team-card');
+      var otherCard = other.cell.querySelector('.team-card');
       if (otherCard) {
         otherCard.setAttribute('tabindex', '-1');
         otherCard.setAttribute('aria-hidden', 'true');
@@ -469,9 +531,7 @@
     announce('Showing ' + data.name + (data.role ? ', ' + data.role : ''));
 
     if (prefersReducedMotion()) {
-      cells.forEach(function (other) {
-        if (other !== cell) other.classList.add('is-flipped');
-      });
+      others.forEach(function (other) { other.cell.classList.add('is-flipped'); });
       return;
     }
 
@@ -483,9 +543,7 @@
       onComplete: function () {
         // Lock in the flipped state with the class so the CSS rule holds the
         // rotation even after any later GSAP cleanup.
-        cells.forEach(function (other) {
-          if (other !== cell) other.classList.add('is-flipped');
-        });
+        others.forEach(function (other) { other.cell.classList.add('is-flipped'); });
       }
     });
   }
@@ -509,6 +567,8 @@
         }
         if (front) front.setAttribute('aria-hidden', 'false');
         other.classList.remove('is-flipped');
+        other.removeAttribute('data-anchor-h');
+        other.removeAttribute('data-anchor-v');
         // Restore the card as a control now that browse state is back.
         var otherCard = other.querySelector('.team-card');
         if (otherCard) {
@@ -516,6 +576,8 @@
           otherCard.removeAttribute('aria-hidden');
         }
       });
+      closingCell.removeAttribute('data-anchor-h');
+      closingCell.removeAttribute('data-anchor-v');
       var closingCloseBtn = closingCell.querySelector('.team-cell-close');
       if (closingCloseBtn) {
         closingCloseBtn.setAttribute('aria-label', 'Close team member');
@@ -526,9 +588,22 @@
       teamGridEl.classList.remove('is-open');
       if (lastFocusedCard) lastFocusedCard.focus();
       activeTeamCell = null;
+      // The flip cue is gone and the spread cards are aria-hidden, so announce the
+      // return to browse state (the live region is the SR user's only feedback).
+      var closingName = closingCell.dataset.name || '';
+      announce(closingName ? 'Closed ' + closingName : 'Team members');
     }
 
     if (immediate === true || prefersReducedMotion()) {
+      // Immediate close (e.g. a resize across a breakpoint): an open flip tween
+      // may still be running. It was created on click, outside the gsap.context,
+      // so a rebuild's ctx.revert() can't reach it — kill it and clear the inline
+      // rotateY here, or the card strands mid-flip showing a blank back face.
+      var resetCards = cells
+        .filter(function (other) { return other !== closingCell; })
+        .map(function (other) { return other.querySelector('.team-card'); });
+      gsap.killTweensOf(resetCards);
+      gsap.set(resetCards, { clearProps: 'transform' });
       finish();
       return;
     }
@@ -549,22 +624,22 @@
     });
   }
 
-  // Map a content type to the back-face HTML. 'photo' / 'blank' (and any
-  // unknown type) render empty so the white card itself reads as the blank
-  // beat. Text is escape-routed through textContent to keep CMS-bound strings
-  // safe from accidental HTML.
+  // Map a content type to the back-face HTML; null / unknown render empty so the
+  // white card itself reads as the blank beat. Text is escape-routed through
+  // textContent to keep CMS-bound strings safe from accidental HTML. 'name' is a
+  // <p>, NOT a heading: the back-face card is aria-hidden while open (identity is
+  // carried by the announce() live region), so an <h3> here would only pollute
+  // the document heading outline (there is no <h2> ancestor for the grid).
   function fillBackFace(type, data) {
     switch (type) {
       case 'name':
-        return '<h3 class="team-back-name">' + escapeHtml(data.name) + '</h3>';
+        return '<p class="team-back-name">' + escapeHtml(data.name) + '</p>';
       case 'role':
         return '<p class="team-back-role">' + escapeHtml(data.role) + '</p>';
       case 'fact':
         return data.fact ? '<p class="team-back-fact">' + escapeHtml(data.fact) + '</p>' : '';
       case 'sticker':
         return data.sticker ? '<img class="team-back-sticker" src="' + escapeAttr(data.sticker) + '" alt="" />' : '';
-      case 'photo':
-      case 'blank':
       default:
         return '';
     }
@@ -660,6 +735,10 @@
     var width = window.innerWidth;
     if (width === lastViewportWidth) return;
     lastViewportWidth = width;
+    // A member open across a breakpoint would keep back-face anchors computed for
+    // the old column count and could strand a half-flipped card — close it clean
+    // (immediate) before the rebuild. No auto-reopen (surprising mid-resize).
+    if (activeTeamCell) closeMember(true);
     rebuildHomepage();
   }
 
