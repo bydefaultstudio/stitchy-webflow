@@ -242,7 +242,7 @@ button.button {
 }
 
 /* -- Add artwork -- */
-.sticker-add.sticker-book::before         { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d29b58e74fa85fb67_sticker_book.svg");                 aspect-ratio: 103 / 102; }
+.sticker-add.sticker-book::before         { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3d29b58e74fa85fb67_aee3637281e60afc5b3733cc8894bd88_sticker_book.svg");  aspect-ratio: 103 / 102; }
 .sticker-add.sticker-brain::before        { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a270310f2e9e581ba53724c_sticker-brain.svg");               aspect-ratio: 76 / 86; }
 .sticker-add.sticker-burrito::before      { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dcaa064ef33b41cb3_sticker_burrito.svg");              aspect-ratio: 72 / 108; }
 .sticker-add.sticker-coffee::before       { background-image: url("https://cdn.prod.website-files.com/6a1c3e91bcdb95c89bd55ef3/6a1c4a3dba03ba59ac867ed5_sticker_coffee.svg");              aspect-ratio: 59 / 70; }
