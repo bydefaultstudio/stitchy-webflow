@@ -164,6 +164,17 @@ button.button {
 }
 
 
+/* ------ WEBFLOW NAVBAR ------ */
+/* Burger ⇄ close icon swap, off Webflow's native .w--open hook (Webflow adds
+   .w--open to .w-nav-button when the mobile menu opens). The Designer can't
+   author an ancestor-state → child selector, so the swap lives here.
+   .w--open is mobile-only — no media query needed. */
+
+.w-nav-button .icn_nav-close         { display: none; }
+.w-nav-button.w--open .icn_nav-open  { display: none; }
+.w-nav-button.w--open .icn_nav-close { display: block; }
+
+
 /* ------ DATA-GRID ------ */
 /* Named layouts + mobile collapse are viewport-gated — see RESPONSIVE. */
 
@@ -484,13 +495,15 @@ body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equival
 
 /* ------ TEAM FLIP ------ */
 
-/* -- Resting tilts -- */
-.team-cell:nth-child(1) { transform: rotate(-1.5deg); }
-.team-cell:nth-child(2) { transform: rotate(1.2deg); }
-.team-cell:nth-child(3) { transform: rotate(-0.8deg); }
-.team-cell:nth-child(4) { transform: rotate(1.6deg); }
-.team-cell:nth-child(5) { transform: rotate(-1.2deg); }
-.team-cell:nth-child(6) { transform: rotate(0.9deg); }
+/* -- Resting tilts — fixed 6-angle cycle keyed to DOM order; repeats for any
+   member count. .team-cell is the Webflow .w-dyn-item (direct grid child), so
+   :nth-child counts true. -- */
+.team-cell:nth-child(6n+1) { transform: rotate(-1.5deg); }
+.team-cell:nth-child(6n+2) { transform: rotate(1.2deg); }
+.team-cell:nth-child(6n+3) { transform: rotate(-0.8deg); }
+.team-cell:nth-child(6n+4) { transform: rotate(1.6deg); }
+.team-cell:nth-child(6n+5) { transform: rotate(-1.2deg); }
+.team-cell:nth-child(6n)   { transform: rotate(0.9deg); }
 
 /* -- Flip mechanics (cell owns perspective natively; card owns rotateY) -- */
 .team-card {
@@ -509,6 +522,8 @@ body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equival
   padding: var(--_spacing---space--l);
   background: var(--_color---background--primary);
   color: var(--_color---text--primary);
+  align-items: center;
+  text-align: center;
   transform: rotateY(180deg);
 }
 .team-photo-hover {
