@@ -293,6 +293,7 @@ button.button {
   margin-inline: .1em;
   margin-right: -1.5em;
   padding-inline: 0 2.9em;
+  transform: translateY(-0.1em)  scale(1.15);
 }
 
 /* -- Placeholder artwork (swap to real assets before launch) -- */
@@ -308,23 +309,17 @@ button.button {
 
 
 /* ------ EYEBROW ------ */
+/* Decorative underline squiggle. The inline SVG (Webflow HTML Embed) uses
+   stroke="currentColor" + preserveAspectRatio="none" + vector-effect="non-scaling-stroke",
+   so it stretches to the flex parent's width at a constant 1.5px line weight.
+   Colour = `color` (set per section in the Designer); defaults to brand orange. */
 
-.eyebrow::after {
-  content: "";
-  display: inline-block;
-  width: 1.1em;
-  height: 0.75em;
-  margin-left: var(--_spacing---space--s);
-  vertical-align: baseline;
-  background-color: currentColor;
-  -webkit-mask-image: url('data:image/svg+xml,<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.09766 0.84668H0.90918V12.1533H3.09766V13H0V0H3.09766V0.84668Z" fill="black"/><path d="M19 13H15.9023V12.1533H18.0908V0.84668H15.9023V0H19V13Z" fill="black"/><path d="M9.94043 6.46973H12.8955V7.3916H9.94043V10.5361H9.05957V7.3916H6.10449V6.46973H9.05957V3.31055H9.94043V6.46973Z" fill="black"/></svg>');
-  mask-image: url('data:image/svg+xml,<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.09766 0.84668H0.90918V12.1533H3.09766V13H0V0H3.09766V0.84668Z" fill="black"/><path d="M19 13H15.9023V12.1533H18.0908V0.84668H15.9023V0H19V13Z" fill="black"/><path d="M9.94043 6.46973H12.8955V7.3916H9.94043V10.5361H9.05957V7.3916H6.10449V6.46973H9.05957V3.31055H9.94043V6.46973Z" fill="black"/></svg>');
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  mask-position: center;
+.eyebrow-line {
+  display: block;
+  width: 100%;        /* fills the flex parent → matches the eyebrow text width */
+  height: 0.6em;      /* fixed height; tracks the eyebrow font size */
+  overflow: visible;  /* the path crests above its viewBox — don't clip the cap */
+  color: var(--_color---background--orange);
 }
 
 
@@ -578,7 +573,7 @@ body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equival
   z-index: 3;
 }
 .team-cell.is-active .team-cell-close {
-  display: block;
+  display: flex;
 }
 
 /* -- Reduced motion (cross-fade faces instead of 3D flip) -- */
