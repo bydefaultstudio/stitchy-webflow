@@ -19,7 +19,7 @@ build/
 # Internal build notes (local only, not for public repo)
 CLAUDE.md
 PROJECT_PROGRESS.md
-HANDOVER.md
+handover/
 WEBFLOW_PLAN.md
 CMS_COLLECTIONS.md
 ASSETS.md
