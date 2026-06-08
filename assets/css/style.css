@@ -737,22 +737,14 @@ section {
   margin-bottom: var(--space-3xl);
 }
 
-.eyebrow::after {
-  content: "";
-  display: inline-block;
-  width: 1.1em;
-  height: 0.75em;
-  margin-left: var(--space-s);
-  vertical-align: baseline;
-  background-color: currentColor;
-  -webkit-mask-image: url('data:image/svg+xml,<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.09766 0.84668H0.90918V12.1533H3.09766V13H0V0H3.09766V0.84668Z" fill="black"/><path d="M19 13H15.9023V12.1533H18.0908V0.84668H15.9023V0H19V13Z" fill="black"/><path d="M9.94043 6.46973H12.8955V7.3916H9.94043V10.5361H9.05957V7.3916H6.10449V6.46973H9.05957V3.31055H9.94043V6.46973Z" fill="black"/></svg>');
-  mask-image: url('data:image/svg+xml,<svg width="19" height="13" viewBox="0 0 19 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.09766 0.84668H0.90918V12.1533H3.09766V13H0V0H3.09766V0.84668Z" fill="black"/><path d="M19 13H15.9023V12.1533H18.0908V0.84668H15.9023V0H19V13Z" fill="black"/><path d="M9.94043 6.46973H12.8955V7.3916H9.94043V10.5361H9.05957V7.3916H6.10449V6.46973H9.05957V3.31055H9.94043V6.46973Z" fill="black"/></svg>');
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-position: center;
-  mask-position: center;
+/* Decorative underline squiggle — inline SVG (stroke="currentColor",
+   preserveAspectRatio="none", vector-effect="non-scaling-stroke"). See global.css. */
+.eyebrow-line {
+  display: block;
+  width: 100%;
+  height: 0.6em;
+  overflow: visible;
+  color: var(--background-orange);
 }
 
 /* -- Text alignment -- */
