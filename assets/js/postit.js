@@ -9,12 +9,13 @@
  *                 from the source, the rest of the page is inert-ed behind it, focus
  *                 moves to the dialog and is restored to the trigger on close.
  *                 Entrance/exit is CSS via an `.is-open` class toggled on the dialog
- *                 AND each animated part (backdrop/card/shadow), so the open/close
- *                 states can be authored as native combo classes — no GSAP, no portal.
+ *                 AND each animated part (backdrop / wrapper / card / shadow), so the
+ *                 open/close states can be authored as native combo classes — no GSAP,
+ *                 no portal.
  * Author: Erlen Masson
- * Version: 0.5.0
+ * Version: 0.6.0
  * Created: 7 June 2026
- * Last Updated: 7 June 2026
+ * Last Updated: 8 June 2026
  */
 
 (function () {
@@ -29,7 +30,7 @@
     return;
   }
 
-  console.log("Script - Post-it v0.5.0 (Stitchy)");
+  console.log("Script - Post-it v0.6.0 (Stitchy)");
 
   var FOCUSABLE =
     'a[href], button:not([disabled]), input:not([disabled]), ' +
@@ -46,12 +47,15 @@
   var bodyEl = shell.querySelector(".post-it-body");
   var closeBtn = shell.querySelector(".post-it-close");
 
-  // Elements that animate on open/close. `is-open` is toggled on each (not only
-  // the dialog) so the entrance/exit states can be authored as native Webflow
-  // combo classes — .post-it-backdrop.is-open, .post-it.is-open, .post-it-shadow.is-open.
+  // Elements that animate on open/close. `is-open` is toggled on each (not only the
+  // dialog) so every open/close state can be authored as a native Webflow combo —
+  // .post-it-backdrop.is-open, .container-post-it.is-open (the rotation/scale wrapper),
+  // .post-it.is-open, .post-it-shadow.is-open. Toggling a part you don't style is a
+  // harmless no-op, so the JS stays decoupled from the styling choices.
   var animatedEls = [
     shell,
     shell.querySelector(".post-it-backdrop"),
+    shell.querySelector(".container-post-it"),
     shell.querySelector(".post-it"),
     shell.querySelector(".post-it-shadow"),
   ];

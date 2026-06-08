@@ -329,89 +329,18 @@ button.button {
 
 
 /* ------ POST-IT ------ */
-/* Motion tokens for the post-it transitions. style.css :root does not ship, so
-   they are defined here; postit.js reads --duration-m for its exit timing too. */
+/* Only the bits Webflow can't author natively. All visuals + open/close states are
+   native Webflow combos (`.is-open` toggled on each animated part by postit.js).
+   postit.js reads --duration-m for its exit-timing fallback — keep it equal to the
+   transition duration set on the native .is-open combos. */
 
 :root {
   --duration-m: 600ms;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.post-it-dialog {
-  position: fixed;
-  inset: 0;
-  z-index: 1100;
-  display: flex;
-  overflow-y: auto;
-  pointer-events: none; /* let clicks through while a note fades out (.is-open removed) */
-}
+.post-it-dialog[hidden] { display: none; } /* survive a stray Webflow display value */
 
-.post-it-dialog.is-open {
-  pointer-events: auto;
-}
-
-.post-it-dialog[hidden] {
-  display: none;
-}
-
-.post-it-stage {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  min-width: 0;
-  margin: auto;
-  padding-top: var(--_spacing---space--2xl);
-  padding-bottom: var(--_spacing---space--2xl);
-}
-
-.post-it-stage .container-xs {
-  position: relative;
-}
-
-.post-it-backdrop {
-  position: absolute;
-  inset: 0;
-  background: var(--_color---background--overlay);
-  opacity: 0;
-  transition: opacity var(--duration-m) var(--ease-out);
-}
-
-.post-it-dialog.is-open .post-it-backdrop {
-  opacity: 1;
-}
-
-.post-it {
-  --postit-rotation: -3deg;
-  position: relative;
-  z-index: 1;
-  opacity: 0;
-  transform: rotate(var(--postit-rotation)) scale(0.96);
-  transition: opacity var(--duration-m) var(--ease-out),
-              transform var(--duration-m) var(--ease-out);
-}
-
-.post-it-dialog.is-open .post-it {
-  opacity: 1;
-  transform: rotate(var(--postit-rotation)) scale(1);
-}
-
-.post-it-shadow {
-  position: absolute;
-  left: 50%;
-  bottom: calc(-1 * var(--_spacing---space--m));
-  width: 90%;
-  aspect-ratio: 840 / 50;
-  transform: translateX(-50%);
-  background: url("https://cdn.jsdelivr.net/gh/bydefaultstudio/stitchy-webflow@main/assets/images/post-it/post-it-shadow.png") center / contain no-repeat;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 0;
-  transition: opacity var(--duration-m) var(--ease-out);
-}
-
-.post-it-dialog.is-open .post-it-shadow {
-  opacity: 1;
-}
+body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equivalent */
 
 .sticker-trigger {
   -webkit-appearance: none;
@@ -424,20 +353,9 @@ button.button {
   cursor: pointer;
 }
 
-body.is-postit-open {
-  overflow: hidden;
-}
-
-@media (max-width: 767px) {
-  .post-it { --postit-rotation: -1.5deg; }
-}
-
-@media (max-width: 479px) {
-  .post-it { --postit-rotation: 0deg; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .post-it-backdrop,
+  .container-post-it,
   .post-it,
   .post-it-shadow {
     transition: none;
