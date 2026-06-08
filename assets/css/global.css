@@ -324,10 +324,11 @@ button.button {
 
 
 /* ------ POST-IT ------ */
-/* Only the bits Webflow can't author natively. All visuals + open/close states are
-   native Webflow combos (`.is-open` toggled on each animated part by postit.js).
-   postit.js reads --duration-m for its exit-timing fallback — keep it equal to the
-   transition duration set on the native .is-open combos. */
+/* The static (closed) look is authored natively in Webflow. The OPEN state ships here:
+   Webflow tree-shakes its published CSS and drops any class only applied at runtime by
+   JS, so the `.is-open` combos postit.js toggles never make it into the Webflow export.
+   Those deltas + the few things Designer can't express live in this block. postit.js
+   reads --duration-m for its exit-timing fallback — keep it equal to the duration below. */
 
 :root {
   --duration-m: 600ms;
@@ -336,6 +337,16 @@ button.button {
 .post-it-dialog[hidden] { display: none; } /* survive a stray Webflow display value */
 
 body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equivalent */
+
+/* Open state — JS adds `is-open` per part; Webflow won't ship these, so they live here.
+   Base (opacity 0 + rotation) stays native; the backdrop's own transition is native too. */
+.container-post-it {
+  transition: opacity var(--duration-m) cubic-bezier(0.16, 1, 0.3, 1);
+}
+.post-it-backdrop.is-open,
+.container-post-it.is-open {
+  opacity: 1;
+}
 
 .sticker-trigger {
   -webkit-appearance: none;
