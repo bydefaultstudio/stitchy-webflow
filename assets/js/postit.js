@@ -13,7 +13,7 @@
  *                 open/close states can be authored as native combo classes — no GSAP,
  *                 no portal.
  * Author: Erlen Masson
- * Version: 0.6.0
+ * Version: 0.7.0
  * Created: 7 June 2026
  * Last Updated: 8 June 2026
  */
@@ -30,7 +30,7 @@
     return;
   }
 
-  console.log("Script - Post-it v0.6.0 (Stitchy)");
+  console.log("Script - Post-it v0.7.0 (Stitchy)");
 
   var FOCUSABLE =
     'a[href], button:not([disabled]), input:not([disabled]), ' +
@@ -48,13 +48,15 @@
   var closeBtn = shell.querySelector(".post-it-close");
 
   // Elements that animate on open/close. `is-open` is toggled on each (not only the
-  // dialog) so every open/close state can be authored as a native Webflow combo —
-  // .post-it-backdrop.is-open, .container-post-it.is-open (the rotation/scale wrapper),
-  // .post-it.is-open, .post-it-shadow.is-open. Toggling a part you don't style is a
-  // harmless no-op, so the JS stays decoupled from the styling choices.
+  // dialog) so every open/close state can be authored as a native Webflow combo.
+  // Matches the live Webflow tree: .post-it-backdrop.is-open, .post-it-stage.is-open
+  // (the full-viewport centering layer), .container-post-it.is-open (the rotation/scale
+  // wrapper), .post-it.is-open, .post-it-shadow.is-open. Toggling a part you don't style
+  // is a harmless no-op, so the JS stays decoupled from the styling choices.
   var animatedEls = [
     shell,
     shell.querySelector(".post-it-backdrop"),
+    shell.querySelector(".post-it-stage"),
     shell.querySelector(".container-post-it"),
     shell.querySelector(".post-it"),
     shell.querySelector(".post-it-shadow"),
@@ -172,7 +174,7 @@
 
     // Focus the dialog itself (tabindex=-1 + aria-labelledby/describedby) so AT
     // announces the note's title + body, not the destructive Close.
-    shell.focus();
+    shell.focus({ preventScroll: true }); // preventScroll: focusing must not scroll the page
   }
 
   function closePostit(immediate) {
@@ -195,7 +197,7 @@
       }, EXIT_MS);
     }
 
-    if (trigger) trigger.focus(); // page is un-inert-ed above, so this lands
+    if (trigger) trigger.focus({ preventScroll: true }); // un-inert-ed above; preventScroll stops the page jumping to the trigger on close
   }
 
   //
