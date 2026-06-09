@@ -1,28 +1,49 @@
 # ──────────────────────────────────────────────────────────────
-# Stitchy London — PUBLIC repo (GitHub + jsDelivr CDN)
+# Stitchy London — PUBLIC delivery repo (GitHub + jsDelivr CDN)
 #
-# Only the custom code layer (assets/) and the Webflow Custom Code
-# snippets are committed — Webflow pulls them via jsDelivr @main.
-# Internal build notes and local tooling are kept out.
+# Allowlist model: ignore EVERYTHING, then re-include ONLY the files
+# Webflow loads over jsDelivr. Anything new (stickers, HTML, docs,
+# build tooling, internal notes) is ignored by default and can never
+# ship by accident. Internal docs (CLAUDE.md, handover/, memory/,
+# build/, .claude/, etc.) are all covered by the catch-all below.
 # ──────────────────────────────────────────────────────────────
 
-# OS / editor cruft
-.DS_Store
-.vscode/
+# 1 — Ignore everything
+/*
 
-# Local Claude Code config
-.claude/
+# 2 — Keep this ignore file
+!/.gitignore
 
-# CSS converter scratch output (build-global-css.js → build/global.css)
-build/
+# (optional) Webflow custom-code source doc — uncomment to keep in-repo
+# !/WEBFLOW_CDN_LINKS.md
 
-# Internal build notes (local only, not for public repo)
-CLAUDE.md
-PROJECT_PROGRESS.md
-handover/
-WEBFLOW_PLAN.md
-CMS_COLLECTIONS.md
-ASSETS.md
-CSS_LAYER_MAP.md
-css-code-struture.md
-memory/
+# 3 — Descend into assets/, ignore its contents by default
+!/assets/
+/assets/*
+
+# 4 — Served CSS (style.css is the local build source → stays ignored)
+!/assets/css/
+/assets/css/*
+!/assets/css/global.css
+!/assets/css/bd-animations.css
+!/assets/css/bd-cursor.css
+
+# 5 — All JS is delivery code (incl. site-loader.js, being recoded) → ship the folder
+!/assets/js/
+
+# 6 — Served image: the cursor sprite (fetched + injected by bd-cursor.js)
+!/assets/images/
+/assets/images/*
+!/assets/images/cursors/
+/assets/images/cursors/*
+!/assets/images/cursors/cursor-sprite.svg
+
+# (optional) Webflow header/footer custom-code source — uncomment to keep in-repo
+# !/templates/
+# /templates/*
+# !/templates/webflow-header-code.html
+# !/templates/webflow-footer-code.html
+
+# 7 — Belt-and-braces: never ship OS/editor cruft from allowlisted folders
+**/.DS_Store
+**/Thumbs.db
