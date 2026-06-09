@@ -1,56 +1,59 @@
 /**
- * Script Purpose: Stitchy London — Site Loader. Acts as the bd-animations
- *                 "intro curtain": opaque from first paint, plays the
- *                 line-draw Stitchy Lottie over an animated gradient, waits
- *                 for the page to settle, then fades out and hands control
- *                 back to bd-animations.
+ * Script Purpose: Stitchy London — Site Loader. The bd-animations "intro
+ *                 curtain": opaque from first paint, sits over an animated
+ *                 gradient while the line-draw Stitchy logo plays, waits for the
+ *                 page to settle, then fades out and hands control back to
+ *                 bd-animations.
  *
- *                 Also wires page transitions: intercepts internal link
- *                 clicks, fades a fresh curtain in over the current page,
- *                 then navigates. The next page renders with its own loader
- *                 at opacity 1, so the curtain stays visible across the
- *                 document swap — no flash.
+ *                 ONCE PER SESSION — a tiny inline <head> script decides BEFORE
+ *                 first paint whether THIS load shows the curtain. It is shown on
+ *                 the first load of a session and on every hard refresh, and
+ *                 skipped on in-session navigations. The head script sets
+ *                 window.__siteLoaderSkip (and adds html.loader-seen so CSS hides
+ *                 the curtain with no flash); this controller reads that flag and
+ *                 takes the matching path. See the head block in
+ *                 templates/webflow-header-code.html.
  *
- *                 Dismiss gates (all must pass, or 5s safety cap):
+ *                 LOGO — in production the Lottie is a NATIVE Webflow element
+ *                 (.site-loader-logo) that autoplays once; no lottie-web is
+ *                 loaded, so this controller never injects a player and the
+ *                 min-display floor holds the curtain while the native draw
+ *                 plays. The local prototype keeps lottie-web + an empty
+ *                 [data-site-loader-logo] mount, so the optional branch below
+ *                 still animates the logo offline.
+ *
+ *                 Dismiss gates (SHOW path — all must pass, or 5s safety cap):
  *                   1. Lottie finished — its own lottie-web draw, OR (native
- *                      Webflow Lottie element with no mount div) treated as done
- *                      immediately so the curtain doesn't wait on it.
+ *                      Webflow Lottie with no mount div) treated as done at once.
  *                   2. studio:ready dispatched by bd-animations.js
  *                   3. window.load fired
  *                   4. minimum display time elapsed (data-min-display, default
  *                      1700ms) so a native Lottie / IX2 draw is always seen.
  *
- *                 Curtain enforcement: pauses gsap.globalTimeline immediately
- *                 so any reveals bd-animations creates during its fonts.ready
- *                 init are held at progress 0 until the curtain fade-out
- *                 completes. Without this, above-fold scroll-trigger reveals
- *                 (fade / slide-up / headline-reveal) fire under the curtain
- *                 and the user never sees them play.
+ *                 Curtain enforcement: pauses gsap.globalTimeline immediately so
+ *                 above-fold reveals bd-animations queues during its fonts.ready
+ *                 init are held at progress 0 until the fade-out completes.
  *
  *                 Contract with bd-animations.js (assets/js/bd-animations.js):
- *                   • body.is-intro-loading must be present BEFORE
- *                     bd-animations init runs — set in HTML, not from JS.
+ *                   • body.is-intro-loading must be present BEFORE bd-animations
+ *                     init runs — set in HTML, not from JS.
  *                   • dispatch studio:intro-complete  → in-view reveals start
  *                   • dispatch bd:intro-complete      → ScrollTrigger refresh
- *
- *                 Per-link opt-out: add data-no-transition to any <a> that
- *                 should bypass the page-transition curtain (e.g. anchor jumps
- *                 you want instant). Anchors (#hash), mailto:/tel:, external
- *                 origins, target=_blank, download links, and modifier-clicked
- *                 links are skipped automatically.
+ *                 Both events fire on BOTH paths, always AFTER studio:ready, so
+ *                 reveals are released whether or not the curtain was shown.
  *
  * Author: Erlen Masson
- * Version: 1.5.0
+ * Version: 2.0.0
  * Created: 29 May 2026
  */
 
 (function () {
   "use strict";
 
-  var loaderEl = document.querySelector("[data-site-loader]");
+  var loaderEl = document.querySelector("[data-site-loader], .site-loader");
   if (!loaderEl) return;
 
-  console.log("Script - Site Loader v1.5.0 (Stitchy)");
+  console.log("Script - Site Loader v2.0.0 (Stitchy)");
 
   // Cross-page anchor support: if the URL arrived with a hash (e.g. /#about),
   // the browser auto-jumps to it before ScrollTrigger is built. Scrub reveals
@@ -68,44 +71,7 @@
     window.scrollTo(0, 0);
   }
 
-  // Pause the GSAP global timeline IMMEDIATELY. bd-animations' fonts.ready
-  // callback may have already queued tweens for above-fold reveals (fade,
-  // slide-up, headline-reveal) — those tweens are added to the global
-  // timeline but won't visually advance until the next rAF. Pausing here
-  // catches them before that rAF, so they sit at progress 0 throughout the
-  // curtain. We resume them after the fade-out.
-  var pausedGsap = false;
-  if (typeof gsap !== "undefined" && gsap.globalTimeline) {
-    gsap.globalTimeline.pause();
-    pausedGsap = true;
-  }
-
-  var logoMount = loaderEl.querySelector("[data-site-loader-logo]");
-  var animationPath =
-    loaderEl.getAttribute("data-lottie-path") ||
-    "assets/images/logo-line-svg.json";
-  // Lottie native duration is 3s (75 frames @ 25fps). 1.5x ⇒ 2s draw.
-  var animationSpeed =
-    parseFloat(loaderEl.getAttribute("data-lottie-speed")) || 1.5;
-  var fadeMs = 500; // matches CSS transition on .site-loader
-  var safetyMs = 5000;
-  // Minimum time the curtain stays up so a native Webflow Lottie / IX2 draw is
-  // always seen, even when load + studio:ready resolve sooner. Override per page
-  // with data-min-display (ms) on the loader element.
-  var minDisplayMs =
-    parseFloat(loaderEl.getAttribute("data-min-display")) || 1700;
-
-  var lottieDone = false;
-  var pageLoaded = document.readyState === "complete";
-  // bd-animations sets data-studio-ready before dispatching the event, so we
-  // can detect a fire that happened before our listener attached (cached-font
-  // cold loads, bfcache, etc.). If GSAP isn't loaded, bd-animations bails and
-  // never fires studio:ready — treat that as ready so we don't hang.
-  var studioReady =
-    document.documentElement.dataset.studioReady === "true" ||
-    typeof gsap === "undefined";
-  var hidden = false;
-  var minDisplayElapsed = false;
+  var fadeMs = 500; // matches the opacity transition on .site-loader
 
   function dispatchIntroComplete() {
     document.dispatchEvent(new CustomEvent("studio:intro-complete"));
@@ -134,6 +100,75 @@
     });
   }
 
+  // bd-animations sets data-studio-ready before dispatching the event, so we can
+  // detect a fire that happened before our listener attached (cached-font cold
+  // loads, bfcache, etc.). If GSAP isn't loaded, bd-animations bails and never
+  // fires studio:ready — treat that as ready so we don't hang.
+  var studioReady =
+    document.documentElement.dataset.studioReady === "true" ||
+    typeof gsap === "undefined";
+
+  //
+  //------- Skip path (in-session navigation) -------//
+  //
+
+  // The head script already hid the curtain (html.loader-seen → display:none),
+  // so there is nothing to fade. We only have to release the bd-animations
+  // handshake. Wait for studio:ready first: bd-animations self-inits on
+  // fonts.ready and this controller runs BEFORE it in the footer, so its
+  // studio:intro-complete listener may not be attached yet. Dispatching after
+  // studio:ready guarantees the held above-fold reveals are released, not lost.
+  function dismissSkipped() {
+    document.body.classList.remove("is-intro-loading");
+    dispatchIntroComplete();
+    if (loaderEl.parentNode) loaderEl.parentNode.removeChild(loaderEl);
+    scrollToInitialHash();
+  }
+
+  if (window.__siteLoaderSkip === true) {
+    if (studioReady) {
+      dismissSkipped();
+    } else {
+      document.addEventListener("studio:ready", dismissSkipped, { once: true });
+    }
+    return;
+  }
+
+  //
+  //------- Show path (first load of the session / hard refresh) -------//
+  //
+
+  // Pause the GSAP global timeline IMMEDIATELY. bd-animations' fonts.ready
+  // callback may have already queued tweens for above-fold reveals (fade,
+  // slide-up, headline-reveal) — those tweens are added to the global timeline
+  // but won't visually advance until the next rAF. Pausing here catches them
+  // before that rAF, so they sit at progress 0 throughout the curtain. We resume
+  // them after the fade-out.
+  var pausedGsap = false;
+  if (typeof gsap !== "undefined" && gsap.globalTimeline) {
+    gsap.globalTimeline.pause();
+    pausedGsap = true;
+  }
+
+  var logoMount = loaderEl.querySelector("[data-site-loader-logo]");
+  var animationPath =
+    loaderEl.getAttribute("data-lottie-path") ||
+    "assets/images/logo-line-svg.json";
+  // Lottie native duration is 3s (75 frames @ 25fps). 1.5x ⇒ 2s draw.
+  var animationSpeed =
+    parseFloat(loaderEl.getAttribute("data-lottie-speed")) || 1.5;
+  var safetyMs = 5000;
+  // Minimum time the curtain stays up so a native Webflow Lottie / IX2 draw is
+  // always seen, even when load + studio:ready resolve sooner. Override per page
+  // with data-min-display (ms) on the loader element.
+  var minDisplayMs =
+    parseFloat(loaderEl.getAttribute("data-min-display")) || 1700;
+
+  var lottieDone = false;
+  var pageLoaded = document.readyState === "complete";
+  var hidden = false;
+  var minDisplayElapsed = false;
+
   function hideLoader() {
     if (hidden) return;
     hidden = true;
@@ -149,14 +184,14 @@
     // Phase 2 (still opaque): defer one frame so the browser settles its
     // restored scroll position, then dispatch intro-complete. bd-animations'
     // handler synchronously rebuilds its triggers (full reinit when the page
-    // booted scrolled) against the settled scroll. All of this lands under
-    // the opaque curtain — the user never sees the rebuild flash.
+    // booted scrolled) against the settled scroll. All of this lands under the
+    // opaque curtain — the user never sees the rebuild flash.
     requestAnimationFrame(function () {
       dispatchIntroComplete();
 
       // Phase 3: now start the curtain fade. Reveals are already correctly
-      // positioned behind it; their tweens animate up to the fade duration
-      // and finish smoothly as the curtain disappears.
+      // positioned behind it; their tweens animate up to the fade duration and
+      // finish smoothly as the curtain disappears.
       loaderEl.classList.add("is-hidden");
       window.setTimeout(function () {
         scrollToInitialHash();
@@ -233,99 +268,8 @@
     maybeHide();
   }, minDisplayMs);
 
-  // Safety cap: dismiss even if one of the gates never resolves (CDN fail,
-  // GSAP missing, fonts.ready hang) so the page is never stuck behind the
-  // curtain. Resume + dispatchIntroComplete() still fire so reveals catch up.
+  // Safety cap: dismiss even if one of the gates never resolves (CDN fail, GSAP
+  // missing, fonts.ready hang) so the page is never stuck behind the curtain.
+  // Resume + dispatchIntroComplete() still fire so reveals catch up.
   window.setTimeout(hideLoader, safetyMs);
-
-  //
-  //------- Page Transitions -------//
-  //
-
-  var navigating = false;
-
-  function shouldInterceptLink(link, evt) {
-    if (!link) return false;
-    // Modifier / non-primary clicks → let the browser handle (new tab etc.)
-    if (evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey) return false;
-    if (typeof evt.button === "number" && evt.button !== 0) return false;
-    // Per-link opt-out
-    if (link.hasAttribute("data-no-transition")) return false;
-    // New tab / window
-    if (link.target && link.target !== "" && link.target !== "_self") return false;
-    if (link.hasAttribute("download")) return false;
-    var raw = link.getAttribute("href");
-    if (!raw) return false;
-    // Pure anchor jumps stay instant
-    if (raw.charAt(0) === "#") return false;
-    // Non-http schemes (mailto, tel, javascript, sms, etc.)
-    if (/^[a-z][a-z0-9+.-]*:/i.test(raw) && !/^https?:/i.test(raw)) return false;
-    // Resolve and compare origins
-    var url;
-    try {
-      url = new URL(link.href, window.location.href);
-    } catch (err) {
-      return false;
-    }
-    if (url.origin !== window.location.origin) return false;
-    // Same URL incl. hash → treat as in-page jump
-    if (url.href === window.location.href) return false;
-    // Same path + only hash differs → in-page jump
-    if (
-      url.pathname === window.location.pathname &&
-      url.search === window.location.search &&
-      url.hash &&
-      url.hash !== window.location.hash
-    ) {
-      return false;
-    }
-    return true;
-  }
-
-  function startPageTransition(href) {
-    if (navigating) return;
-    navigating = true;
-
-    var curtain = document.createElement("div");
-    curtain.className = "site-loader is-fade-in";
-    curtain.setAttribute("aria-hidden", "true");
-    // Page-transition curtain is gradient-only — no Lottie. The destination
-    // page renders its own loader with the Lottie + full lifecycle.
-    document.body.appendChild(curtain);
-
-    // Lock scroll for the brief fade-in so the page doesn't bounce under the
-    // semi-transparent curtain.
-    document.body.classList.add("is-intro-loading");
-
-    // Force a layout read so the browser registers the .is-fade-in start
-    // state, then drop it on the next frame to trigger the opacity transition.
-    void curtain.offsetWidth;
-    window.requestAnimationFrame(function () {
-      curtain.classList.remove("is-fade-in");
-    });
-
-    window.setTimeout(function () {
-      window.location.href = href;
-    }, fadeMs);
-  }
-
-  document.addEventListener("click", function (evt) {
-    var link = evt.target.closest && evt.target.closest("a[href]");
-    if (!shouldInterceptLink(link, evt)) return;
-    evt.preventDefault();
-    startPageTransition(link.href);
-  });
-
-  // bfcache restore: if the user hits back/forward and the browser restores
-  // this page from memory, the in-flight curtain (if any) is restored too.
-  // Tear it down so the user doesn't land on a covered page.
-  window.addEventListener("pageshow", function (evt) {
-    if (!evt.persisted) return;
-    navigating = false;
-    document.body.classList.remove("is-intro-loading");
-    var stray = document.querySelectorAll(".site-loader");
-    for (var i = 0; i < stray.length; i++) {
-      if (stray[i].parentNode) stray[i].parentNode.removeChild(stray[i]);
-    }
-  });
 })();

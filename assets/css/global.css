@@ -32,6 +32,115 @@ summary:focus-visible,
 }
 
 
+/* ------ SITE LOADER ------ */
+
+/* Full-viewport opening curtain: animated 5-colour gradient with the line-draw
+   "Stitchy" logo centred on top. In production the logo is a NATIVE Webflow
+   Lottie (.site-loader-logo); the prototype injects it via lottie-web into the
+   [data-site-loader-logo] mount. Dismissed by site-loader.js once window.load +
+   studio:ready + the data-min-display floor have all passed (5s safety cap).
+
+   Once-per-session: an inline <head> script adds html.loader-seen on loads that
+   should NOT show the curtain (in-session navigations); the rules at the end of
+   this section hide it before first paint. Shown on first load + every hard
+   refresh. Layout: orange top, yellow mid-left, lime bottom-left, sage
+   bottom-right, peach base wash + soft right-edge highlight. Positions drift on
+   a 22s loop; two warm layers breathe between adjacent palette colours on a 26s
+   loop. All motion killed under prefers-reduced-motion. */
+
+/* Register the two cycling colour stops so they can interpolate in @keyframes. */
+@property --loader-warm-top { syntax: "<color>"; inherits: false; initial-value: #FF9E52; }
+@property --loader-warm-mid { syntax: "<color>"; inherits: false; initial-value: #FADB6F; }
+
+.site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  /* Fully opaque from first paint — on hard refresh the user must NEVER see
+     the page content flash before the curtain covers it. .is-hidden runs the
+     fade-OUT when site-loader.js dismisses the curtain. */
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  --loader-warm-top: #FF9E52;
+  --loader-warm-mid: #FADB6F;
+  background-color: #F6C193;
+  background-image:
+    /* sage — bottom-right */
+    radial-gradient(ellipse 55% 50% at 95% 100%, #AFCDBE 0%, transparent 60%),
+    /* lime — bottom-left */
+    radial-gradient(ellipse 55% 55% at 5%  95%, #9DEE9C 0%, transparent 65%),
+    /* yellow — mid-left (cycles to lime-warm) */
+    radial-gradient(ellipse 50% 60% at 0%  55%, var(--loader-warm-mid) 0%, transparent 60%),
+    /* peach — right-edge highlight */
+    radial-gradient(ellipse 45% 70% at 105% 50%, #F6C193 0%, transparent 60%),
+    /* orange — top (cycles to peach-warm) */
+    radial-gradient(ellipse 70% 55% at 60% -5%, var(--loader-warm-top) 0%, transparent 65%);
+  background-size: 150% 150%, 160% 160%, 160% 160%, 150% 150%, 170% 170%;
+  background-repeat: no-repeat;
+  animation:
+    site-loader-drift 22s ease-in-out infinite alternate,
+    site-loader-shift 26s ease-in-out infinite;
+}
+
+.site-loader.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Lock page scroll while the loader curtain is up. Removed by site-loader.js
+   the instant the fade-out completes, so reveals run against the real layout. */
+body.is-intro-loading {
+  overflow: hidden;
+}
+
+.site-loader-logo {
+  width: 70vw;
+  aspect-ratio: 1267 / 266;
+  height: auto;
+}
+
+.site-loader-logo svg,
+.site-loader-logo > div {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 5 layers, in declaration order:
+   sage(BR), lime(BL), yellow(L-mid), peach(R-mid), orange(top). Each drifts a
+   small amount on its own axis so the composition slowly rearranges. */
+@keyframes site-loader-drift {
+  0%   { background-position:   0%   0%,   0%   0%,   0%   0%,   0%   0%,   0%   0%; }
+  50%  { background-position:  -8%  -5%,   8%  -5%,  -5%  10%,   5%  -8%,   5%  10%; }
+  100% { background-position:   5% -10%,  -8%  10%,  10%  -5%,  -5%   8%,  -8%   5%; }
+}
+
+/* Two warm layers gently swap between adjacent palette colours so the warmth
+   subtly breathes without any colour disappearing from the composition. */
+@keyframes site-loader-shift {
+  0%,
+  100% { --loader-warm-top: #FF9E52; --loader-warm-mid: #FADB6F; }
+  50%  { --loader-warm-top: #F6C193; --loader-warm-mid: #9DEE9C; }
+}
+
+@media (max-width: 767px) {
+  .site-loader-logo { width: 82vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-loader { animation: none; }
+}
+
+/* Once-per-session skip — html.loader-seen is set by the inline <head> script
+   BEFORE first paint on in-session navigations, so the curtain never renders
+   and the scroll lock never bites. site-loader.js reads window.__siteLoaderSkip
+   and dismisses the (already hidden) element on the same loads. */
+html.loader-seen .site-loader { display: none; }
+html.loader-seen body.is-intro-loading { overflow: visible; }
+
+
 /* ------ BUTTONS ------ */
 
 /* -- Base (API: data-variant | data-size | data-icon-only | data-full-width) -- */
@@ -530,10 +639,18 @@ body.is-postit-open { overflow: hidden; } /* scroll lock — no Designer equival
   aspect-ratio: auto;
   transition: opacity 220ms ease;
 }
-.team-grid:not(.is-open) .team-card:hover .team-photo-hover,
+/* Hover-photo reveal on keyboard focus + the active (open) cell — unconditional. */
 .team-grid:not(.is-open) .team-card:focus-visible .team-photo-hover,
 .team-cell.is-active .team-photo-hover {
   opacity: 1;
+}
+/* :hover swap gated to real (mouse) pointers — on touch, a content-revealing
+   hover style makes the first tap land on :hover instead of opening the card
+   (iOS swallows the first tap), so on touch a single tap opens it. */
+@media (hover: hover) and (pointer: fine) {
+  .team-grid:not(.is-open) .team-card:hover .team-photo-hover {
+    opacity: 1;
+  }
 }
 .team-cell.is-flipped .team-card {
   transform: rotateY(180deg);
